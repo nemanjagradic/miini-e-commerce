@@ -6,6 +6,7 @@ import ProductSmallItem from "../../Products/ProductSmallItem";
 import { useState, useRef, useEffect } from "react";
 import useIntersectionNav from "../../../hooks/useIntersectionNav";
 import { Link } from "react-router-dom";
+/* eslint-disable no-unused-vars */
 
 const Categories = () => {
   const [runAgain, setRunAgain] = useState(false);

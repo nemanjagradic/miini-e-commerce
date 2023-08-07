@@ -3,6 +3,7 @@ import Container from "react-bootstrap/Container";
 import classes from "./GridLayout.module.css";
 import useIntersectionNav from "../../../hooks/useIntersectionNav";
 import { useEffect, useRef, useState } from "react";
+/* eslint-disable no-unused-vars */
 
 const GridLayout = () => {
   const [runAgain, setRunAgain] = useState(false);
