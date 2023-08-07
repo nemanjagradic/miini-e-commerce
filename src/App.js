@@ -167,7 +167,7 @@ export const products = [
 
 const router = createBrowserRouter([
   {
-    path: "",
+    path: "/",
     element: <RootLayout />,
     errorElement: <ErrorPage />,
     children: [

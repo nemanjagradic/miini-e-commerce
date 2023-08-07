@@ -23,7 +23,7 @@ const useIntersectionNav = (options, targetEl, categoryPage = false) => {
         }
       }
     },
-    [nav.classList, categoryPage]
+    [nav, categoryPage]
   );
 
   const obsOptions = useMemo(() => {
