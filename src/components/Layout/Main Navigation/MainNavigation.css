@@ -117,6 +117,9 @@ ul {
   .logo-side {
     margin-bottom: 20px;
   }
+  .logo-side a {
+    flex-grow: 1;
+  }
   .nav-side {
     z-index: 2;
     background: #fff;
