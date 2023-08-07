@@ -1,0 +1,25 @@
+.best-sellers {
+  margin-top: 100px;
+}
+
+.best-sellers h2 {
+  margin-bottom: 35px;
+}
+
+.product-list {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+@media screen and (max-width: 900px) {
+  .product-list {
+    justify-content: space-evenly;
+  }
+
+  .best-sellers h1 {
+    width: fit-content;
+    margin: 0 auto 35px auto;
+  }
+}

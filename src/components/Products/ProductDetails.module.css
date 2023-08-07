@@ -1,0 +1,247 @@
+.product-name {
+  text-align: center;
+  margin: 50px 0;
+}
+
+.product-main-image {
+  width: 430px;
+  height: 400px;
+}
+
+.product-main-image img {
+  width: 100%;
+  height: 100%;
+}
+
+.small-img {
+  width: 120px;
+  height: 120px;
+  margin-right: 10px;
+}
+
+.small-img:hover {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(0, 0, 0, 0.3);
+}
+
+.small-img img {
+  width: 100%;
+  height: 100%;
+}
+
+.product-content {
+  font-family: "Heebo", sans-serif;
+}
+
+.quantity-buttons button,
+.quantity-buttons span {
+  display: inline-block;
+  padding: 8px 12px;
+}
+
+.quantity-buttons span {
+  font-size: 18px;
+}
+
+.quantity-buttons button {
+  background: none;
+  border: 1px solid rgba(0, 0, 0, 0.8);
+  transition: 0.3s;
+}
+
+.quantity-buttons button:hover {
+  background: #f3f3f3;
+  border: 1px solid rgba(0, 0, 0, 1);
+}
+
+.shopping-item-quantity .quantity {
+  display: inline-block;
+}
+
+.product-images {
+  margin-right: 40px;
+}
+
+.product-small-images {
+  display: flex;
+  margin-top: 10px;
+}
+
+.description {
+  font-size: 20px;
+  font-weight: 500;
+  margin-bottom: 30px;
+}
+
+.info {
+  display: flex;
+  margin-bottom: 30px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.info h4 {
+  margin-bottom: 0;
+  font-weight: bold;
+}
+
+.price {
+  font-size: 26px;
+  font-weight: bold;
+  flex-basis: 20%;
+  text-align: right;
+}
+
+.add-and-buy {
+  display: flex;
+  justify-content: space-between;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.add-and-buy button {
+  background: none;
+  outline: none;
+  width: 220px;
+  height: 50px;
+  font-weight: bold;
+  text-transform: uppercase;
+  transition: 0.3s;
+}
+
+.add-and-buy button:nth-child(1) {
+  border: 2px solid #000;
+}
+
+.add-and-buy button:nth-child(2) {
+  background-color: rgb(211, 0, 0);
+  color: #fff;
+  border: 2px solid rgb(211, 0, 0);
+}
+
+.add-and-buy button:nth-child(1):hover {
+  background: #000;
+  color: #fff;
+}
+
+.add-and-buy button:nth-child(2):hover {
+  background: #fff;
+  color: rgb(211, 0, 0);
+}
+
+.additional-description {
+  display: flex;
+  justify-content: space-evenly;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding-top: 70px;
+}
+
+.additional-description > div {
+  background: #f3f3f3;
+  padding: 15px;
+  padding-bottom: 0;
+  flex-basis: 31%;
+}
+
+.additional-description h4 {
+  font-weight: bold;
+}
+
+.product-container {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.product-container > div {
+  flex-basis: 45%;
+}
+
+@media screen and (max-width: 930px) {
+  .description {
+    font-size: 18px !important;
+  }
+  .add-and-buy button {
+    width: 140px;
+  }
+  .product-images {
+    margin-right: 15px;
+  }
+  .product-container {
+    width: 95%;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .description {
+    margin-top: 20px;
+  }
+  .product-content {
+    flex-basis: 55%;
+    margin: 0 auto;
+  }
+  .product-images {
+    margin: 0 auto !important;
+  }
+  body
+    > div.product-page
+    > div.additional-description.d-flex.justify-content-evenly {
+    justify-content: center !important;
+  }
+  body
+    > div.product-page
+    > div.additional-description.d-flex.justify-content-evenly
+    > div {
+    margin: 0 15px;
+  }
+  .product-container > div {
+    flex-basis: 60%;
+  }
+}
+
+@media screen and (max-width: 770px) {
+  .info h2 {
+    font-size: 22px;
+  }
+  .quantity-buttons button {
+    padding: 3px 6px;
+  }
+  .price {
+    font-size: 22px !important;
+  }
+  .add-and-buy button {
+    width: 110px !important;
+  }
+  .product-content .description {
+    font-size: 16px;
+  }
+  .additional-description > div h4 {
+    font-size: 18px;
+  }
+  .additional-description > div p {
+    font-size: 13px;
+  }
+  .product-main-image {
+    width: 350px;
+    height: 350px;
+  }
+  .product-container > div {
+    flex-basis: 60%;
+  }
+}
+
+@media screen and (max-width: 490px) {
+  .product-content {
+    flex-basis: 90% !important;
+  }
+  .product-main-image {
+    width: 320px;
+    height: 320px;
+  }
+  .additional-description > div {
+    flex-basis: 35%;
+    padding: 10px;
+  }
+}

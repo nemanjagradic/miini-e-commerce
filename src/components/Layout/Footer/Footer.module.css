@@ -1,0 +1,53 @@
+.footer {
+  margin-top: 100px;
+  text-align: center;
+  padding-top: 100px;
+  padding-bottom: 20px;
+  background: #202020;
+  color: #fff;
+  font-family: "Heebo", sans-serif;
+}
+
+.footer h3 {
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+.footer input {
+  height: 30px;
+  border: none;
+}
+
+.footer input::placeholder {
+  padding-left: 10px;
+}
+
+.footer button {
+  border: none !important;
+  height: 30px;
+  padding: 0 5px;
+  font-weight: bold;
+  background: #e0e0e0 !important;
+}
+
+.footer-pages {
+  list-style: none;
+  margin-top: 100px;
+}
+
+.footer-pages li {
+  display: inline-block;
+  margin: 0 10px;
+}
+
+.footer-pages li a {
+  color: #fff !important;
+}
+
+@media screen and (max-width: 490px) {
+  .footer-pages li {
+    margin: 0 5px;
+  }
+  .footer-pages li a {
+    font-size: 12px;
+  }
+}

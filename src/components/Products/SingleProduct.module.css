@@ -1,0 +1,129 @@
+.product-name {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.product-main-image {
+  width: 430px;
+  height: 400px;
+}
+
+.product-main-image img {
+  width: 100%;
+  height: 100%;
+}
+
+.small-img {
+  width: 120px;
+  height: 120px;
+  margin-right: 10px;
+}
+
+.small-img img {
+  width: 100%;
+  height: 100%;
+}
+
+.product-content {
+  font-family: "Heebo", sans-serif;
+}
+
+.quantity-buttons button,
+.quantity-buttons span {
+  display: inline-block;
+  padding: 5px 10px;
+}
+
+.quantity-buttons span {
+  font-size: 18px;
+}
+
+.quantity-buttons button {
+  background: none;
+}
+
+.shopping-item-quantity .quantity {
+  display: inline-block;
+}
+
+.product-images {
+  margin-right: 40px;
+}
+
+.product-small-images {
+  display: flex;
+  margin-top: 10px;
+}
+
+.description {
+  font-size: 20px;
+  font-weight: 500;
+  margin-bottom: 30px;
+}
+
+.info {
+  display: flex;
+  margin-bottom: 30px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.info h2 {
+  font-weight: 600;
+}
+
+.price {
+  font-size: 26px;
+  font-weight: bold;
+}
+
+.add-and-buy {
+  display: flex;
+  justify-content: space-between;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.add-and-buy button {
+  background: none;
+  outline: none;
+  width: 220px;
+  height: 50px;
+  border: 2px solid #000;
+  font-weight: bold;
+}
+
+.add-and-buy button:nth-child(2) {
+  background-color: rgb(211, 0, 0);
+  color: #fff;
+}
+
+.additional-description {
+  display: flex;
+  justify-content: space-evenly;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding-top: 70px;
+}
+
+.additional-description > div {
+  background: rgb(236, 236, 236);
+  padding: 15px;
+  padding-bottom: 0;
+  flex-basis: 31%;
+}
+
+.additional-description h4 {
+  font-weight: bold;
+}
+
+.product-container {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.product-container > div {
+  flex-basis: 45%;
+}
