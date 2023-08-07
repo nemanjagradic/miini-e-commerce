@@ -35,7 +35,7 @@ const useIntersectionNav = (options, targetEl, categoryPage = false) => {
     return () => {
       if (currentTarget) stickyNavObserver.unobserve(currentTarget);
     };
-  }, [targetEl, options]);
+  }, [targetEl, options, obsCallback, obsOptions]);
 };
 
 export default useIntersectionNav;

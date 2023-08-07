@@ -50,7 +50,7 @@ const ShoppingCart = () => {
         {cartItems.length === 0 && (
           <div className={classes.empty}>
             <div className={classes["empty-img"]}>
-              <img src="/images/empty.png" />
+              <img src="/images/empty.png" alt="" />
             </div>
             <h5>Your cart is empty.</h5>
             <Link to="/">Keep Browsing</Link>
