@@ -53,7 +53,7 @@
 
 @media screen and (max-width: 900px) {
   .grid-container {
-    width: 95%;
+    width: 90%;
     margin: 30px auto 0 auto;
   }
   .grid-content img {
