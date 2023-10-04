@@ -15,7 +15,7 @@ const TrendingProducts = () => {
       <div
         key={product.id}
         className={classes["trending-item"]}
-        style={{ transform: `translateX(${100 * slide}%)` }}
+        style={{ transform: `translateX(calc(${100 * slide}% + 20px))` }}
       >
         <Link to={`/products/${product.id}`}>
           <div className={classes["trending-img"]}>
