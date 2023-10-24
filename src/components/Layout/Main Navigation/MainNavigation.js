@@ -8,25 +8,25 @@ import { useDispatch, useSelector } from "react-redux";
 import { uiActions } from "../../../store/ui-slice";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { cartActions } from "../../../store/cart-slice";
 import "./MainNavigation.css";
 
 const MainNavigation = () => {
   const [showNav, setShowNav] = useState(false);
+  const [highlighted, setHighlighted] = useState(false);
   const showNavHandler = () => {
     setShowNav((prevState) => !prevState);
   };
   const dispatch = useDispatch();
   const totalQuantity = useSelector((state) => state.cart.totalQuantity);
-  const changedQuantity = useSelector((state) => state.cart.changedQuantity);
   const showModal = () => {
     dispatch(uiActions.showModal());
   };
   let totalQuantityClasses;
-  if (!changedQuantity) {
+
+  if (!highlighted) {
     totalQuantityClasses = "shopping-items";
   }
-  if (changedQuantity) {
+  if (highlighted) {
     totalQuantityClasses = "shopping-items bump";
   }
   if (totalQuantity === 0) {
@@ -34,8 +34,10 @@ const MainNavigation = () => {
   }
 
   useEffect(() => {
+    setHighlighted(true);
+
     const timer = setTimeout(() => {
-      dispatch(cartActions.setChangedQuantity());
+      setHighlighted(false);
     }, 400);
 
     return () => {

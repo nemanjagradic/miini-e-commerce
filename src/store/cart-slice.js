@@ -4,7 +4,6 @@ const initialCartState = {
   cartItems: JSON.parse(localStorage.getItem("cartItems")) || [],
   subtotal: JSON.parse(localStorage.getItem("subtotal")) || 0,
   totalQuantity: JSON.parse(localStorage.getItem("totalQuantity")) || 0,
-  changedQuantity: false,
 };
 
 const cartSlice = createSlice({
@@ -12,7 +11,6 @@ const cartSlice = createSlice({
   initialState: initialCartState,
   reducers: {
     addToCart(state, action) {
-      state.changedQuantity = true;
       state.subtotal = state.subtotal + action.payload.totalPrice;
       state.totalQuantity = state.totalQuantity + action.payload.quantity;
       const existingItem = state.cartItems.find(
@@ -58,9 +56,6 @@ const cartSlice = createSlice({
       state.subtotal =
         state.subtotal - existingItem.quantity * existingItem.price;
       state.totalQuantity = state.totalQuantity - existingItem.quantity;
-    },
-    setChangedQuantity(state) {
-      state.changedQuantity = false;
     },
   },
 });
