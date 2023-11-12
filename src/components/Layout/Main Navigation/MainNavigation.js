@@ -53,6 +53,10 @@ const MainNavigation = () => {
             <img src="/images/logo.png" alt="" />
           </div>
         </Link>
+        <div className="shopping-cart-icon-responsive" onClick={showModal}>
+          <div className={totalQuantityClasses}>{totalQuantity}</div>
+          <FontAwesomeIcon icon={faCartShopping} />
+        </div>
         <div className="menu" onClick={showNavHandler}>
           {!showNav && <FontAwesomeIcon icon={faBars} />}
           {showNav && <FontAwesomeIcon icon={faXmark} />}
@@ -69,10 +73,12 @@ const MainNavigation = () => {
           <li>
             <Link to="product-page">Product Page</Link>
           </li>
-          <li className="shopping-cart-icon" onClick={showModal}>
-            <div className={totalQuantityClasses}>{totalQuantity}</div>
-            <FontAwesomeIcon icon={faCartShopping} />
-          </li>
+          {!showNav && (
+            <li className="shopping-cart-icon" onClick={showModal}>
+              <div className={totalQuantityClasses}>{totalQuantity}</div>
+              <FontAwesomeIcon icon={faCartShopping} />
+            </li>
+          )}
         </ul>
       </div>
     </div>

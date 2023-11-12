@@ -42,7 +42,7 @@
   display: none;
   width: 30px;
   height: 30px;
-  font-size: 24px;
+  font-size: 20px;
 }
 
 .shopping-cart-icon {
@@ -69,16 +69,19 @@
   font-size: 19px;
 }
 
+.shopping-cart-icon-responsive {
+  position: relative;
+  display: none;
+  margin-right: 20px;
+  font-size: 20px;
+}
+
 .bump {
   animation: bump 0.4s 1;
 }
 
 .hidden {
   opacity: 0;
-}
-
-.show-nav {
-  display: block;
 }
 
 ul {
@@ -114,9 +117,6 @@ ul {
   .nav > div {
     flex-basis: 100%;
   }
-  .logo-side {
-    margin-bottom: 20px;
-  }
   .logo-side a {
     flex-grow: 1;
   }
@@ -129,8 +129,13 @@ ul {
   .show-nav {
     display: block;
   }
+  .shopping-cart-icon-responsive {
+    display: block;
+  }
   .nav-list {
     float: none;
+    margin-top: 20px;
+    margin-bottom: 0;
   }
   .nav-list li {
     margin: 5px 0 !important;
