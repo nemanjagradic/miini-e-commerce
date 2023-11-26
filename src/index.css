@@ -31,13 +31,3 @@
     @apply fixed left-1/2 top-0 -translate-x-2/4 bg-white z-[2];
   }
 }
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  position: relative;
-}
