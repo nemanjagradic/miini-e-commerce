@@ -1,6 +1,3 @@
-import "bootstrap/dist/css/bootstrap.min.css";
-import Container from "react-bootstrap/Container";
-import classes from "./GridLayout.module.css";
 import useIntersectionNav from "../../../hooks/useIntersectionNav";
 import { useEffect, useRef, useState } from "react";
 /* eslint-disable no-unused-vars */
@@ -15,36 +12,46 @@ const GridLayout = () => {
   useIntersectionNav({ root: null, threshold: 0 }, gridContainer.current);
 
   return (
-    <Container className={classes.container}>
-      <div className={classes["grid-container"]} ref={gridContainer}>
-        <div
-          className={`${classes["grid-container-item"]} ${classes["height-2"]} ${classes.w2}`}
-        >
-          <div className={classes["grid-content"]}>
-            <img src="./images/bed.png" alt="" />
-            <div className={classes.overlay}>
-              <p>Bedroom</p>
-            </div>
+    <div className="my-container">
+      <div
+        className="grid grid-cols-4 grid-rows-200 gap-2 mt-12"
+        ref={gridContainer}
+      >
+        <div className="col-span-2 row-span-2">
+          <div className="relative w-full h-full">
+            <img
+              className="w-full h-full object-cover"
+              src="./images/bed.png"
+              alt=""
+            />
+            <div className="absolute top-0 left-0 block w-full h-full transition opacity-10 hover:bg-black"></div>
+            <p className="text-2xl absolute left-5 top-5">Bedroom</p>
           </div>
         </div>
-        <div className={classes[("grid-container-item", "w2")]}>
-          <div className={classes["grid-content"]}>
-            <img src="./images/light.png" alt="" />
-            <div className={classes.overlay}>
-              <p>Lighting</p>
-            </div>
+        <div className="col-span-2">
+          <div className="relative w-full h-full">
+            <img
+              className="w-full h-full object-cover"
+              src="./images/light.png"
+              alt=""
+            />
+            <div className="absolute top-0 left-0 block w-full h-full transition opacity-10 hover:bg-black"></div>
+            <p className="text-2xl absolute left-5 bottom-5">Lighting</p>
           </div>
         </div>
-        <div className={classes[("grid-container-item", "w2")]}>
-          <div className={classes["grid-content"]}>
-            <img src="./images/kitchen.png" alt="" />
-            <div className={classes.overlay}>
-              <p>Kitchen</p>
-            </div>
+        <div className="col-span-2">
+          <div className="relative w-full h-full">
+            <img
+              className="w-full h-full object-cover"
+              src="./images/kitchen.png"
+              alt=""
+            />
+            <div className="absolute top-0 left-0 block w-full h-full transition opacity-10 hover:bg-black"></div>
+            <p className="text-2xl absolute left-5 bottom-5">Kitchen</p>
           </div>
         </div>
       </div>
-    </Container>
+    </div>
   );
 };
 

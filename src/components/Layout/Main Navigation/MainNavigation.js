@@ -8,7 +8,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { uiActions } from "../../../store/ui-slice";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-import "./MainNavigation.css";
 
 const MainNavigation = () => {
   const [showNav, setShowNav] = useState(false);
@@ -46,35 +45,47 @@ const MainNavigation = () => {
   }, [totalQuantity, dispatch]);
 
   return (
-    <div className="nav">
-      <div className="logo-side">
-        <Link to="/">
-          <div className="logo">
-            <img src="/images/logo.png" alt="" />
-          </div>
-        </Link>
-        <div className="shopping-cart-icon-responsive" onClick={showModal}>
+    <div className="navigation relative px-8 py-5 shadow-small w-full block md:flex md:items-center md:justify-between md:h-20 md:px-[17%] z-[2] uppercase md:py-3">
+      <div className="flex">
+        <div className="flex-1">
+          <Link to="/">
+            <img
+              src="/images/logo.png"
+              alt="Logo"
+              className="max-w-full h-auto"
+            />
+          </Link>
+        </div>
+        <div className="relative md:hidden text-xl mx-3" onClick={showModal}>
           <div className={totalQuantityClasses}>{totalQuantity}</div>
           <FontAwesomeIcon icon={faCartShopping} />
         </div>
-        <div className="menu" onClick={showNavHandler}>
-          {!showNav && <FontAwesomeIcon icon={faBars} />}
-          {showNav && <FontAwesomeIcon icon={faXmark} />}
+        <div className="md:hidden text-xl" onClick={showNavHandler}>
+          <FontAwesomeIcon icon={showNav ? faXmark : faBars} />
         </div>
       </div>
-      <div className={`nav-side ${showNav ? "show-nav" : ""}`}>
-        <ul className="nav-list">
-          <li>
-            <Link to="">Home</Link>
+      <div className={`${!showNav ? "hidden" : "block"} md:block`}>
+        <ul className="w-full mb-0 pl-0 bg-white list-none font-Heebo">
+          <li className="my-3 mb-1 cursor-pointer md:mx-3 md:inline-block md:my-0">
+            <Link className="text-darker font-extrabold" to="/">
+              Home
+            </Link>
           </li>
-          <li>
-            <Link to="categories/all">Categories</Link>
+          <li className="my-1 cursor-pointer md:mx-3 md:inline-block md:my-0">
+            <Link className="text-darker font-extrabold" to="categories/all">
+              Categories
+            </Link>
           </li>
-          <li>
-            <Link to="product-page">Product Page</Link>
+          <li className="my-1 cursor-pointer md:mx-3 md:inline-block md:my-0">
+            <Link className="text-darker font-extrabold" to="product-page">
+              Product Page
+            </Link>
           </li>
           {!showNav && (
-            <li className="shopping-cart-icon" onClick={showModal}>
+            <li
+              className="relative block text-xl mx-3 md:inline-block cursor-pointer"
+              onClick={showModal}
+            >
               <div className={totalQuantityClasses}>{totalQuantity}</div>
               <FontAwesomeIcon icon={faCartShopping} />
             </li>

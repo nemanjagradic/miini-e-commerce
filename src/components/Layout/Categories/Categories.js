@@ -1,6 +1,3 @@
-import "bootstrap/dist/css/bootstrap.min.css";
-import Container from "react-bootstrap/Container";
-import classes from "./Categories.module.css";
 import { products } from "../../../App";
 import ProductSmallItem from "../../Products/ProductSmallItem";
 import { useState, useRef, useEffect } from "react";
@@ -46,26 +43,33 @@ const Categories = () => {
   });
 
   return (
-    <Container>
-      <h3 className={classes["category-name"]}>{categoryName}</h3>
-      <ul className={classes["categories"]}>
+    <div className="my-container">
+      <h3 className="my-8 text-center text-3xl font-semibold">
+        {categoryName}
+      </h3>
+      <ul className="font-Heebo text-center">
         {categoryButtons.map((button, i) => {
           return (
             <Link
               to={`/categories/${button}`}
               key={i}
               onClick={filterProducts.bind(null, button, i)}
-              className={active === i ? classes.active : ""}
+              className={`inline-block mx-4 border border-black py-1 px-4 mt-4 md:mt-0 hover:shadow-md ${
+                active === i ? "bg-light" : ""
+              }`}
             >
               {`${button[0].toUpperCase()}${button.slice(1)}`}
             </Link>
           );
         })}
       </ul>
-      <div className={classes["product-list"]} ref={productList}>
+      <div
+        className="flex gap-2 justify-evenly lg:justify-between flex-wrap mt-16"
+        ref={productList}
+      >
         {allProducts}
       </div>
-    </Container>
+    </div>
   );
 };
 

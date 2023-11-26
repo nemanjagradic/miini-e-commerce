@@ -1,6 +1,3 @@
-import "bootstrap/dist/css/bootstrap.min.css";
-import Container from "react-bootstrap/Container";
-import classes from "./BestProducts.module.css";
 import { products } from "../../App";
 import ProductSmallItem from "./ProductSmallItem";
 
@@ -9,12 +6,14 @@ const BestProducts = () => {
     return <ProductSmallItem key={product.id} product={product} />;
   });
   return (
-    <Container className={classes["best-sellers"]}>
-      <h2>Best Sellers</h2>
-      <div className={`${classes["product-list"]} ${classes["mt-5"]}`}>
+    <div className="my-container mt-24">
+      <h2 className="mb-8 mx-auto w-fit text-3xl font-semibold lg:mx-0">
+        Best Sellers
+      </h2>
+      <div className="flex gap-4 lg:gap-2 justify-evenly lg:justify-between items-center flex-wrap">
         {bestProducsts}
       </div>
-    </Container>
+    </div>
   );
 };
 
