@@ -14,40 +14,40 @@ const GridLayout = () => {
   return (
     <div className="my-container">
       <div
-        className="grid grid-cols-4 grid-rows-200 gap-2 mt-12"
+        className="mt-12 grid grid-cols-4 grid-rows-200 gap-2"
         ref={gridContainer}
       >
         <div className="col-span-2 row-span-2">
-          <div className="relative w-full h-full">
+          <div className="relative h-full w-full">
             <img
-              className="w-full h-full object-cover"
+              className="h-full w-full object-cover"
               src="./images/bed.png"
               alt=""
             />
-            <div className="absolute top-0 left-0 block w-full h-full transition opacity-10 hover:bg-black"></div>
-            <p className="text-2xl absolute left-5 top-5">Bedroom</p>
+            <div className="absolute left-0 top-0 block h-full w-full opacity-10 transition hover:bg-black"></div>
+            <p className="absolute left-5 top-5 text-2xl">Bedroom</p>
           </div>
         </div>
         <div className="col-span-2">
-          <div className="relative w-full h-full">
+          <div className="relative h-full w-full">
             <img
-              className="w-full h-full object-cover"
+              className="h-full w-full object-cover"
               src="./images/light.png"
               alt=""
             />
-            <div className="absolute top-0 left-0 block w-full h-full transition opacity-10 hover:bg-black"></div>
-            <p className="text-2xl absolute left-5 bottom-5">Lighting</p>
+            <div className="absolute left-0 top-0 block h-full w-full opacity-10 transition hover:bg-black"></div>
+            <p className="absolute bottom-5 left-5 text-2xl">Lighting</p>
           </div>
         </div>
         <div className="col-span-2">
-          <div className="relative w-full h-full">
+          <div className="relative h-full w-full">
             <img
-              className="w-full h-full object-cover"
+              className="h-full w-full object-cover"
               src="./images/kitchen.png"
               alt=""
             />
-            <div className="absolute top-0 left-0 block w-full h-full transition opacity-10 hover:bg-black"></div>
-            <p className="text-2xl absolute left-5 bottom-5">Kitchen</p>
+            <div className="absolute left-0 top-0 block h-full w-full opacity-10 transition hover:bg-black"></div>
+            <p className="absolute bottom-5 left-5 text-2xl">Kitchen</p>
           </div>
         </div>
       </div>

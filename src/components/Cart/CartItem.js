@@ -15,25 +15,25 @@ const CartItem = ({ item }) => {
     dispatch(cartActions.removeItemFromCart(item.id));
   };
   return (
-    <div className="flex justify-between relative my-6 border border-black/30">
+    <div className="relative my-6 flex justify-between border border-black/30">
       <div className="w-24">
-        <img className="w-full h-full" src={`/${item.imgs[0]}`} alt="" />
+        <img className="h-full w-full" src={`/${item.imgs[0]}`} alt="" />
       </div>
       <div className="flex-1 p-2.5">
-        <div className="flex justify-between h-14">
+        <div className="flex h-14 justify-between">
           <h6 className="font-bold">{item.title}</h6>
           <h6 className="font-bold">${item.totalPrice}</h6>
         </div>
-        <div className="flex item-center">
+        <div className="item-center flex">
           <button
-            className="bg-lightBlack text-white text-xs w-[22px] h-[22px]"
+            className="h-[22px] w-[22px] bg-lightBlack text-xs text-white"
             onClick={decreaseQuantity}
           >
             <FontAwesomeIcon icon={faMinus} />
           </button>
           <span className="w-6 text-center">{item.quantity}</span>
           <button
-            className="bg-lightBlack text-white text-xs w-[22px] h-[22px]"
+            className="h-[22px] w-[22px] bg-lightBlack text-xs text-white"
             onClick={increaseQuantity}
           >
             <FontAwesomeIcon icon={faPlus} />
@@ -41,7 +41,7 @@ const CartItem = ({ item }) => {
         </div>
 
         <div
-          className="absolute right-3.5 bottom-1.5 text-xl"
+          className="absolute bottom-1.5 right-3.5 text-xl"
           onClick={removeItem}
         >
           <FontAwesomeIcon icon={faXmark} />

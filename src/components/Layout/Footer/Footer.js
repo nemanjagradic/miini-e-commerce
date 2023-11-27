@@ -2,33 +2,33 @@ import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
-    <div className="pt-24 pb-5 mt-24 bg-lightBlack text-white font-Heebo text-center">
-      <h3 className="text-3xl font-bold tracking-wide mb-5">Newsletter</h3>
+    <div className="mt-24 bg-lightBlack pb-5 pt-24 text-center font-Heebo text-white">
+      <h3 className="mb-5 text-3xl font-bold tracking-wide">Newsletter</h3>
       <input
-        className="h-8 w-52 border-none text-black pl-3 outline-none"
+        className="h-8 w-52 border-none pl-3 text-black outline-none"
         type="email"
         placeholder="your@email.com"
       />
-      <button className="h-8 border-none px-2 font-bold bg-slate-300 text-black">
+      <button className="h-8 border-none bg-slate-300 px-2 font-bold text-black">
         Subscribe
       </button>
-      <ul className="mt-24 mb-5">
-        <li className="inline-block mx-3">
+      <ul className="mb-5 mt-24">
+        <li className="mx-3 inline-block">
           <Link to="/">About</Link>
         </li>
-        <li className="inline-block mx-3">
+        <li className="mx-3 inline-block">
           <Link to="/">Store Locator</Link>
         </li>
-        <li className="inline-block mx-3">
+        <li className="mx-3 inline-block">
           <Link to="/">FAQs</Link>
         </li>
-        <li className="inline-block mx-3">
+        <li className="mx-3 inline-block">
           <Link to="/">News</Link>
         </li>
-        <li className="inline-block mx-3">
+        <li className="mx-3 inline-block">
           <Link to="/">Carrers</Link>
         </li>
-        <li className="inline-block mx-3">
+        <li className="mx-3 inline-block">
           <Link to="/">Contact Us</Link>
         </li>
       </ul>

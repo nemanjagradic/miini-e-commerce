@@ -1,9 +1,7 @@
 import { useMemo, useEffect, useCallback } from "react";
 
 const useIntersectionNav = (options, targetEl, categoryPage = false) => {
-  // nisam znao na koji drugi nacin da selektujem nav, pa sam uradio na ovaj nacin
   const nav = document.querySelector(".navigation");
-  console.log(nav);
 
   const obsCallback = useCallback(
     (entries) => {
@@ -24,7 +22,7 @@ const useIntersectionNav = (options, targetEl, categoryPage = false) => {
         }
       }
     },
-    [nav, categoryPage]
+    [nav, categoryPage],
   );
 
   const obsOptions = useMemo(() => {

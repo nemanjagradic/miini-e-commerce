@@ -36,19 +36,19 @@ const TrendingProducts = () => {
     return (
       <div
         key={product.id}
-        className="w-[220px] lg:w-[200px] lg:h-72 xl:w-[190px] xl:h-72 mr-3 transition duration-1000 border border-solid border-black/20"
+        className="mr-3 w-[220px] flex-shrink-0 border border-solid border-black/20 transition duration-500 lg:h-72 lg:w-[200px] xl:h-72 xl:w-[190px]"
         style={{ transform: `translateX(calc(${100 * slide}% + ${margin}px))` }}
       >
         <Link to={`/products/${product.id}`}>
-          <div className="w-[220px] lg:w-[200px] lg:h-[180px] xl:w-[190px] xl:h-[200px]">
+          <div className="h-[200px]">
             <img
-              className="w-full h-full"
+              className="h-full w-full object-cover"
               src={!productId ? product.imgs[0] : `/${product.imgs[0]}`}
               alt=""
             />
           </div>
-          <h2 className="font-Heebo text-lg m-2">{product.title}</h2>
-          <p className="text-lg font-bold m-2">${product.price}</p>
+          <h2 className="m-2 font-Heebo text-lg">{product.title}</h2>
+          <p className="m-2 text-lg font-bold">${product.price}</p>
         </Link>
       </div>
     );
@@ -56,19 +56,19 @@ const TrendingProducts = () => {
 
   return (
     <>
-      <div className="my-container flex pt-24 pb-5 items-center">
+      <div className="my-container flex items-center pb-5 pt-24">
         <div className="flex-1">
-          <h2 className="text-3xl font-semibold font-Heebo">Trending Now</h2>
+          <h2 className="font-Heebo text-3xl font-semibold">Trending Now</h2>
         </div>
         <div>
           <button
-            className="px-3 py-2 mx-1 bg-lightBlack text-white border transition border-black hover:bg-transparent hover:text-black"
+            className="mx-1 border border-black bg-lightBlack px-3 py-2 text-white transition hover:bg-transparent hover:text-black"
             onClick={slideLeft}
           >
             <FontAwesomeIcon icon={faArrowLeft} />
           </button>
           <button
-            className="px-3 py-2 mx-1 bg-lightBlack text-white border transition border-black hover:bg-transparent hover:text-black"
+            className="mx-1 border border-black bg-lightBlack px-3 py-2 text-white transition hover:bg-transparent hover:text-black"
             onClick={slideRight}
           >
             <FontAwesomeIcon icon={faArrowRight} />

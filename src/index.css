@@ -5,14 +5,14 @@
 
 @layer base {
   .shopping-items {
-    @apply absolute top-[-5px] -right-1 rounded-[50%] bg-red-500 w-4 h-4 z-[2] text-[11px] text-center text-white font-bold transition;
+    @apply absolute -right-1 top-[-5px] z-[2] h-4 w-4 rounded-[50%] bg-red-500 text-center text-[11px] font-bold leading-5 text-white transition;
   }
   .my-container {
     @apply mx-auto w-11/12 lg:w-10/12 xl:w-[66%];
   }
 }
 
-@layer utilities {
+@layer components {
   .bump {
     animation: bump 0.4s 1;
   }
@@ -28,6 +28,6 @@
     }
   }
   .sticky {
-    @apply fixed left-1/2 top-0 -translate-x-2/4 bg-white z-[2];
+    @apply fixed top-0 z-[2] bg-white;
   }
 }

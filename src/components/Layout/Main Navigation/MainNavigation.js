@@ -45,45 +45,51 @@ const MainNavigation = () => {
   }, [totalQuantity, dispatch]);
 
   return (
-    <div className="navigation relative px-8 py-5 shadow-small w-full block md:flex md:items-center md:justify-between md:h-20 md:px-[17%] z-[2] uppercase md:py-3">
+    <div className="navigation relative z-[2] block w-full px-8 py-5 uppercase shadow-small md:flex md:h-20 md:items-center md:justify-between md:py-3 lg:px-[9%] xl:px-[17%]">
       <div className="flex">
         <div className="flex-1">
           <Link to="/">
             <img
               src="/images/logo.png"
               alt="Logo"
-              className="max-w-full h-auto"
+              className="h-auto max-w-full"
             />
           </Link>
         </div>
-        <div className="relative md:hidden text-xl mx-3" onClick={showModal}>
+        <div
+          className="relative mx-3 cursor-pointer text-xl md:hidden"
+          onClick={showModal}
+        >
           <div className={totalQuantityClasses}>{totalQuantity}</div>
           <FontAwesomeIcon icon={faCartShopping} />
         </div>
-        <div className="md:hidden text-xl" onClick={showNavHandler}>
+        <div
+          className="cursor-pointer text-xl md:hidden"
+          onClick={showNavHandler}
+        >
           <FontAwesomeIcon icon={showNav ? faXmark : faBars} />
         </div>
       </div>
       <div className={`${!showNav ? "hidden" : "block"} md:block`}>
-        <ul className="w-full mb-0 pl-0 bg-white list-none font-Heebo">
-          <li className="my-3 mb-1 cursor-pointer md:mx-3 md:inline-block md:my-0">
-            <Link className="text-darker font-extrabold" to="/">
+        <ul className="mb-0 w-full list-none bg-white pl-0 font-Heebo">
+          <li className="my-3 mb-1 cursor-pointer md:mx-3 md:my-0 md:inline-block">
+            <Link className="font-extrabold text-darker" to="/">
               Home
             </Link>
           </li>
-          <li className="my-1 cursor-pointer md:mx-3 md:inline-block md:my-0">
-            <Link className="text-darker font-extrabold" to="categories/all">
+          <li className="my-1 cursor-pointer md:mx-3 md:my-0 md:inline-block">
+            <Link className="font-extrabold text-darker" to="categories/all">
               Categories
             </Link>
           </li>
-          <li className="my-1 cursor-pointer md:mx-3 md:inline-block md:my-0">
-            <Link className="text-darker font-extrabold" to="product-page">
+          <li className="my-1 cursor-pointer md:mx-3 md:my-0 md:inline-block">
+            <Link className="font-extrabold text-darker" to="product-page">
               Product Page
             </Link>
           </li>
           {!showNav && (
             <li
-              className="relative block text-xl mx-3 md:inline-block cursor-pointer"
+              className="relative mx-3 block cursor-pointer text-xl md:inline-block"
               onClick={showModal}
             >
               <div className={totalQuantityClasses}>{totalQuantity}</div>

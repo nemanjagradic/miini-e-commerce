@@ -31,7 +31,7 @@ const Categories = () => {
       setFilteredProducts(products);
     } else {
       const categories = products.filter(
-        (product) => product.category === category
+        (product) => product.category === category,
       );
       setFilteredProducts(categories);
     }
@@ -47,14 +47,14 @@ const Categories = () => {
       <h3 className="my-8 text-center text-3xl font-semibold">
         {categoryName}
       </h3>
-      <ul className="font-Heebo text-center">
+      <ul className="text-center font-Heebo">
         {categoryButtons.map((button, i) => {
           return (
             <Link
               to={`/categories/${button}`}
               key={i}
               onClick={filterProducts.bind(null, button, i)}
-              className={`inline-block mx-4 border border-black py-1 px-4 mt-4 md:mt-0 hover:shadow-md ${
+              className={`mx-4 mt-4 inline-block border border-black px-4 py-1 hover:shadow-md md:mt-0 ${
                 active === i ? "bg-light" : ""
               }`}
             >
@@ -64,7 +64,7 @@ const Categories = () => {
         })}
       </ul>
       <div
-        className="flex gap-2 justify-evenly lg:justify-between flex-wrap mt-16"
+        className="mt-16 flex flex-wrap justify-evenly gap-2 lg:justify-between"
         ref={productList}
       >
         {allProducts}
