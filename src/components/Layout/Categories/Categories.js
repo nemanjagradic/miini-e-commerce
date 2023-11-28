@@ -64,7 +64,7 @@ const Categories = () => {
         })}
       </ul>
       <div
-        className="mt-16 flex flex-wrap justify-evenly gap-2 lg:justify-between"
+        className="mt-16 flex flex-wrap justify-center gap-8"
         ref={productList}
       >
         {allProducts}

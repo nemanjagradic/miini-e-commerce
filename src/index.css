@@ -5,10 +5,10 @@
 
 @layer base {
   .shopping-items {
-    @apply absolute -right-1 top-[-5px] z-[2] h-4 w-4 rounded-[50%] bg-red-500 text-center text-[11px] font-bold leading-5 text-white transition;
+    @apply absolute -right-1.5 -top-1.5 z-[2] h-4 w-4 rounded-[50%] bg-red-500 text-center text-[11px] font-bold leading-4 text-white transition;
   }
   .my-container {
-    @apply mx-auto w-11/12 lg:w-10/12 xl:w-[66%];
+    @apply mx-auto w-11/12 xl:w-[1200px];
   }
 }
 

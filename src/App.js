@@ -5,6 +5,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import RootLayout from "./pages/RootLayout";
 import ProductPage from "./pages/ProductPage";
 import ErrorPage from "./pages/ErrorPage";
+import CheckoutPage from "./pages/CheckoutPage";
 
 export const products = [
   {
@@ -178,6 +179,7 @@ const router = createBrowserRouter([
       },
       { path: "categories/:categoryName", element: <CategoriesPage /> },
       { path: "product-page", element: <ProductPage /> },
+      { path: "checkout", element: <CheckoutPage /> },
     ],
   },
 ]);

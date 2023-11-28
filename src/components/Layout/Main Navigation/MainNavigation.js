@@ -45,7 +45,7 @@ const MainNavigation = () => {
   }, [totalQuantity, dispatch]);
 
   return (
-    <div className="navigation relative z-[2] block w-full px-8 py-5 uppercase shadow-small md:flex md:h-20 md:items-center md:justify-between md:py-3 lg:px-[9%] xl:px-[17%]">
+    <div className="navigation relative z-[2] block w-full px-9 py-5 uppercase shadow-small md:flex md:h-20 md:items-center md:justify-between md:py-3 lg:px-[9%] xl:px-[10.5%]">
       <div className="flex">
         <div className="flex-1">
           <Link to="/">

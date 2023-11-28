@@ -15,7 +15,7 @@ const TrendingProducts = () => {
 
   const slideLeft = () => {
     if (slide === 0) {
-      setSlide(-3);
+      setSlide(-2);
       setMargin(-36);
     } else {
       setSlide((prevSlide) => prevSlide + 1);
@@ -23,7 +23,7 @@ const TrendingProducts = () => {
     }
   };
   const slideRight = () => {
-    if (slide === -3) {
+    if (slide === -2) {
       setSlide(0);
       setMargin(0);
     } else {
@@ -32,7 +32,7 @@ const TrendingProducts = () => {
     }
   };
 
-  const trendingProducts = products.slice(6, 14).map((product) => {
+  const trendingProducts = products.slice(3, 11).map((product) => {
     return (
       <div
         key={product.id}

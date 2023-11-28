@@ -6,7 +6,7 @@ module.exports = {
       colors: {
         light: "#f1f1f1",
         darker: "#3c3c3c",
-        lightBlack: "#202020",
+        lightBlack: "#363636",
         bloodRed: "#d30000",
       },
       boxShadow: {
