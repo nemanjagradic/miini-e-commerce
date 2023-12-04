@@ -4,10 +4,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { uiActions } from "../../store/ui-slice";
 import CartItem from "./CartItem";
 import { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 
 const ShoppingCart = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
   const isShow = useSelector((state) => state.ui.isShow);
   const cartItems = useSelector((state) => state.cart.cartItems);
   const subtotal = useSelector((state) => state.cart.subtotal);
@@ -15,11 +17,16 @@ const ShoppingCart = () => {
   const closeModal = () => {
     dispatch(uiActions.closeModal());
   };
+
   useEffect(() => {
     localStorage.setItem("subtotal", JSON.stringify(subtotal));
     localStorage.setItem("totalQuantity", JSON.stringify(totalQuantity));
     localStorage.setItem("cartItems", JSON.stringify(cartItems));
   }, [subtotal, totalQuantity, cartItems]);
+
+  useEffect(() => {
+    dispatch(uiActions.closeModal());
+  }, [location.pathname]);
 
   const shoppingCartItems = cartItems.map((item) => {
     return (
@@ -78,7 +85,10 @@ const ShoppingCart = () => {
           )}
           {cartItems.length !== 0 && (
             <div>
-              <button className="text-md border-2 border-solid border-black bg-white px-5 py-2">
+              <button
+                onClick={() => navigate("/checkout/1")}
+                className="text-md border-2 border-solid border-black bg-white px-5 py-2"
+              >
                 Payment
               </button>
             </div>

@@ -62,7 +62,7 @@ const ProductDetails = ({ curProduct }) => {
 
   const buyHandler = () => {
     dispatch(cartActions.addToCart(item));
-    navigate("/checkout");
+    navigate("/checkout/1");
   };
 
   const smallImgs = imgs.map((img, i) => {

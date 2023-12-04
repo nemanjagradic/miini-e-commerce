@@ -177,9 +177,12 @@ const router = createBrowserRouter([
         path: "products/:productId",
         element: <SingleProductPage />,
       },
-      { path: "categories/:categoryName", element: <CategoriesPage /> },
+      {
+        path: "categories/:categoryName",
+        element: <CategoriesPage />,
+      },
       { path: "product-page", element: <ProductPage /> },
-      { path: "checkout", element: <CheckoutPage /> },
+      { path: "checkout/:step", element: <CheckoutPage /> },
     ],
   },
 ]);
