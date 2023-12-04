@@ -26,7 +26,7 @@ const ShoppingCart = () => {
 
   useEffect(() => {
     dispatch(uiActions.closeModal());
-  }, [location.pathname]);
+  }, [location.pathname, dispatch]);
 
   const shoppingCartItems = cartItems.map((item) => {
     return (
