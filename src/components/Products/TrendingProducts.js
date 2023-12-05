@@ -8,6 +8,7 @@ const TrendingProducts = () => {
   const { productId } = useParams();
   const [slide, setSlide] = useState(0);
   const [margin, setMargin] = useState(0);
+  const productSliced = products.slice(3, 11);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -32,7 +33,7 @@ const TrendingProducts = () => {
     }
   };
 
-  const trendingProducts = products.slice(3, 11).map((product) => {
+  const trendingProducts = productSliced.map((product) => {
     return (
       <div
         key={product.id}

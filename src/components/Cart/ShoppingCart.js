@@ -80,14 +80,20 @@ const ShoppingCart = () => {
           {cartItems.length !== 0 && (
             <div>
               <p className="mb-1 text-lg">Subtotal:</p>
-              <p className="mb-1 text-lg">${subtotal}</p>
+              <p className="mb-1 text-lg">
+                {" "}
+                {new Intl.NumberFormat("en-US", {
+                  style: "currency",
+                  currency: "USD",
+                }).format(subtotal)}
+              </p>
             </div>
           )}
           {cartItems.length !== 0 && (
             <div>
               <button
                 onClick={() => navigate("/checkout/1")}
-                className="text-md border-2 border-solid border-black bg-white px-5 py-2"
+                className="border-2 border-solid border-black bg-white px-5 py-2 text-sm uppercase tracking-wider transition duration-300 hover:bg-lightBlack hover:text-white "
               >
                 Payment
               </button>

@@ -22,7 +22,13 @@ const CartItem = ({ item }) => {
       <div className="flex-1 p-2.5">
         <div className="flex h-14 justify-between">
           <h6 className="font-bold">{item.title}</h6>
-          <h6 className="font-bold">${item.totalPrice}</h6>
+          <h6 className="font-bold">
+            {" "}
+            {new Intl.NumberFormat("en-US", {
+              style: "currency",
+              currency: "USD",
+            }).format(item.totalPrice)}
+          </h6>
         </div>
         <div className="item-center flex">
           <button

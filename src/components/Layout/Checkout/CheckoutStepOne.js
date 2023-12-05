@@ -17,11 +17,16 @@ const CheckoutStepOne = () => {
   const removeItem = (id) => {
     dispatch(cartActions.removeItemFromCart(id));
   };
+  const formatNumber = (number) =>
+    new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+    }).format(number);
   return (
     <div className="my-container mt-12">
       <h1 className="text-3xl font-bold">Shopping basket</h1>
       <div className="mt-10 flex flex-wrap justify-center gap-16 font-Heebo font-semibold">
-        <div className="basis-full min-[910px]:flex-1">
+        <div className="basis-full min-[1000px]:flex-1">
           <div className="hidden border-b-2 pb-3 uppercase sm:flex">
             <div className="grow">Article</div>
             <div className="basis-1/6">Price</div>
@@ -56,7 +61,7 @@ const CheckoutStepOne = () => {
                 Price
               </div>
               <div className="text-right sm:col-span-2 sm:text-start">
-                <p>${item.price}</p>
+                <p>{formatNumber(item.price)}</p>
               </div>
               <div className="mt-3 text-sm uppercase sm:my-0 sm:hidden">
                 Quantity
@@ -77,7 +82,9 @@ const CheckoutStepOne = () => {
                 </button>
               </div>
               <div className="mt-3 text-sm uppercase sm:hidden">Total</div>
-              <div className="text-right sm:text-start">${item.totalPrice}</div>
+              <div className="text-right sm:text-start">
+                {formatNumber(item.totalPrice)}
+              </div>
               <div
                 className="hidden text-center sm:block"
                 onClick={() => removeItem(item.id)}
@@ -93,10 +100,10 @@ const CheckoutStepOne = () => {
             Back to shop
           </Link>
         </div>
-        <div className="basis-full sm:pl-7 min-[910px]:basis-[30%] min-[910px]:border-l-2">
+        <div className="basis-full min-[1000px]:basis-[30%] min-[1000px]:border-l-2 min-[1000px]:pl-7">
           <div className="align-center flex justify-between border-b-2 pb-3">
             <h1 className="uppercase">Order summary</h1>
-            <p className="text-slate-500">${subtotal}</p>
+            <p className="text-slate-500">{formatNumber(subtotal)}</p>
           </div>
           <h2 className="border-b-2 py-3">
             The delivery price will be calculated on the next step.
@@ -104,7 +111,7 @@ const CheckoutStepOne = () => {
           <div className="mt-7 flex justify-between">
             <h3 className="uppercase">Total</h3>
             <div className="text-right">
-              <p className="mb-3 text-xl">${subtotal}</p>
+              <p className="mb-3 text-xl">{formatNumber(subtotal)}</p>
               <p className="text-xs text-slate-500">
                 VAT is included in the price (20%)
               </p>

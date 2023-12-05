@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useState, useEffect, useRef } from "react";
 import { cartActions } from "../../store/cart-slice";
 import useIntersectionNav from "../../hooks/useIntersectionNav";
@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 const ProductDetails = ({ curProduct }) => {
   const { id, description, dimensions, imgs, price, title, weight } =
     curProduct;
+  const cartItems = useSelector((state) => state.cart.cartItems);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const productContainer = useRef();
@@ -61,7 +62,10 @@ const ProductDetails = ({ curProduct }) => {
   };
 
   const buyHandler = () => {
-    dispatch(cartActions.addToCart(item));
+    const curItem = cartItems.find((item) => item.id === id);
+    if (!curItem) {
+      dispatch(cartActions.addToCart(item));
+    }
     navigate("/checkout/1");
   };
 
@@ -81,13 +85,13 @@ const ProductDetails = ({ curProduct }) => {
     <>
       <h2 className="my-12 text-center text-4xl font-semibold">{title}</h2>
       <div className="my-container flex flex-wrap gap-4" ref={productContainer}>
-        <div className="mx-auto basis-9/12 min-[910px]:basis-6/12">
+        <div className="mx-auto basis-11/12 min-[910px]:basis-6/12">
           <div className="mx-auto h-[400px] md:w-9/12">
             <img className="h-full w-full" src={`/${bigImage}`} alt="" />
           </div>
           <div className="mx-auto mt-2 flex gap-2 md:w-9/12">{smallImgs}</div>
         </div>
-        <div className="mx-auto basis-9/12 min-[910px]:basis-[45%]">
+        <div className="mx-auto basis-11/12 min-[910px]:basis-[45%]">
           <div className="w-11/12">
             <p className="mb-9 text-xl">{description}</p>
             <div className="mb-6 flex items-center justify-between">
@@ -109,19 +113,22 @@ const ProductDetails = ({ curProduct }) => {
                   <FontAwesomeIcon icon={faPlus} />
                 </button>
               </div>
-              <h4 className="flex-1 text-right text-2xl font-bold">
-                ${itemData.totalPrice}
+              <h4 className="flex-1 text-right text-xl font-bold sm:text-2xl">
+                {new Intl.NumberFormat("en-US", {
+                  style: "currency",
+                  currency: "USD",
+                }).format(itemData.totalPrice)}
               </h4>
             </div>
-            <div className="flex justify-between">
+            <div className="flex justify-between gap-6">
               <button
-                className="w-34 h-12 border-2 border-solid border-black px-2 text-base font-semibold uppercase transition duration-300 hover:bg-lightBlack hover:text-white md:w-40 md:text-lg lg:w-44 xl:w-56"
+                className="h-12 flex-1 border-2 border-solid border-black px-2 text-base font-semibold uppercase transition duration-300 hover:bg-lightBlack hover:text-white md:w-40 md:text-lg lg:w-44 xl:w-56"
                 onClick={addToCart}
               >
                 Add To Cart
               </button>
               <button
-                className="w-34 h-12 border-2 border-solid border-bloodRed bg-bloodRed px-2 text-base font-semibold uppercase text-white transition duration-300 hover:bg-transparent hover:text-bloodRed md:w-40 md:text-lg lg:w-44 xl:w-56"
+                className="h-12 flex-1 border-2 border-solid border-bloodRed bg-bloodRed px-2 text-base font-semibold uppercase text-white transition duration-300 hover:bg-transparent hover:text-bloodRed md:w-40 md:text-lg lg:w-44 xl:w-56"
                 onClick={buyHandler}
               >
                 Buy Now
@@ -130,19 +137,19 @@ const ProductDetails = ({ curProduct }) => {
           </div>
         </div>
       </div>
-      <div className="mx-auto mt-20 flex w-7/12 justify-evenly gap-4">
+      <div className="mx-auto mt-20 flex w-11/12 justify-center gap-4 lg:w-8/12">
         <div
-          className={`bg-light p-3 ${
-            !curProduct.size ? "basis-1/3" : "flex-1"
-          }`}
+          className={`${
+            curProduct.size ? "flex-1" : "basis-5/12"
+          } bg-light p-3`}
         >
           <h4 className="mb-1 text-lg font-bold lg:text-2xl">Weight:</h4>
           <p className="text-sm lg:text-base">{weight}</p>
         </div>
         <div
-          className={`bg-light p-3 ${
-            !curProduct.size ? "basis-1/3" : "flex-1"
-          }`}
+          className={`${
+            curProduct.size ? "flex-1" : "basis-5/12"
+          } bg-light p-3`}
         >
           <h4 className="mb-1 text-lg font-bold lg:text-2xl">Dimensions:</h4>
           <p className="text-sm lg:text-base">{dimensions}</p>
