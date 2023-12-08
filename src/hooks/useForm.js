@@ -33,16 +33,13 @@ const useForm = (fieldsConfig) => {
       const value = formData[name];
 
       if (type === "radio") {
-        isRadioSelected =
-          isRadioSelected ||
-          (value !== null && value !== undefined && value !== "");
+        isRadioSelected = value !== "";
+        isValid = isValid && isRadioSelected;
       } else {
         const fieldIsValid = validateField(value, field.validate);
         isValid = isValid && fieldIsValid;
       }
     });
-
-    isValid = isValid && isRadioSelected;
 
     return isValid;
   };
