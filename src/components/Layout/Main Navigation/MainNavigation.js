@@ -87,15 +87,13 @@ const MainNavigation = () => {
               Product Page
             </Link>
           </li>
-          {!showNav && (
-            <li
-              className="relative mx-3 block cursor-pointer text-xl md:inline-block"
-              onClick={showModal}
-            >
-              <div className={totalQuantityClasses}>{totalQuantity}</div>
-              <FontAwesomeIcon icon={faCartShopping} />
-            </li>
-          )}
+          <li
+            className="relative mx-3 cursor-pointer text-xl md:inline-block"
+            onClick={showModal}
+          >
+            <div className={totalQuantityClasses}>{totalQuantity}</div>
+            <FontAwesomeIcon icon={faCartShopping} />
+          </li>
         </ul>
       </div>
     </div>

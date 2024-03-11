@@ -2,10 +2,15 @@ import { useEffect, useState } from "react";
 import FormElement from "../../../UI/FormElement";
 import { useSelector } from "react-redux";
 import useForm from "../../../hooks/useForm";
+import "../../../firebaseConfig";
+import { getFirestore, addDoc, collection } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
 
 const CheckoutStepTwo = () => {
   const cartItems = useSelector((state) => state.cart.cartItems);
   const subtotal = useSelector((state) => state.cart.subtotal);
+  const database = getFirestore();
+  const navigate = useNavigate();
 
   const [active, setActive] = useState(null);
   const [deliveryPrice, setDeliveryPrice] = useState("");
@@ -79,7 +84,7 @@ const CheckoutStepTwo = () => {
       label: "Order Notes",
     },
     {
-      name: "deliveryoption",
+      name: "deliveryPrice",
       type: "radio",
       width: "col-span-4",
       label: "Pick up on location Lombard Street 30",
@@ -89,7 +94,7 @@ const CheckoutStepTwo = () => {
       required: true,
     },
     {
-      name: "deliveryoption",
+      name: "deliveryPrice",
       type: "radio",
       width: "col-span-4",
       label: "Home delivery to your address",
@@ -139,7 +144,6 @@ const CheckoutStepTwo = () => {
     const options = {
       hour: "numeric",
       minute: "numeric",
-      hour12: false,
     };
     const startTime = new Date(nextDate);
     const endTime = new Date(nextDate);
@@ -149,20 +153,27 @@ const CheckoutStepTwo = () => {
       `First available appointment for collection: ${forDay} ${startTime.toLocaleTimeString(
         [],
         options,
-      )} - ${endTime.toLocaleTimeString("en-US", options)}`,
+      )} - ${endTime.toLocaleTimeString([], options)}`,
     );
   }, []);
 
   const form = useForm(fieldsConfig);
 
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
 
     const paymentInfo = form.formData;
 
-    console.log(paymentInfo);
+    const formData = await addDoc(
+      collection(database, "formData"),
+      paymentInfo,
+    );
+    const orderId = formData._key.path.segments[1];
+    navigate(`/checkout/3?id=${orderId}`);
+
     form.resetForm();
     setActive(0);
+    console.log(formData);
   };
 
   const formatNumber = (number) =>
