@@ -1,7 +1,7 @@
 # Miini e-commerce website
 
 ## Overview
-This is minimalistic e-commerce app for home products where users can search for their product and buy it with ease.
+This e-commerce application focuses on home products, offering an efficient experience for browsing and purchasing items.
 
 **LIVE LINK :** https://miini-e-commerce.netlify.app/
 
