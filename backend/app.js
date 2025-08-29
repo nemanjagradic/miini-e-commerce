@@ -37,9 +37,14 @@ app.use(xss());
 app.use(compression());
 
 const limiter = rateLimit({
-  max: 100,
+  max: 300,
   windowMs: 60 * 60 * 1000,
-  message: "You made too many requests. Please try again in an hour!",
+  handler: (req, res) => {
+    res.status(429).json({
+      status: "fail",
+      message: "You made too many requests. Please try again in an hour!",
+    });
+  },
   trustProxy: 1,
 });
 
@@ -50,11 +55,8 @@ app.use("/api/products", productRouter);
 app.use("/api/cart", cartRouter);
 app.use("/api/orders", orderRouter);
 
-app.all("*", (req, res) => {
-  res.status(404).json({
-    status: "fail",
-    message: `Route ${req.originalUrl} is not found on this server.`,
-  });
+app.all("*", (req, res, next) => {
+  next(new AppError(`Can't find ${req.originalUrl} on this server.`, 404));
 });
 
 app.use(globalErrorHandler);
