@@ -7,10 +7,10 @@ const rateLimit = require("express-rate-limit");
 const helmet = require("helmet");
 const mongoSanitize = require("express-mongo-sanitize");
 const xss = require("xss-clean");
-const userRouter = require("./routes/userRouter");
-const productRouter = require("./routes/productRouter");
-const cartRouter = require("./routes/cartRouter");
-const orderRouter = require("./routes/orderRouter");
+const userRouter = require("./routes/userRoutes");
+const productRouter = require("./routes/productRoutes");
+const cartRouter = require("./routes/cartRoutes");
+const orderRouter = require("./routes/orderRoutes");
 const globalErrorHandler = require("./controllers/errorController");
 
 const app = express();
