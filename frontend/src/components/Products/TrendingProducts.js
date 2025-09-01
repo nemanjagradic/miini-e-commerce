@@ -1,18 +1,16 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
-import { products } from "../../App";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const TrendingProducts = () => {
   const { productId } = useParams();
   const [slide, setSlide] = useState(0);
   const [margin, setMargin] = useState(0);
-  const productSliced = products.slice(3, 11);
+  const { allProducts, loading } = useSelector((state) => state.products);
 
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, [productId]);
+  const productSliced = allProducts.slice(1, 9);
 
   const slideLeft = () => {
     if (slide === 0) {
@@ -77,7 +75,13 @@ const TrendingProducts = () => {
         </div>
       </div>
       <div className="my-container flex overflow-hidden">
-        {trendingProducts}
+        {loading ? (
+          <div className="flex w-full justify-center py-20">
+            <div className="h-12 w-12 animate-spin rounded-full border-4 border-gray-300 border-t-black" />
+          </div>
+        ) : (
+          trendingProducts
+        )}
       </div>
     </>
   );

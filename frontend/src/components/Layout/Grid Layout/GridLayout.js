@@ -1,22 +1,7 @@
-import useIntersectionNav from "../../../hooks/useIntersectionNav";
-import { useEffect, useRef, useState } from "react";
-/* eslint-disable no-unused-vars */
-
 const GridLayout = () => {
-  const [runAgain, setRunAgain] = useState(false);
-  useEffect(() => {
-    // da bi se rerenderovao page zbog nav elementa i izvrsavanja useIntersectionNav
-    setRunAgain(true);
-  }, []);
-  const gridContainer = useRef();
-  useIntersectionNav({ root: null, threshold: 0 }, gridContainer.current);
-
   return (
     <div className="my-container">
-      <div
-        className="mt-12 grid grid-cols-4 grid-rows-200 gap-2"
-        ref={gridContainer}
-      >
+      <div className="mt-12 grid grid-cols-4 grid-rows-200 gap-2">
         <div className="col-span-2 row-span-2">
           <div className="relative h-full w-full">
             <img

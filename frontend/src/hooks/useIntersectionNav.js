@@ -1,43 +1,25 @@
-import { useMemo, useEffect, useCallback } from "react";
+import { useEffect } from "react";
 
-const useIntersectionNav = (options, targetEl, categoryPage = false) => {
-  const nav = document.querySelector(".navigation");
+const useScrollNav = (percentage = 0.4) => {
+  useEffect(() => {
+    const nav = document.querySelector(".navigation");
+    if (!nav) return;
 
-  const obsCallback = useCallback(
-    (entries) => {
-      const [entry] = entries;
+    const handleScroll = () => {
+      const scrollPos = window.scrollY;
+      const triggerPoint =
+        (document.body.scrollHeight - window.innerHeight) * percentage;
 
-      if (categoryPage && entry.intersectionRect.y > 15) {
+      if (scrollPos >= triggerPoint) {
+        nav.classList.add("sticky");
+      } else {
         nav.classList.remove("sticky");
       }
-      if (categoryPage && entry.intersectionRect.y < 15) {
-        nav.classList.add("sticky");
-      }
-
-      if (!categoryPage) {
-        if (!entry.isIntersecting) {
-          nav.classList.add("sticky");
-        } else {
-          nav.classList.remove("sticky");
-        }
-      }
-    },
-    [nav, categoryPage],
-  );
-
-  const obsOptions = useMemo(() => {
-    return options;
-  }, [options]);
-
-  useEffect(() => {
-    const stickyNavObserver = new IntersectionObserver(obsCallback, obsOptions);
-    const currentTarget = targetEl;
-    if (currentTarget) stickyNavObserver.observe(currentTarget);
-
-    return () => {
-      if (currentTarget) stickyNavObserver.unobserve(currentTarget);
     };
-  }, [targetEl, options, obsCallback, obsOptions]);
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [percentage]);
 };
 
-export default useIntersectionNav;
+export default useScrollNav;

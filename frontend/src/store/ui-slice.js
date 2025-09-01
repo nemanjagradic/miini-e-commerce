@@ -1,6 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialUiState = { isShow: false };
+const initialUiState = {
+  isShow: false,
+  alert: { isShow: false, status: null, message: "", time: null },
+};
 
 const uiSlice = createSlice({
   name: "ui",
@@ -11,6 +14,18 @@ const uiSlice = createSlice({
     },
     closeModal(state) {
       state.isShow = false;
+    },
+    setAlert(state, action) {
+      const { status, message, time } = action.payload;
+      state.alert = { isShow: true, status, message, time };
+    },
+    clearAlert(state) {
+      state.alert = {
+        isShow: false,
+        status: null,
+        message: "",
+        time: null,
+      };
     },
   },
 });

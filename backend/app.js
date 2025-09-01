@@ -1,29 +1,64 @@
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
-const userRouter = require("./routes/userRouter");
-const productRouter = require("./routes/productRouter");
+const cookieParser = require("cookie-parser");
+const compression = require("compression");
+const rateLimit = require("express-rate-limit");
+const helmet = require("helmet");
+const mongoSanitize = require("express-mongo-sanitize");
+const xss = require("xss-clean");
+const userRouter = require("./routes/userRoutes");
+const productRouter = require("./routes/productRoutes");
+const cartRouter = require("./routes/cartRoutes");
+const orderRouter = require("./routes/orderRoutes");
+const globalErrorHandler = require("./controllers/errorController");
 
 const app = express();
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: [
+      "http://localhost:3000",
+      "https://miini-e-commerce-frontend.onrender.com",
+    ],
+
     credentials: true,
   })
 );
 
 app.use(express.static(path.join(__dirname, "public")));
-app.use(express.json());
+app.use(express.json({ limit: "10kb" }));
+app.use(cookieParser());
+
+app.use(helmet());
+
+app.use(mongoSanitize());
+app.use(xss());
+app.use(compression());
+
+const limiter = rateLimit({
+  max: 300,
+  windowMs: 60 * 60 * 1000,
+  handler: (req, res) => {
+    res.status(429).json({
+      status: "fail",
+      message: "You made too many requests. Please try again in an hour!",
+    });
+  },
+  trustProxy: 1,
+});
+
+app.use("/api", limiter);
 
 app.use("/api/users", userRouter);
 app.use("/api/products", productRouter);
+app.use("/api/cart", cartRouter);
+app.use("/api/orders", orderRouter);
 
-app.all("*", (req, res) => {
-  res.status(404).json({
-    status: "fail",
-    message: `Route ${req.originalUrl} is not found on this server.`,
-  });
+app.all("*", (req, res, next) => {
+  next(new AppError(`Can't find ${req.originalUrl} on this server.`, 404));
 });
+
+app.use(globalErrorHandler);
 
 module.exports = app;

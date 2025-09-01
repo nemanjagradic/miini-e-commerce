@@ -1,6 +1,8 @@
 const Product = require("../models/productModel");
+const catchAsync = require("../utils/catchAsync");
+const AppError = require("../utils/appError");
 
-exports.getAllProducts = async (req, res) => {
+exports.getAllProducts = catchAsync(async (req, res, next) => {
   const filter = {};
 
   if (req.query.category) filter.category = req.query.category;
@@ -10,29 +12,19 @@ exports.getAllProducts = async (req, res) => {
   res.status(200).json({
     status: "success",
     results: products.length,
-    data: { products },
+    data: products,
   });
-};
+});
 
-exports.getProduct = async (req, res) => {
-  try {
-    const product = await Product.findById(req.params.id);
+exports.getProduct = catchAsync(async (req, res, next) => {
+  const product = await Product.findById(req.params.id);
 
-    if (!product) {
-      return res.status(404).json({
-        status: "fail",
-        message: "Can't find product with that ID.",
-      });
-    }
-
-    res.status(200).json({
-      status: "success",
-      data: { product },
-    });
-  } catch (err) {
-    res.status(500).json({
-      status: "error",
-      message: "Something went wrong.",
-    });
+  if (!product) {
+    return next(new AppError("Can't find product with that ID.", 404));
   }
-};
+
+  res.status(200).json({
+    status: "success",
+    data: product,
+  });
+});

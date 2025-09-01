@@ -19,16 +19,10 @@ const ShoppingCart = () => {
   };
 
   useEffect(() => {
-    localStorage.setItem("subtotal", JSON.stringify(subtotal));
-    localStorage.setItem("totalQuantity", JSON.stringify(totalQuantity));
-    localStorage.setItem("cartItems", JSON.stringify(cartItems));
-  }, [subtotal, totalQuantity, cartItems]);
-
-  useEffect(() => {
     dispatch(uiActions.closeModal());
   }, [location.pathname, dispatch]);
 
-  const shoppingCartItems = cartItems.map((item) => {
+  const shoppingCartItems = cartItems?.map((item) => {
     return (
       <CartItem
         key={item.id}
@@ -51,7 +45,7 @@ const ShoppingCart = () => {
         onClick={closeModal}
       ></div>
       <div
-        className={`fixed right-0 top-0 z-[4] h-screen w-[370px] overflow-y-scroll bg-white p-6 font-Heebo transition duration-300 ${
+        className={`fixed right-0 top-0 z-[4] h-screen w-full overflow-y-scroll bg-white p-6 font-Heebo transition duration-300 min-[570px]:w-[370px] lg:w-[410px] ${
           !isShow ? "translate-x-full" : "translate-x-0"
         }`}
       >
@@ -61,7 +55,7 @@ const ShoppingCart = () => {
         <div className="absolute right-7 top-5 text-2xl" onClick={closeModal}>
           <FontAwesomeIcon icon={faXmark} />
         </div>
-        {cartItems.length === 0 && (
+        {cartItems?.length === 0 && (
           <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
             <div className="mx-auto h-24 w-24">
               <img className="h-full w-full" src="/images/empty.png" alt="" />
@@ -69,7 +63,7 @@ const ShoppingCart = () => {
             <h5 className="mb-3 mt-6 text-xl">Your cart is empty.</h5>
             <Link
               className="mx-auto block rounded-md bg-slate-300 px-5 py-2.5 text-center"
-              to="/"
+              to="/home"
             >
               Keep Browsing
             </Link>
@@ -77,10 +71,10 @@ const ShoppingCart = () => {
         )}
         <div>{shoppingCartItems}</div>
         <div className="flex h-[15%] items-center justify-between bg-white font-Heebo font-bold">
-          {cartItems.length !== 0 && (
+          {cartItems?.length !== 0 && (
             <div>
-              <p className="mb-1 text-lg">Subtotal:</p>
-              <p className="mb-1 text-lg">
+              <p className="mb-1 text-base min-[570px]:text-lg">Subtotal:</p>
+              <p className="mb-1 text-base min-[570px]:text-lg">
                 {" "}
                 {new Intl.NumberFormat("en-US", {
                   style: "currency",
@@ -89,10 +83,10 @@ const ShoppingCart = () => {
               </p>
             </div>
           )}
-          {cartItems.length !== 0 && (
+          {cartItems?.length !== 0 && (
             <div>
               <button
-                onClick={() => navigate("/checkout/1")}
+                onClick={() => navigate("/checkout")}
                 className="border-2 border-solid border-black bg-white px-5 py-2 text-sm uppercase tracking-wider transition duration-300 hover:bg-lightBlack hover:text-white "
               >
                 Payment

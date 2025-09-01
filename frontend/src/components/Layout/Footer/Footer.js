@@ -14,22 +14,22 @@ const Footer = () => {
       </button>
       <ul className="mb-5 mt-24">
         <li className="mx-3 inline-block">
-          <Link to="/">About</Link>
+          <Link to="/home">About</Link>
         </li>
         <li className="mx-3 inline-block">
-          <Link to="/">Store Locator</Link>
+          <Link to="/home">Store Locator</Link>
         </li>
         <li className="mx-3 inline-block">
-          <Link to="/">FAQs</Link>
+          <Link to="/home">FAQs</Link>
         </li>
         <li className="mx-3 inline-block">
-          <Link to="/">News</Link>
+          <Link to="/home">News</Link>
         </li>
         <li className="mx-3 inline-block">
-          <Link to="/">Carrers</Link>
+          <Link to="/home">Carrers</Link>
         </li>
         <li className="mx-3 inline-block">
-          <Link to="/">Contact Us</Link>
+          <Link to="/home">Contact Us</Link>
         </li>
       </ul>
     </div>

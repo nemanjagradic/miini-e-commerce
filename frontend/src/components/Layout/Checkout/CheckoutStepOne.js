@@ -1,27 +1,24 @@
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faMinus, faXmark } from "@fortawesome/free-solid-svg-icons";
-import { cartActions } from "../../../store/cart-slice";
 import { Link } from "react-router-dom";
+import { useUpdateQuantity } from "../../../hooks/useUpdateQuantity";
+import { useRemoveItem } from "../../../hooks/useRemoveItem";
+import { useContinuePayment } from "../../../hooks/useContinuePayment";
 
 const CheckoutStepOne = () => {
-  const cartItems = useSelector((state) => state.cart.cartItems);
-  const subtotal = useSelector((state) => state.cart.subtotal);
-  const dispatch = useDispatch();
-  const increaseQuantity = (item) => {
-    dispatch(cartActions.increaseQuantity(item));
-  };
-  const decreaseQuantity = (id) => {
-    dispatch(cartActions.decreaseQuantity(id));
-  };
-  const removeItem = (id) => {
-    dispatch(cartActions.removeItemFromCart(id));
-  };
+  const { cartItems, subtotal } = useSelector((state) => state.cart);
+
+  const continuePayment = useContinuePayment();
+  const updateQuantity = useUpdateQuantity();
+  const removeItem = useRemoveItem();
+
   const formatNumber = (number) =>
     new Intl.NumberFormat("en-US", {
       style: "currency",
       currency: "USD",
     }).format(number);
+
   return (
     <div className="my-container mt-12">
       <h1 className="text-3xl font-bold">Shopping basket</h1>
@@ -69,14 +66,14 @@ const CheckoutStepOne = () => {
               <div className="text-right sm:col-span-2 sm:text-start">
                 <button
                   className="h-6 w-6 bg-lightBlack text-xs text-white"
-                  onClick={() => decreaseQuantity(item.id)}
+                  onClick={() => updateQuantity(item.id, -1)}
                 >
                   <FontAwesomeIcon icon={faMinus} />
                 </button>
                 <span className="mx-2">{item.quantity}</span>
                 <button
                   className="h-6 w-6 bg-lightBlack text-xs text-white"
-                  onClick={() => increaseQuantity(item)}
+                  onClick={() => updateQuantity(item.id, 1)}
                 >
                   <FontAwesomeIcon icon={faPlus} />
                 </button>
@@ -117,12 +114,12 @@ const CheckoutStepOne = () => {
               </p>
             </div>
           </div>
-          <Link
-            to="/checkout/2"
+          <button
+            onClick={continuePayment}
             className="float-right mt-7 bg-lightBlack px-4 py-2 text-xs uppercase text-white"
           >
             Continue payment
-          </Link>
+          </button>
         </div>
       </div>
     </div>

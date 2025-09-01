@@ -3,6 +3,15 @@ module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
+      animation: {
+        slideDown: "slideDown 0.3s ease-out",
+      },
+      keyframes: {
+        slideDown: {
+          "0%": { transform: "translateY(-20px) translateX(-50%)", opacity: 0 },
+          "100%": { transform: "translateY(0) translateX(-50%)", opacity: 1 },
+        },
+      },
       colors: {
         light: "#f1f1f1",
         darker: "#3c3c3c",

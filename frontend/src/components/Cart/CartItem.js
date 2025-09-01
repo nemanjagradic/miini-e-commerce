@@ -1,28 +1,27 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMinus, faPlus, faXmark } from "@fortawesome/free-solid-svg-icons";
-import { useDispatch } from "react-redux";
-import { cartActions } from "../../store/cart-slice";
+import { useUpdateQuantity } from "../../hooks/useUpdateQuantity";
+import { useRemoveItem } from "../../hooks/useRemoveItem";
 
 const CartItem = ({ item }) => {
-  const dispatch = useDispatch();
-  const increaseQuantity = () => {
-    dispatch(cartActions.increaseQuantity(item));
-  };
-  const decreaseQuantity = () => {
-    dispatch(cartActions.decreaseQuantity(item.id));
-  };
-  const removeItem = () => {
-    dispatch(cartActions.removeItemFromCart(item.id));
-  };
+  const updateQuantity = useUpdateQuantity();
+  const removeItem = useRemoveItem();
+
   return (
     <div className="relative my-6 flex justify-between border border-black/30">
-      <div className="w-24">
-        <img className="h-full w-full" src={`/${item.imgs[0]}`} alt="" />
+      <div className="w-20 min-[570px]:w-24">
+        <img
+          className="h-full w-full"
+          src={`/${item.imgs[0]}`}
+          alt={item.title}
+        />
       </div>
       <div className="flex-1 p-2.5">
-        <div className="flex h-14 justify-between">
-          <h6 className="font-bold">{item.title}</h6>
-          <h6 className="font-bold">
+        <div className="flex h-12 justify-between gap-x-2 min-[570px]:h-14">
+          <h6 className="truncate text-sm font-bold min-[570px]:text-base">
+            {item.title}
+          </h6>
+          <h6 className="text-sm font-bold min-[570px]:text-base">
             {" "}
             {new Intl.NumberFormat("en-US", {
               style: "currency",
@@ -32,15 +31,17 @@ const CartItem = ({ item }) => {
         </div>
         <div className="item-center flex">
           <button
-            className="h-[22px] w-[22px] bg-lightBlack text-xs text-white"
-            onClick={decreaseQuantity}
+            className={`h-[20px] w-[20px] bg-lightBlack text-xs text-white min-[570px]:h-[22px] min-[570px]:w-[22px]`}
+            onClick={() => updateQuantity(item.id, -1)}
           >
             <FontAwesomeIcon icon={faMinus} />
           </button>
-          <span className="w-6 text-center">{item.quantity}</span>
+          <span className="w-6 text-center text-sm min-[570px]:text-base">
+            {item.quantity}
+          </span>
           <button
-            className="h-[22px] w-[22px] bg-lightBlack text-xs text-white"
-            onClick={increaseQuantity}
+            className="h-[20px] w-[20px] bg-lightBlack text-xs text-white min-[570px]:h-[22px] min-[570px]:w-[22px]"
+            onClick={() => updateQuantity(item.id, 1)}
           >
             <FontAwesomeIcon icon={faPlus} />
           </button>
@@ -48,7 +49,7 @@ const CartItem = ({ item }) => {
 
         <div
           className="absolute bottom-1.5 right-3.5 text-xl"
-          onClick={removeItem}
+          onClick={() => removeItem(item.id)}
         >
           <FontAwesomeIcon icon={faXmark} />
         </div>

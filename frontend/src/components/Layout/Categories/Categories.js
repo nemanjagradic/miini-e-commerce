@@ -1,19 +1,10 @@
-import { products } from "../../../App";
 import ProductSmallItem from "../../Products/ProductSmallItem";
-import { useState, useRef, useEffect } from "react";
-import useIntersectionNav from "../../../hooks/useIntersectionNav";
+import { useState, useRef } from "react";
 import { Link } from "react-router-dom";
-/* eslint-disable no-unused-vars */
+import { useSelector } from "react-redux";
 
 const Categories = () => {
-  const [runAgain, setRunAgain] = useState(false);
-  useEffect(() => {
-    // da bi se rerenderovao page zbog nav elementa i izvrsavanja useIntersectionNav
-    setRunAgain(true);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, []);
-  const productList = useRef();
-  useIntersectionNav({ root: null, threshold: 0.4 }, productList.current, true);
+  const productListRef = useRef();
   const categoryButtons = [
     "all",
     "chairs",
@@ -22,15 +13,16 @@ const Categories = () => {
     "lamps",
     "other",
   ];
-  const [filteredProducts, setFilteredProducts] = useState(products);
+  const { allProducts } = useSelector((state) => state.products);
+  const [filteredProducts, setFilteredProducts] = useState(allProducts);
   const [categoryName, setCategoryName] = useState("All");
   const [active, setActive] = useState(0);
 
   const filterProducts = (category, index) => {
     if (category === "all") {
-      setFilteredProducts(products);
+      setFilteredProducts(allProducts);
     } else {
-      const categories = products.filter(
+      const categories = allProducts.filter(
         (product) => product.category === category,
       );
       setFilteredProducts(categories);
@@ -38,9 +30,6 @@ const Categories = () => {
     setActive(index);
     setCategoryName(`${category[0].toUpperCase()}${category.slice(1)}`);
   };
-  const allProducts = filteredProducts.map((product) => {
-    return <ProductSmallItem key={product.id} product={product} />;
-  });
 
   return (
     <div className="my-container">
@@ -63,11 +52,19 @@ const Categories = () => {
           );
         })}
       </ul>
+
       <div
-        className="mt-16 flex flex-wrap justify-center gap-8"
-        ref={productList}
+        className="mt-8 flex flex-wrap justify-center gap-8"
+        ref={productListRef}
       >
-        {allProducts}
+        {(categoryName === "All" ? allProducts : filteredProducts).map(
+          (product) => (
+            <ProductSmallItem
+              key={product._id || product.id}
+              product={product}
+            />
+          ),
+        )}
       </div>
     </div>
   );
