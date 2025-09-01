@@ -32,7 +32,7 @@ const Alert = () => {
 
   return (
     <div
-      className={`fixed left-1/2 top-14 z-10 w-[90%] max-w-md -translate-x-1/2 animate-slideDown rounded-lg px-6 py-4 text-center text-white shadow-lg transition-all duration-500 ${alertColor}`}
+      className={`animate-slideDown fixed left-1/2 top-14 z-10 w-[90%] max-w-md -translate-x-1/2 rounded-lg px-6 py-4 text-center text-white shadow-lg transition-all duration-500 ${alertColor}`}
     >
       <p className="text-sm font-semibold">{alert.message}</p>
       {alert.status === "notification" && (

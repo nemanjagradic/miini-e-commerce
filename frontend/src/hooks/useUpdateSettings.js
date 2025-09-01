@@ -48,7 +48,7 @@ export function useUpdateSettings() {
         return;
       }
 
-      dispatch(userActions.setUser(data.data));
+      dispatch(userActions.setUser(data.data.user));
       setSettingsError(null);
       setPhotoFile(null);
       dispatch(
