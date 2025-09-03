@@ -18,11 +18,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: [
-      "http://localhost:3000",
-      "https://miini-e-commerce-frontend.onrender.com",
-    ],
-
+    origin: ["http://localhost:3000", "https://miini-frontend.onrender.com"],
     credentials: true,
   })
 );
