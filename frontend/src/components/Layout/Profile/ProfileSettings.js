@@ -4,9 +4,11 @@ import { useUpdateSettings } from "../../../hooks/useUpdateSettings";
 import { useUpdatePassword } from "../../../hooks/useUpdatePassword";
 
 const ProfileSettings = () => {
+  const API_URL = process.env.REACT_APP_API_URL;
+  const ASSET_URL = API_URL.replace("/api", "");
   const user = useSelector((state) => state.user.currentUser);
   const [photoPreview, setPhotoPreview] = useState(
-    `http://localhost:8000/images/users/${user.photo}`,
+    `${ASSET_URL}/images/users/${user.photo}`,
   );
   const {
     updateSettings,
@@ -32,10 +34,10 @@ const ProfileSettings = () => {
   useEffect(() => {
     setPhotoPreview(
       user?.photo
-        ? `http://localhost:8000/images/users/${user.photo}`
+        ? `${ASSET_URL}/images/users/${user.photo}`
         : "/images/users/default.jpg",
     );
-  }, [user?.photo]);
+  }, [user?.photo, ASSET_URL]);
 
   const handlePhotoChange = (e) => {
     const file = e.target.files[0];

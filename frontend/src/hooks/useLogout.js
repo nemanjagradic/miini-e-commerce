@@ -22,7 +22,7 @@ export function useLogout() {
         throw new Error(data.message || "Failed to clear guest favorites");
       }
 
-      const logoutRes = await fetch("http://localhost:8000/api/users/logout", {
+      const logoutRes = await fetch(`${API_URL}/users/logout`, {
         method: "POST",
         credentials: "include",
       });

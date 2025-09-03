@@ -21,6 +21,8 @@ const MainNavigation = () => {
   const [highlighted, setHighlighted] = useState(false);
   const [modal, setModal] = useState(false);
   useScrollNav(0.3);
+  const API_URL = process.env.REACT_APP_API_URL;
+  const ASSET_URL = API_URL.replace("/api", "");
 
   const showNavHandler = () => {
     setShowNav((prevState) => !prevState);
@@ -95,7 +97,7 @@ const MainNavigation = () => {
                   <Link to="profile">
                     <img
                       className="h-full w-full rounded-full"
-                      src={`http://localhost:8000/images/users/${user.photo}`}
+                      src={`${ASSET_URL}/images/users/${user.photo}`}
                       alt="User"
                     />
                   </Link>

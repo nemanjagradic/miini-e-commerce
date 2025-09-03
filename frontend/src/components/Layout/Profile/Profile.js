@@ -3,6 +3,8 @@ import { NavLink, Outlet } from "react-router-dom";
 
 const Profile = () => {
   const user = useSelector((state) => state.user.currentUser);
+  const API_URL = process.env.REACT_APP_API_URL;
+  const ASSET_URL = API_URL.replace("/api", "");
 
   if (!user) return;
 
@@ -12,7 +14,7 @@ const Profile = () => {
         <div className="m-auto h-28 w-28">
           <img
             className="h-full w-full rounded-full"
-            src={`http://localhost:8000/images/users/${user.photo}`}
+            src={`${ASSET_URL}/images/users/${user.photo}`}
             alt="profile"
           />
         </div>
