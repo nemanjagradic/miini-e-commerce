@@ -3,38 +3,38 @@ import HarmonousLiving from "../components/Layout/Harmonous Section/HarmonousLiv
 import TrendingProducts from "../components/Products/TrendingProducts";
 import BestProducts from "../components/Products/BestProducts";
 import { useDispatch } from "react-redux";
-import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
 import { uiActions } from "../store/ui-slice";
+import { useSearchParams } from "react-router-dom";
 
 const HomePage = () => {
   const dispatch = useDispatch();
-  const location = useLocation();
+  const [searchParams] = useSearchParams();
 
   useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    if (params.get("payment") === "success") {
+    const paymentStatus = searchParams.get("payment");
+
+    if (paymentStatus === "success") {
       dispatch(
-        uiActions.showAlert({
+        uiActions.setAlert({
           message: "Purchase successful!",
           status: "success",
-          isShow: true,
           time: 5,
         }),
       );
     }
-    if (params.get("payment") === "cancel") {
+
+    if (paymentStatus === "cancel") {
       dispatch(
-        uiActions.showAlert({
+        uiActions.setAlert({
           message:
-            "Payment canceled. We’ve saved your order in case you change your mind.",
+            "Payment canceled. We saved your order in history in case you change your mind.",
           status: "notification",
-          isShow: true,
           time: 5,
         }),
       );
     }
-  }, [location.search, dispatch]);
+  }, [searchParams, dispatch]);
 
   return (
     <>

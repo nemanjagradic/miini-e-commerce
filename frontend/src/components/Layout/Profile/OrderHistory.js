@@ -117,9 +117,7 @@ const OrderHistory = () => {
               <span
                 className={`${
                   order.status === "pending" && "bg-yellow-200 text-yellow-800"
-                } ${
-                  order.status === "success" && "bg-green-200 text-green-800"
-                } ${
+                } ${order.status === "paid" && "bg-green-200 text-green-800"} ${
                   order.status === "canceled" && "bg-red-200 text-red-800"
                 } rounded-full px-3 py-1.5 text-xs font-semibold uppercase`}
               >
