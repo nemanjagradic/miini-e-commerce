@@ -20,6 +20,7 @@ export function useContinuePayment() {
           message:
             "You are currently signed in as a guest. Please log in or sign up to continue with payment.",
           time: 5,
+          showLogoutButton: true,
         }),
       );
       return;

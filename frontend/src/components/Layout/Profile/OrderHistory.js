@@ -48,7 +48,7 @@ const OrderHistory = () => {
 
   const showOrders = orders.filter((order) => {
     if (showOrdersType === "active") {
-      return order.status === "pending" || order.status === "success";
+      return order.status === "pending" || order.status === "paid";
     } else if (showOrdersType === "canceled") {
       return order.status === "canceled";
     }
