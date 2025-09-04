@@ -177,6 +177,15 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 exports.updatePassword = catchAsync(async (req, res, next) => {
   const { currentPassword, newPassword, passwordConfirm } = req.body;
 
+  if (req.user.isGuest) {
+    return next(
+      new AppError(
+        "Password changes are disabled for the demo account. Please sign up to manage your own password.",
+        403
+      )
+    );
+  }
+
   if (!currentPassword)
     return next(new AppError("Please provide your current password.", 400));
   if (!newPassword)

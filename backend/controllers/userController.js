@@ -56,6 +56,15 @@ const filterObj = (obj, ...alowwedFields) => {
 
 exports.updateMe = catchAsync(async (req, res, next) => {
   try {
+    if (req.user.isGuest) {
+      return next(
+        new AppError(
+          "Updates are disabled for the demo account. Please sign up to customize your profile.",
+          403
+        )
+      );
+    }
+
     if (req.body.password || req.body.passwordConfirm) {
       return next(
         new AppError("This route is not for updating password.", 400)

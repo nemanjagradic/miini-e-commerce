@@ -49,9 +49,7 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
         unit_amount: item.price * 100,
         product_data: {
           name: item.title,
-          images: [
-            "https://miini-e-commerce.netlify.app/images/roundtable-1.png",
-          ],
+          images: [`https://miini-frontend.onrender.com/${item.img}`],
         },
       },
       quantity: item.quantity,
@@ -73,6 +71,29 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
       stripeSessionId: session.sessionId,
     },
   });
+});
+
+exports.webhookHandler = catchAsync(async (req, res, next) => {
+  const signature = req.headers["stripe-signature"];
+  let event;
+
+  try {
+    event = stripe.webhooks.constructEvent(
+      req.body,
+      signature,
+      process.env.STRIPE_WEBHOOK_SECRET
+    );
+  } catch (err) {
+    return res.status(400).send(`Webhook error: ${err.message}`);
+  }
+
+  if (event.type === "checkout.session.completed") {
+    await Order.findByIdAndUpdate(event.data.object.client_reference_id, {
+      status: "paid",
+    });
+  }
+
+  res.status(200).json({ received: true });
 });
 
 exports.getMyOrders = catchAsync(async (req, res, next) => {

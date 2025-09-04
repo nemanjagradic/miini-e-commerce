@@ -12,6 +12,7 @@ const productRouter = require("./routes/productRoutes");
 const cartRouter = require("./routes/cartRoutes");
 const orderRouter = require("./routes/orderRoutes");
 const globalErrorHandler = require("./controllers/errorController");
+const orderController = require("./controllers/orderController");
 const AppError = require("./utils/appError");
 
 const app = express();
@@ -21,6 +22,12 @@ app.use(
     origin: ["http://localhost:3000", "https://miini-frontend.onrender.com"],
     credentials: true,
   })
+);
+
+app.use(
+  "/webhook-checkout",
+  express.raw({ type: "application/json" }),
+  orderController.webhookHandler
 );
 
 app.use(express.static(path.join(__dirname, "public")));
