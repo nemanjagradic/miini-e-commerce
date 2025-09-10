@@ -19,7 +19,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: ["http://localhost:3000", "https://miini-frontend.onrender.com"],
+    origin: ["http://localhost:3000", "https://miini-e-commerce.onrender.com"],
     credentials: true,
   })
 );
@@ -53,6 +53,10 @@ const limiter = rateLimit({
 });
 
 app.use("/api", limiter);
+
+app.get("/api/health", (req, res) => {
+  res.status(200).json({ status: "ok" });
+});
 
 app.use("/api/users", userRouter);
 app.use("/api/products", productRouter);
