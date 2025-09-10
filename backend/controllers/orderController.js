@@ -49,7 +49,7 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
         unit_amount: item.price * 100,
         product_data: {
           name: item.title,
-          images: [`https://miini-frontend.onrender.com/${item.img}`],
+          images: [`https://miini-e-commerce.onrender.com/${item.img}`],
         },
       },
       quantity: item.quantity,
