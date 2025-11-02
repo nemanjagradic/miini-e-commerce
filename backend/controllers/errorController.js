@@ -55,7 +55,7 @@ const globalErrorHandler = (err, req, res, next) => {
   if (process.env.NODE_ENV === "development") {
     sendErrorDev(res, err);
   } else if (process.env.NODE_ENV === "production") {
-    let error = Object.assign(err);
+    let error = Object.assign({}, err);
 
     if (err.code === 11000) error = handleDuplicateErrorDB(error);
     if (err.name === "CastError") error = handleCastErrorDB(error);

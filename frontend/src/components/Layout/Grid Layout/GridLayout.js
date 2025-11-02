@@ -9,7 +9,7 @@ const GridLayout = () => {
               src="./images/bed.png"
               alt=""
             />
-            <div className="absolute left-0 top-0 block h-full w-full opacity-10 transition hover:bg-black"></div>
+            <div className="absolute left-0 top-0 block h-full w-full transition hover:bg-black/10"></div>
             <p className="absolute left-5 top-5 text-2xl">Bedroom</p>
           </div>
         </div>
@@ -20,7 +20,7 @@ const GridLayout = () => {
               src="./images/light.png"
               alt=""
             />
-            <div className="absolute left-0 top-0 block h-full w-full opacity-10 transition hover:bg-black"></div>
+            <div className="absolute left-0 top-0 block h-full w-full transition hover:bg-black/10"></div>
             <p className="absolute bottom-5 left-5 text-2xl">Lighting</p>
           </div>
         </div>
@@ -31,7 +31,7 @@ const GridLayout = () => {
               src="./images/kitchen.png"
               alt=""
             />
-            <div className="absolute left-0 top-0 block h-full w-full opacity-10 transition hover:bg-black"></div>
+            <div className="absolute left-0 top-0 block h-full w-full transition hover:bg-black/10"></div>
             <p className="absolute bottom-5 left-5 text-2xl">Kitchen</p>
           </div>
         </div>
