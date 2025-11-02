@@ -1,6 +1,4 @@
-require("@babel/register")({
-  extensions: [".js", ".jsx"],
-});
+require("@babel/register")({ extensions: [".js", ".jsx"] });
 
 const nodemailer = require("nodemailer");
 const htmlToText = require("html-to-text");
@@ -9,10 +7,10 @@ const ReactDOMServer = require("react-dom/server");
 
 class Email {
   constructor(user, url) {
-    this.from = process.env.EMAIL_FROM;
     this.to = user.email;
     this.firstName = user.name.split(" ")[0];
     this.url = url;
+    this.from = process.env.EMAIL_FROM;
   }
 
   newTransport() {
@@ -25,9 +23,7 @@ class Email {
           user: process.env.EMAIL_USER,
           pass: process.env.EMAIL_PASS,
         },
-        // tls: {
-        //   rejectUnauthorized: false,
-        // },
+        tls: { rejectUnauthorized: false },
       });
     }
 
@@ -44,7 +40,7 @@ class Email {
 
   async send(template, subject) {
     try {
-      console.log("Creating email for:", this.to);
+      console.log(`Preparing email for ${this.to}`);
 
       const templateComponent = require(`../emails/${template}.jsx`);
       const html = ReactDOMServer.renderToStaticMarkup(
@@ -64,22 +60,24 @@ class Email {
       };
 
       const transporter = this.newTransport();
-      console.log("Transporter created, sending...");
-      const info = await transporter.sendMail(mailOptions);
-      console.log("Email sent successfully:", info.response);
+      console.log("Sending email...");
+      transporter.sendMail(mailOptions, (err, info) => {
+        if (err) console.error("Email send failed:", err.message);
+        else console.log("Email sent successfully:", info.response);
+      });
     } catch (err) {
-      console.error("Error sending email:", err.message);
+      console.error("Error preparing email:", err.message);
     }
   }
 
-  async sendWelcome() {
-    await this.send("welcomeEmail", "Welcome to the Miini!");
+  sendWelcome() {
+    this.send("welcomeEmail", "Welcome to the Miini!");
   }
 
-  async sendPasswordReset() {
-    await this.send(
+  sendPasswordReset() {
+    this.send(
       "passwordResetEmail",
-      "Your password reset token (valid only for 10 minutes)"
+      "Your password reset token (valid for 10 minutes)"
     );
   }
 }
