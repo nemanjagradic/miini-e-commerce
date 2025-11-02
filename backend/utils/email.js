@@ -43,25 +43,33 @@ class Email {
   }
 
   async send(template, subject) {
-    const templateComponent = require(`../emails/${template}.jsx`);
+    try {
+      console.log("Creating email for:", this.to);
 
-    const html = ReactDOMServer.renderToStaticMarkup(
-      React.createElement(templateComponent, {
-        firstName: this.firstName,
-        url: this.url,
+      const templateComponent = require(`../emails/${template}.jsx`);
+      const html = ReactDOMServer.renderToStaticMarkup(
+        React.createElement(templateComponent, {
+          firstName: this.firstName,
+          url: this.url,
+          subject,
+        })
+      );
+
+      const mailOptions = {
+        from: this.from,
+        to: this.to,
         subject,
-      })
-    );
+        html,
+        text: htmlToText.convert(html),
+      };
 
-    const mailOptions = {
-      from: this.from,
-      to: this.to,
-      subject,
-      html,
-      text: htmlToText.convert(html),
-    };
-
-    await this.newTransport().sendMail(mailOptions);
+      const transporter = this.newTransport();
+      console.log("Transporter created, sending...");
+      const info = await transporter.sendMail(mailOptions);
+      console.log("Email sent successfully:", info.response);
+    } catch (err) {
+      console.error("Error sending email:", err.message);
+    }
   }
 
   async sendWelcome() {
