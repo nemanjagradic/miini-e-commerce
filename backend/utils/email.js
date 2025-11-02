@@ -1,5 +1,4 @@
 require("@babel/register")({ extensions: [".js", ".jsx"] });
-
 const nodemailer = require("nodemailer");
 const htmlToText = require("html-to-text");
 const React = require("react");
@@ -15,6 +14,7 @@ class Email {
 
   newTransport() {
     if (process.env.NODE_ENV === "production") {
+      // Production SMTP (Gmail or other provider)
       return nodemailer.createTransport({
         host: "smtp.gmail.com",
         port: 465,
@@ -27,6 +27,7 @@ class Email {
       });
     }
 
+    // Development (Mailtrap)
     return nodemailer.createTransport({
       host: process.env.MAILTRAP_HOST,
       port: process.env.MAILTRAP_PORT,
@@ -40,8 +41,6 @@ class Email {
 
   async send(template, subject) {
     try {
-      console.log(`Preparing email for ${this.to}`);
-
       const templateComponent = require(`../emails/${template}.jsx`);
       const html = ReactDOMServer.renderToStaticMarkup(
         React.createElement(templateComponent, {
@@ -60,13 +59,10 @@ class Email {
       };
 
       const transporter = this.newTransport();
-      console.log("Sending email...");
-      transporter.sendMail(mailOptions, (err, info) => {
-        if (err) console.error("Email send failed:", err.message);
-        else console.log("Email sent successfully:", info.response);
-      });
+      const info = await transporter.sendMail(mailOptions);
+      console.log(`Email sent successfully to ${this.to}: ${info.response}`);
     } catch (err) {
-      console.error("Error preparing email:", err.message);
+      console.error(`Error sending email to ${this.to}: ${err.message}`);
     }
   }
 
