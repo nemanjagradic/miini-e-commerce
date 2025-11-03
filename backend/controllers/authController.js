@@ -45,14 +45,9 @@ exports.signup = catchAsync(async (req, res) => {
     isGuest,
   });
 
-  const emailSender = new Email(newUser, url);
-  emailSender
-    .sendWelcome()
-    .catch((err) =>
-      console.error("Failed to send welcome email:", err.message)
-    );
+  await new Email(newUser, url).sendWelcome();
 
-  res.status(201).json({ status: "success", data: newUser });
+  createSendToken(newUser, 201, req, res);
 });
 
 exports.login = catchAsync(async (req, res, next) => {
@@ -128,9 +123,9 @@ exports.protect = catchAsync(async (req, res, next) => {
 
 exports.forgotPassword = catchAsync(async (req, res, next) => {
   const user = await User.findOne({ email: req.body.email });
-  if (!user) {
-    return next(new AppError("No user found with this email.", 404));
-  }
+
+  if (!user)
+    return next(new AppError("There is no user beloning to this email.", 404));
 
   const resetToken = user.createPasswordResetToken();
   await user.save({ validateBeforeSave: false });
@@ -138,24 +133,19 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   const resetURL = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
 
   try {
-    const email = new Email(user, resetURL);
-    console.log("Triggering password reset email...");
-    email.sendPasswordReset();
+    await new Email(user, resetURL).sendPasswordReset();
 
-    res.status(200).json({
-      status: "success",
-      message: "Password reset token sent to email.",
-    });
+    res
+      .status(200)
+      .json({ status: "success", message: "Token sent to email." });
   } catch (err) {
-    console.error("Error sending password reset email:", err.message);
-
     user.passwordResetToken = undefined;
     user.passwordResetTokenExpires = undefined;
     await user.save({ validateBeforeSave: false });
 
     return next(
       new AppError(
-        "There was an error sending the email. Try again later.",
+        "There was an error sending an email. Please try later!",
         500
       )
     );

@@ -29,7 +29,7 @@ export function useFavoriteToggle() {
       dispatch(
         uiActions.setAlert({
           status: "success",
-          message: `Item ${favoriteExist ? "added" : "removed"} from favorites!`,
+          message: `Item ${favoriteExist ? "added to" : "removed from"} favorites!`,
           time: 3,
         }),
       );
