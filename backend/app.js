@@ -19,15 +19,15 @@ const app = express();
 
 app.use(
   cors({
-    origin: ["http://localhost:3000", "https://miini-e-commerce.onrender.com"],
+    origin: ["http://localhost:3000", "https://miini-e-commerce.vercel.app/"],
     credentials: true,
-  })
+  }),
 );
 
 app.use(
   "/webhook-checkout",
   express.raw({ type: "application/json" }),
-  orderController.webhookHandler
+  orderController.webhookHandler,
 );
 
 app.use(express.static(path.join(__dirname, "public")));
