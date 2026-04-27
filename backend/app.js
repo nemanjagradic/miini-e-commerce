@@ -16,6 +16,7 @@ const orderController = require("./controllers/orderController");
 const AppError = require("./utils/appError");
 
 const app = express();
+app.set("trust proxy", 1);
 
 app.use(
   cors({
@@ -39,8 +40,6 @@ app.use(helmet());
 app.use(mongoSanitize());
 app.use(xss());
 app.use(compression());
-
-app.set("trust proxy", 1);
 
 const limiter = rateLimit({
   max: 300,
