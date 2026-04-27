@@ -40,6 +40,8 @@ app.use(mongoSanitize());
 app.use(xss());
 app.use(compression());
 
+app.set("trust proxy", 1);
+
 const limiter = rateLimit({
   max: 300,
   windowMs: 60 * 60 * 1000,
