@@ -1,10 +1,10 @@
 require("@babel/register")({ extensions: [".js", ".jsx"] });
-const sgMail = require("@sendgrid/mail");
+const { Resend } = require("resend");
 const React = require("react");
 const ReactDOMServer = require("react-dom/server");
 const htmlToText = require("html-to-text");
 
-sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 class Email {
   constructor(user, url) {
@@ -21,18 +21,16 @@ class Email {
         firstName: this.firstName,
         url: this.url,
         subject,
-      })
+      }),
     );
 
-    const msg = {
-      to: this.to,
+    await resend.emails.send({
       from: this.from,
+      to: this.to,
       subject,
       html,
       text: htmlToText.convert(html),
-    };
-
-    await sgMail.send(msg);
+    });
   }
 
   async sendWelcome() {
@@ -42,7 +40,7 @@ class Email {
   async sendPasswordReset() {
     await this.send(
       "passwordResetEmail",
-      "Your password reset token (valid for 10 minutes)"
+      "Your password reset token (valid for 10 minutes)",
     );
   }
 }

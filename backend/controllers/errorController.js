@@ -5,7 +5,7 @@ const handleDuplicateErrorDB = (err) => {
   const value = Object.values(err.keyValue)[0];
   return new AppError(
     `A user with the ${fieldName}: "${value}" already exists. Please use a different one.`,
-    400
+    400,
   );
 };
 
@@ -56,6 +56,8 @@ const globalErrorHandler = (err, req, res, next) => {
     sendErrorDev(res, err);
   } else if (process.env.NODE_ENV === "production") {
     let error = Object.assign({}, err);
+    error.message = err.message;
+    error.isOperational = err.isOperational;
 
     if (err.code === 11000) error = handleDuplicateErrorDB(error);
     if (err.name === "CastError") error = handleCastErrorDB(error);
