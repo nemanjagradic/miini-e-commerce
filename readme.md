@@ -30,14 +30,14 @@ A full-stack e-commerce web application where users can browse products, manage 
 
 - Welcome email when a user signs up
 - Password reset email
-- Uses Mailtrap in development and Gmail API for production
+- Uses Resend for email delivery
 
 ---
 
 ## Tech Stack
 
 - Frontend: React, Redux Toolkit, TailwindCSS
-- Backend: Node.js, Express, MongoDB, JWT Authentication, Stripe, Nodemailer
+- Backend: Node.js, Express, MongoDB, JWT Authentication, Stripe, Resend
 - Security: Helmet, Rate Limit, XSS-Clean, Mongo-Sanitize
 
 ---
@@ -64,7 +64,7 @@ npm install
 NODE_ENV=development
 PORT=8000
 
-DATABASE=mongodb+srv://<username>:<password>@cluster0.zqu1vfp.mongodb.net/?retryWrites=true&w=majority
+DATABASE=mongodb+srv://<username>:<password>@cluster0.mongodb.net/?retryWrites=true&w=majority
 DATABASE_PASSWORD=<your_database_password>
 
 FRONTEND_URL=http://localhost:3000
@@ -73,14 +73,8 @@ JWT_SECRET=<your_jwt_secret>
 JWT_EXPIRES_IN=90d
 COOKIE_EXPIRES_IN=90
 
-MAILTRAP_HOST=sandbox.smtp.mailtrap.io
-MAILTRAP_PORT=2525
-MAILTRAP_USER=<mailtrap_user>
-MAILTRAP_PASSWORD=<mailtrap_password>
-
-EMAIL_FROM=<your_email_name> <your_email@example.com>
-EMAIL_USER=<your_email@example.com>
-EMAIL_PASS=<your_email_password>
+EMAIL_FROM=onboarding@resend.dev
+RESEND_API_KEY=<your_resend_api_key>
 
 STRIPE_SECRET_KEY=<your_stripe_secret_key>
 
