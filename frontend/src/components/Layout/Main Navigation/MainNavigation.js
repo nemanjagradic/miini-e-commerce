@@ -7,10 +7,11 @@ import {
   faUser,
   faBoxArchive,
   faHeart,
+  faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { uiActions } from "../../../store/ui-slice";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Modal from "../../../UI/Modal";
 import useScrollNav from "../../../hooks/useIntersectionNav";
@@ -20,12 +21,21 @@ const MainNavigation = () => {
   const [showNav, setShowNav] = useState(false);
   const [highlighted, setHighlighted] = useState(false);
   const [modal, setModal] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const navigate = useNavigate();
   useScrollNav(0.3);
   const API_URL = process.env.REACT_APP_API_URL;
   const ASSET_URL = API_URL.replace("/api", "");
 
   const showNavHandler = () => {
     setShowNav((prevState) => !prevState);
+  };
+
+  const submitSearch = (e) => {
+    e.preventDefault();
+    const q = searchTerm.trim();
+    navigate(q ? `/categories/all?q=${encodeURIComponent(q)}` : "/categories/all");
+    setShowNav(false);
   };
   const dispatch = useDispatch();
   const totalQuantity = useSelector((state) => state.cart.totalQuantity);
@@ -62,7 +72,7 @@ const MainNavigation = () => {
   return (
     <div className="navigation z-[2] w-full bg-white py-6 font-Heebo shadow-small">
       <div className="my-container flex items-center justify-between">
-        <div>
+        <div className="flex-1">
           <Link to="/home">
             <img
               src="/images/logo.png"
@@ -71,7 +81,7 @@ const MainNavigation = () => {
             />
           </Link>
         </div>
-        <ul className="hidden flex-1 justify-center gap-6 text-lg font-extrabold uppercase text-darker md:flex">
+        <ul className="hidden justify-center gap-6 text-lg font-extrabold uppercase text-darker md:flex">
           <li>
             <Link to="/home">Home</Link>
           </li>
@@ -82,7 +92,24 @@ const MainNavigation = () => {
             <Link to="product-page">Product Page</Link>
           </li>
         </ul>
-        <div className="flex items-center justify-end gap-3">
+        <div className="flex flex-1 items-center justify-end gap-3">
+          <form onSubmit={submitSearch} className="hidden items-center md:flex">
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Search products..."
+              aria-label="Search products"
+              className="h-9 w-40 rounded-l-md border border-gray-300 px-3 text-sm outline-none focus:border-lightBlack lg:w-56"
+            />
+            <button
+              type="submit"
+              aria-label="Search"
+              className="h-9 rounded-r-md border border-l-0 border-gray-300 bg-lightBlack px-3 text-white transition hover:bg-black"
+            >
+              <FontAwesomeIcon icon={faMagnifyingGlass} />
+            </button>
+          </form>
           {user && (
             <>
               <div
@@ -143,6 +170,23 @@ const MainNavigation = () => {
       </div>
       {showNav && (
         <div className="bg-white text-lg font-extrabold uppercase text-darker md:hidden">
+          <form onSubmit={submitSearch} className="flex px-5 pt-3">
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Search products..."
+              aria-label="Search products"
+              className="h-9 flex-1 rounded-l-md border border-gray-300 px-3 text-sm normal-case outline-none focus:border-lightBlack"
+            />
+            <button
+              type="submit"
+              aria-label="Search"
+              className="h-9 rounded-r-md border border-l-0 border-gray-300 bg-lightBlack px-3 text-white"
+            >
+              <FontAwesomeIcon icon={faMagnifyingGlass} />
+            </button>
+          </form>
           <ul className="flex flex-col gap-2 px-5 py-3">
             <li>
               <Link to="/home">Home</Link>

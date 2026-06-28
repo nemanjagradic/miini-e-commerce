@@ -13,14 +13,14 @@ const ProductSmallItem = ({ product }) => {
   );
 
   return (
-    <div className="relative border border-solid border-black/20 transition duration-400 hover:border-black/40 hover:shadow-[3px_3px_4px_#e3e2e2,6px_6px_10px_#ababab]">
+    <div className="group relative overflow-hidden rounded-lg border border-black/10 transition duration-300 hover:-translate-y-1 hover:shadow-lg">
       <button
         onClick={(e) => {
           e.preventDefault();
           e.stopPropagation();
           toggleFavorite(product.id);
         }}
-        className={`absolute right-3 top-3 rounded-full px-3 py-2 transition-all duration-300 ${
+        className={`z-10 absolute right-3 top-3 rounded-full px-3 py-2 transition-all duration-300 ${
           isFavorite
             ? "bg-red-50 text-red-500"
             : "bg-white/80 text-gray-400 hover:text-red-400"
@@ -33,9 +33,9 @@ const ProductSmallItem = ({ product }) => {
       </button>
 
       <Link to={`/products/${product.id}`}>
-        <div className="h-[220px] w-[220px] xl:h-[250px] xl:w-[270px]">
+        <div className="h-[220px] w-[220px] overflow-hidden xl:h-[250px] xl:w-[270px]">
           <img
-            className="h-full w-full"
+            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
             src={`/${product.imgs[0]}`}
             alt={product.title}
           />
@@ -43,7 +43,12 @@ const ProductSmallItem = ({ product }) => {
         <h3 className="m-2.5 font-Heebo text-xl xl:text-2xl">
           {product.title}
         </h3>
-        <p className="m-2.5 text-xl font-bold">${product.price}</p>
+        <p className="m-2.5 text-xl font-bold">
+          {new Intl.NumberFormat("en-US", {
+            style: "currency",
+            currency: "USD",
+          }).format(product.price)}
+        </p>
       </Link>
     </div>
   );

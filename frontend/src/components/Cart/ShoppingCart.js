@@ -45,55 +45,61 @@ const ShoppingCart = () => {
         onClick={closeModal}
       ></div>
       <div
-        className={`fixed right-0 top-0 z-[4] h-screen w-full overflow-y-scroll bg-white p-6 font-Heebo transition duration-300 min-[570px]:w-[370px] lg:w-[410px] ${
+        className={`fixed right-0 top-0 z-[4] flex h-screen w-full flex-col bg-white font-Heebo transition duration-300 min-[570px]:w-[370px] lg:w-[410px] ${
           !isShow ? "translate-x-full" : "translate-x-0"
         }`}
       >
-        <h6 className="font-bold">
-          Your Shopping Cart (<span>{totalQuantity}</span>)
-        </h6>
-        <div className="absolute right-7 top-5 text-2xl" onClick={closeModal}>
-          <FontAwesomeIcon icon={faXmark} />
+        <div className="flex items-center justify-between border-b p-6 pb-4">
+          <h6 className="font-bold">
+            Your Shopping Cart (<span>{totalQuantity}</span>)
+          </h6>
+          <button
+            className="text-2xl"
+            onClick={closeModal}
+            aria-label="Close cart"
+          >
+            <FontAwesomeIcon icon={faXmark} />
+          </button>
         </div>
-        {cartItems?.length === 0 && (
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-            <div className="mx-auto h-24 w-24">
-              <img className="h-full w-full" src="/images/empty.png" alt="" />
+
+        <div className="flex-1 overflow-y-auto px-6">
+          {cartItems?.length === 0 ? (
+            <div className="flex h-full flex-col items-center justify-center text-center">
+              <div className="mx-auto h-24 w-24">
+                <img className="h-full w-full" src="/images/empty.png" alt="" />
+              </div>
+              <h5 className="mb-3 mt-6 text-xl">Your cart is empty.</h5>
+              <Link
+                className="border-2 border-solid border-black bg-white px-5 py-2.5 text-center text-sm uppercase tracking-wider transition duration-300 hover:bg-lightBlack hover:text-white"
+                to="/home"
+              >
+                Keep Browsing
+              </Link>
             </div>
-            <h5 className="mb-3 mt-6 text-xl">Your cart is empty.</h5>
-            <Link
-              className="mx-auto block rounded-md bg-slate-300 px-5 py-2.5 text-center"
-              to="/home"
-            >
-              Keep Browsing
-            </Link>
-          </div>
-        )}
-        <div>{shoppingCartItems}</div>
-        <div className="flex h-[15%] items-center justify-between bg-white font-Heebo font-bold">
-          {cartItems?.length !== 0 && (
+          ) : (
+            shoppingCartItems
+          )}
+        </div>
+
+        {cartItems?.length !== 0 && (
+          <div className="flex items-center justify-between border-t bg-white p-6 font-bold">
             <div>
               <p className="mb-1 text-base min-[570px]:text-lg">Subtotal:</p>
               <p className="mb-1 text-base min-[570px]:text-lg">
-                {" "}
                 {new Intl.NumberFormat("en-US", {
                   style: "currency",
                   currency: "USD",
                 }).format(subtotal)}
               </p>
             </div>
-          )}
-          {cartItems?.length !== 0 && (
-            <div>
-              <button
-                onClick={() => navigate("/checkout")}
-                className="border-2 border-solid border-black bg-white px-5 py-2 text-sm uppercase tracking-wider transition duration-300 hover:bg-lightBlack hover:text-white "
-              >
-                Payment
-              </button>
-            </div>
-          )}
-        </div>
+            <button
+              onClick={() => navigate("/checkout")}
+              className="border-2 border-solid border-black bg-white px-5 py-2 text-sm uppercase tracking-wider transition duration-300 hover:bg-lightBlack hover:text-white"
+            >
+              Payment
+            </button>
+          </div>
+        )}
       </div>
     </>
   );

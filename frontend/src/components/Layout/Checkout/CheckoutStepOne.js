@@ -21,7 +21,22 @@ const CheckoutStepOne = () => {
 
   return (
     <div className="my-container mt-12">
-      <h1 className="text-3xl font-bold">Shopping basket</h1>
+      <div className="flex items-center justify-center gap-3 font-Heebo sm:gap-4">
+        <div className="flex items-center gap-2">
+          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-lightBlack text-sm font-bold text-white">
+            1
+          </span>
+          <span className="text-sm font-semibold">Basket</span>
+        </div>
+        <div className="h-px w-12 bg-gray-300 sm:w-20"></div>
+        <div className="flex items-center gap-2 text-gray-400">
+          <span className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-300 text-sm font-bold">
+            2
+          </span>
+          <span className="text-sm font-semibold">Payment</span>
+        </div>
+      </div>
+      <h1 className="mt-10 text-3xl font-bold">Shopping basket</h1>
       <div className="mt-10 flex flex-wrap justify-center gap-16 font-Heebo font-semibold">
         <div className="basis-full min-[1000px]:flex-1">
           <div className="hidden border-b-2 pb-3 uppercase sm:flex">
@@ -43,9 +58,9 @@ const CheckoutStepOne = () => {
                   <FontAwesomeIcon icon={faXmark} />
                 </div>
                 <img
-                  className="h-24 w-24 sm:h-full sm:w-full"
+                  className="h-24 w-24 object-cover sm:h-full sm:w-full"
                   src={`/${item.imgs[0]}`}
-                  alt=""
+                  alt={item.title}
                 />
               </div>
               <div className="text-right sm:col-span-5 sm:pl-4 sm:text-start">
@@ -116,9 +131,9 @@ const CheckoutStepOne = () => {
           </div>
           <button
             onClick={continuePayment}
-            className="float-right mt-7 bg-lightBlack px-4 py-2 text-xs uppercase text-white"
+            className="mt-7 w-full bg-lightBlack px-4 py-3 text-sm font-semibold uppercase tracking-wider text-white transition duration-300 hover:bg-black"
           >
-            Continue payment
+            Continue to payment
           </button>
         </div>
       </div>

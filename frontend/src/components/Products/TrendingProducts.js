@@ -35,19 +35,24 @@ const TrendingProducts = () => {
     return (
       <div
         key={product.id}
-        className="mr-3 w-[220px] flex-shrink-0 border border-solid border-black/20 transition duration-500 lg:h-72 lg:w-[200px] xl:h-72 xl:w-[190px]"
+        className="group mr-3 w-[220px] flex-shrink-0 overflow-hidden rounded-lg border border-black/10 transition duration-300 hover:shadow-lg lg:h-72 lg:w-[200px] xl:h-72 xl:w-[190px]"
         style={{ transform: `translateX(calc(${100 * slide}% + ${margin}px))` }}
       >
         <Link to={`/products/${product.id}`}>
-          <div className="h-[200px]">
+          <div className="h-[200px] overflow-hidden">
             <img
-              className="h-full w-full object-cover"
+              className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
               src={!productId ? product.imgs[0] : `/${product.imgs[0]}`}
-              alt=""
+              alt={product.title}
             />
           </div>
           <h2 className="m-2 font-Heebo text-lg">{product.title}</h2>
-          <p className="m-2 text-lg font-bold">${product.price}</p>
+          <p className="m-2 text-lg font-bold">
+            {new Intl.NumberFormat("en-US", {
+              style: "currency",
+              currency: "USD",
+            }).format(product.price)}
+          </p>
         </Link>
       </div>
     );

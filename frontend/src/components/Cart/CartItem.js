@@ -11,7 +11,7 @@ const CartItem = ({ item }) => {
     <div className="relative my-6 flex justify-between border border-black/30">
       <div className="w-20 min-[570px]:w-24">
         <img
-          className="h-full w-full"
+          className="h-full w-full object-cover"
           src={`/${item.imgs[0]}`}
           alt={item.title}
         />

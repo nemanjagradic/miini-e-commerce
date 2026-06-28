@@ -13,6 +13,8 @@ const SingleProduct = ({ tableProductId }) => {
 
   const navigate = useNavigate();
   const [bigImage, setBigImage] = useState(null);
+  const [addStatus, setAddStatus] = useState("idle");
+  const [buying, setBuying] = useState(false);
   const [itemData, setItemData] = useState({
     quantity: 1,
     totalPrice: curProduct?.price,
@@ -43,7 +45,17 @@ const SingleProduct = ({ tableProductId }) => {
     setBigImage(img);
   };
 
+  const addToCartHandler = async () => {
+    if (addStatus === "adding" || buying) return;
+    setAddStatus("adding");
+    await addToCart(idToUse, itemData.quantity, false);
+    setAddStatus("added");
+    setTimeout(() => setAddStatus("idle"), 1500);
+  };
+
   const buyHandler = async () => {
+    if (buying || addStatus === "adding") return;
+    setBuying(true);
     await addToCart(idToUse, itemData.quantity, true);
     navigate("/checkout");
   };
@@ -52,10 +64,10 @@ const SingleProduct = ({ tableProductId }) => {
     return (
       <div
         key={i}
-        className="h-32 w-32 hover:border hover:border-black/30 hover:shadow-md"
+        className="h-32 w-32 cursor-pointer hover:border hover:border-black/30 hover:shadow-md"
         onClick={setMainImage.bind(null, img)}
       >
-        <img className="h-full w-full" src={`/${img}`} alt="" />
+        <img className="h-full w-full object-cover" src={`/${img}`} alt="" />
       </div>
     );
   });
@@ -76,7 +88,11 @@ const SingleProduct = ({ tableProductId }) => {
       <div className="my-container flex flex-wrap gap-4">
         <div className="mx-auto basis-11/12 min-[910px]:basis-6/12">
           <div className="mx-auto h-[400px] md:w-9/12">
-            <img className="h-full w-full" src={`/${bigImage}`} alt="" />
+            <img
+              className="h-full w-full object-contain"
+              src={`/${bigImage}`}
+              alt={curProduct.title}
+            />
           </div>
           <div className="mx-auto mt-2 flex gap-2 md:w-9/12">{smallImgs}</div>
         </div>
@@ -111,16 +127,22 @@ const SingleProduct = ({ tableProductId }) => {
             </div>
             <div className="flex justify-between gap-6">
               <button
-                className="h-12 flex-1 border-2 border-solid border-black px-2 text-base font-semibold uppercase transition duration-300 hover:bg-lightBlack hover:text-white md:w-40 md:text-lg lg:w-44 xl:w-56"
-                onClick={() => addToCart(idToUse, itemData.quantity, false)}
+                disabled={addStatus === "adding" || buying}
+                className="h-12 flex-1 border-2 border-solid border-black px-2 text-base font-semibold uppercase transition duration-300 hover:bg-lightBlack hover:text-white disabled:cursor-not-allowed disabled:opacity-70 md:w-40 md:text-lg lg:w-44 xl:w-56"
+                onClick={addToCartHandler}
               >
-                Add To Cart
+                {addStatus === "adding"
+                  ? "Adding..."
+                  : addStatus === "added"
+                    ? "Added \u2713"
+                    : "Add To Cart"}
               </button>
               <button
-                className="h-12 flex-1 border-2 border-solid border-bloodRed bg-bloodRed px-2 text-base font-semibold uppercase text-white transition duration-300 hover:bg-transparent hover:text-bloodRed md:w-40 md:text-lg lg:w-44 xl:w-56"
+                disabled={buying || addStatus === "adding"}
+                className="h-12 flex-1 border-2 border-solid border-bloodRed bg-bloodRed px-2 text-base font-semibold uppercase text-white transition duration-300 hover:bg-transparent hover:text-bloodRed disabled:cursor-not-allowed disabled:opacity-70 md:w-40 md:text-lg lg:w-44 xl:w-56"
                 onClick={buyHandler}
               >
-                Buy Now
+                {buying ? "Processing..." : "Buy Now"}
               </button>
             </div>
           </div>
