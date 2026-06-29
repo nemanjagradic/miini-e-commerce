@@ -32,6 +32,7 @@ const ShoppingCart = () => {
           title: item.title,
           quantity: item.quantity,
           totalPrice: item.totalPrice,
+          stockQuantity: item.stockQuantity,
         }}
       />
     );

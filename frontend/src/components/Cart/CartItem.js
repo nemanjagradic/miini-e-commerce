@@ -6,6 +6,7 @@ import { useRemoveItem } from "../../hooks/useRemoveItem";
 const CartItem = ({ item }) => {
   const updateQuantity = useUpdateQuantity();
   const removeItem = useRemoveItem();
+  const atMax = item.quantity >= (item.stockQuantity ?? 0);
 
   return (
     <div className="relative my-6 flex justify-between border border-black/30">
@@ -31,8 +32,9 @@ const CartItem = ({ item }) => {
         </div>
         <div className="item-center flex">
           <button
-            className={`h-[20px] w-[20px] bg-lightBlack text-xs text-white min-[570px]:h-[22px] min-[570px]:w-[22px]`}
+            className="h-[20px] w-[20px] bg-lightBlack text-xs text-white disabled:cursor-not-allowed disabled:opacity-50 min-[570px]:h-[22px] min-[570px]:w-[22px]"
             onClick={() => updateQuantity(item.id, -1)}
+            disabled={item.quantity <= 1}
           >
             <FontAwesomeIcon icon={faMinus} />
           </button>
@@ -40,8 +42,9 @@ const CartItem = ({ item }) => {
             {item.quantity}
           </span>
           <button
-            className="h-[20px] w-[20px] bg-lightBlack text-xs text-white min-[570px]:h-[22px] min-[570px]:w-[22px]"
+            className="h-[20px] w-[20px] bg-lightBlack text-xs text-white disabled:cursor-not-allowed disabled:opacity-50 min-[570px]:h-[22px] min-[570px]:w-[22px]"
             onClick={() => updateQuantity(item.id, 1)}
+            disabled={atMax}
           >
             <FontAwesomeIcon icon={faPlus} />
           </button>

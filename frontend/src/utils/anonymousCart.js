@@ -1,3 +1,5 @@
+import { capQuantity } from "./productStock";
+
 const STORAGE_KEY = "anonymousCart";
 const LEGACY_KEY = "guestCart";
 
@@ -36,13 +38,16 @@ export function buildCartItemsFromStorage(storedItems, allProducts) {
     .map(({ id, quantity }) => {
       const product = allProducts.find((p) => p._id === id);
       if (!product) return null;
+      const cappedQuantity = capQuantity(quantity, product.stockQuantity);
+      if (cappedQuantity <= 0) return null;
       return {
         id: product._id,
         title: product.title,
         imgs: product.imgs,
         price: product.price,
-        quantity,
-        totalPrice: quantity * product.price,
+        stockQuantity: product.stockQuantity,
+        quantity: cappedQuantity,
+        totalPrice: cappedQuantity * product.price,
       };
     })
     .filter(Boolean);

@@ -13,7 +13,27 @@ export function useUpdateQuantity() {
     dispatch(uiActions.clearAlert());
 
     if (!currentUser) {
-      dispatch(cartActions.updateItemQuantity({ productId, quantityChange: updatedQuantity }));
+      const item = store
+        .getState()
+        .cart.cartItems.find((i) => i.id === productId);
+
+      if (item && updatedQuantity > 0) {
+        const targetQuantity = item.quantity + updatedQuantity;
+        if (targetQuantity > (item.stockQuantity ?? 0)) {
+          dispatch(
+            uiActions.setAlert({
+              status: "error",
+              message: `Only ${item.stockQuantity} item(s) available in stock.`,
+              time: 3,
+            }),
+          );
+          return;
+        }
+      }
+
+      dispatch(
+        cartActions.updateItemQuantity({ productId, quantityChange: updatedQuantity }),
+      );
       syncAnonymousCartFromItems(store.getState().cart.cartItems);
       return;
     }

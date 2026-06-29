@@ -5,12 +5,11 @@ import { orderActions } from "../../store/order-slice";
 export function useFetchOrders() {
   const API_URL = process.env.REACT_APP_API_URL;
   const dispatch = useDispatch();
-  const orders = useSelector((state) => state.orders?.orders || []);
   const currentUser = useSelector((state) => state.user.currentUser);
+  const authChecked = useSelector((state) => state.user.authChecked);
 
   useEffect(() => {
-    if (!currentUser) return;
-    if (orders.length > 0) return;
+    if (!authChecked || !currentUser) return;
 
     const fetchOrders = async () => {
       dispatch(orderActions.setLoading(true));
@@ -22,15 +21,22 @@ export function useFetchOrders() {
         });
 
         const data = await res.json();
+
+        if (!res.ok) {
+          dispatch(
+            orderActions.setError(data.message || "Failed to load orders"),
+          );
+          return;
+        }
+
         dispatch(orderActions.setOrders(data.data || []));
       } catch (err) {
         dispatch(orderActions.setError("Failed to load orders"));
-        dispatch(orderActions.setOrders([]));
       } finally {
         dispatch(orderActions.setLoading(false));
       }
     };
 
     fetchOrders();
-  }, [dispatch, orders, API_URL, currentUser]);
+  }, [authChecked, currentUser, dispatch, API_URL]);
 }

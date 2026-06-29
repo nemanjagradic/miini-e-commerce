@@ -32,7 +32,7 @@ const createSendToken = (user, statusCode, req, res) => {
 };
 
 exports.signup = catchAsync(async (req, res) => {
-  const { name, email, password, passwordConfirm, photo } = req.body;
+  const { name, email, password, passwordConfirm } = req.body;
 
   const url = `${process.env.FRONTEND_URL}/profile`;
 
@@ -41,7 +41,6 @@ exports.signup = catchAsync(async (req, res) => {
     email,
     password,
     passwordConfirm,
-    photo,
   });
 
   await new Email(newUser, url).sendWelcome();

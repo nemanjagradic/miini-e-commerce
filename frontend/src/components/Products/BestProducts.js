@@ -1,8 +1,11 @@
 import ProductSmallItem from "./ProductSmallItem";
 import { useSelector } from "react-redux";
+import { sortOutOfStockLast } from "../../utils/productStock";
 
 const BestProducts = () => {
   const { allProducts, loading } = useSelector((state) => state.products);
+
+  const bestSellers = sortOutOfStockLast(allProducts).slice(3, 11);
 
   return (
     <div className="my-container mt-24">
@@ -15,11 +18,12 @@ const BestProducts = () => {
             <div className="h-12 w-12 animate-spin rounded-full border-4 border-gray-300 border-t-black" />
           </div>
         ) : (
-          allProducts
-            .slice(3, 11)
-            .map((product) => (
-              <ProductSmallItem key={product.id} product={product} />
-            ))
+          bestSellers.map((product) => (
+            <ProductSmallItem
+              key={product._id ?? product.id}
+              product={product}
+            />
+          ))
         )}
       </div>
     </div>

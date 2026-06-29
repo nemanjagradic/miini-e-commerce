@@ -1,14 +1,19 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { useSelector } from "react-redux";
 import { useState, useEffect } from "react";
 import { useUpdateSettings } from "../../../hooks/useUpdateSettings";
 import { useUpdatePassword } from "../../../hooks/useUpdatePassword";
+import { hasUserPhoto } from "../../../UI/UserAvatar";
 
 const ProfileSettings = () => {
   const API_URL = process.env.REACT_APP_API_URL;
   const ASSET_URL = API_URL.replace("/api", "");
   const user = useSelector((state) => state.user.currentUser);
   const [photoPreview, setPhotoPreview] = useState(
-    `${ASSET_URL}/images/users/${user.photo}`,
+    hasUserPhoto(user?.photo)
+      ? `${ASSET_URL}/images/users/${user.photo}`
+      : null,
   );
   const {
     updateSettings,
@@ -33,9 +38,9 @@ const ProfileSettings = () => {
 
   useEffect(() => {
     setPhotoPreview(
-      user?.photo
+      hasUserPhoto(user?.photo)
         ? `${ASSET_URL}/images/users/${user.photo}`
-        : "/images/users/default.jpg",
+        : null,
     );
   }, [user?.photo, ASSET_URL]);
 
@@ -90,12 +95,17 @@ const ProfileSettings = () => {
         </div>
 
         <div className="flex items-center gap-x-4">
-          <img
-            src={photoPreview}
-            alt="Profile"
-            onError={(e) => (e.target.src = "/images/users/default.jpg")}
-            className="h-14 w-14 rounded-full object-cover"
-          />
+          {photoPreview ? (
+            <img
+              src={photoPreview}
+              alt="Profile"
+              className="h-14 w-14 rounded-full object-cover"
+            />
+          ) : (
+            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gray-200">
+              <FontAwesomeIcon icon={faUser} className="text-gray-500" />
+            </div>
+          )}
           <input
             type="file"
             id="photo"

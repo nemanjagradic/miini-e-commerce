@@ -8,6 +8,7 @@
     "dimensions": "700 x 500 x 800 cm",
     "size": "M",
     "price": 95,
+    "stockQuantity": 42,
     "category": "chairs"
   },
   {
@@ -18,6 +19,7 @@
     "weight": "0.2 kg",
     "dimensions": "35 x 50 x 40cm",
     "price": 30,
+    "stockQuantity": 3,
     "category": "other"
   },
   {
@@ -28,6 +30,7 @@
     "weight": "0.2 kg",
     "dimensions": "100 x 50 x 40 cm",
     "price": 25,
+    "stockQuantity": 38,
     "category": "other"
   },
   {
@@ -38,6 +41,7 @@
     "weight": "1.5 kg",
     "dimensions": "35 x 200 x 230 cm",
     "price": 350,
+    "stockQuantity": 45,
     "category": "tables"
   },
   {
@@ -48,6 +52,7 @@
     "weight": "0.2 kg",
     "dimensions": "700 x 200 x 800 cm",
     "price": 35,
+    "stockQuantity": 0,
     "category": "clocks"
   },
   {
@@ -58,16 +63,18 @@
     "weight": "1.7 kg",
     "dimensions": "700 x 20 x 230 cm",
     "price": 200,
+    "stockQuantity": 40,
     "category": "tables"
   },
   {
     "id": 7,
-    "imgs": ["images/yamanami chair-1.png"],
+    "imgs": ["images/yamanami-chair-1.png"],
     "title": "Yamanami Chair",
     "description": "Kyuzo is a capsule collection of desk and home accessories, driven by materiality and designed to provide divisions of space through subtle hierarchies.",
     "weight": "2.5 kg",
     "dimensions": "1530 x 800 x 1250 cm",
     "price": 200,
+    "stockQuantity": 35,
     "category": "chairs"
   },
   {
@@ -78,6 +85,7 @@
     "weight": "0.2 kg",
     "dimensions": "35 x 50 x 20 cm",
     "price": 120,
+    "stockQuantity": 4,
     "category": "other"
   },
   {
@@ -89,6 +97,7 @@
     "dimensions": "700 x 500 x 800 cm",
     "size": "S",
     "price": 60,
+    "stockQuantity": 50,
     "category": "chairs"
   },
   {
@@ -99,6 +108,7 @@
     "weight": "0.4 kg",
     "dimensions": "50 x 60 x 30 cm",
     "price": 50,
+    "stockQuantity": 36,
     "category": "clocks"
   },
   {
@@ -109,6 +119,7 @@
     "weight": "1.8 kg",
     "dimensions": "700 x 500 x 20 cm",
     "price": 80,
+    "stockQuantity": 44,
     "category": "chairs"
   },
   {
@@ -119,6 +130,7 @@
     "weight": "0.8 kg",
     "dimensions": "35 x 50 x 40 cm",
     "price": 110,
+    "stockQuantity": 39,
     "category": "lamps"
   },
   {
@@ -129,6 +141,7 @@
     "weight": "0.8 kg",
     "dimensions": "35 x 50 x 40 cm",
     "price": 110,
+    "stockQuantity": 41,
     "category": "lamps"
   },
   {
@@ -139,6 +152,7 @@
     "weight": "0.8 kg",
     "dimensions": "35 x 50 x 40 cm",
     "price": 110,
+    "stockQuantity": 37,
     "category": "lamps"
   }
 ]

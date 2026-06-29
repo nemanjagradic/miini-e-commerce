@@ -1,4 +1,5 @@
 const Order = require("../models/orderModel");
+const Product = require("../models/productModel");
 const User = require("../models/userModel");
 const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
@@ -11,6 +12,17 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
 
   if (!user.cart || user.cart.length === 0)
     return next(new AppError("There are no products in cart", 400));
+
+  for (const item of user.cart) {
+    if (item.quantity > item.product.stockQuantity) {
+      return next(
+        new AppError(
+          `Only ${item.product.stockQuantity} item(s) of "${item.product.title}" available in stock.`,
+          400
+        )
+      );
+    }
+  }
 
   const products = user.cart.map((item) => ({
     product: item.product._id,
@@ -49,7 +61,7 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
         unit_amount: item.price * 100,
         product_data: {
           name: item.title,
-          images: [`https://miini-e-commerce.onrender.com/${item.img}`],
+          images: [`https://miini-backend.up.railway.app/api/${item.img}`],
         },
       },
       quantity: item.quantity,
@@ -88,9 +100,19 @@ exports.webhookHandler = catchAsync(async (req, res, next) => {
   }
 
   if (event.type === "checkout.session.completed") {
-    await Order.findByIdAndUpdate(event.data.object.client_reference_id, {
-      status: "paid",
-    });
+    const orderId = event.data.object.client_reference_id;
+    const order = await Order.findById(orderId);
+
+    if (order && order.status !== "paid") {
+      for (const item of order.products) {
+        await Product.findByIdAndUpdate(item.product, {
+          $inc: { stockQuantity: -item.quantity },
+        });
+      }
+
+      order.status = "paid";
+      await order.save();
+    }
   }
 
   res.status(200).json({ received: true });

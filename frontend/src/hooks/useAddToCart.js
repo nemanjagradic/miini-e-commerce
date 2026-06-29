@@ -11,7 +11,9 @@ export function useAddToCart() {
   const allProducts = useSelector((state) => state.products.allProducts);
 
   const resolveProduct = async (id) => {
-    const fromStore = allProducts.find((p) => p._id === id);
+    const fromStore = allProducts.find(
+      (p) => p._id === id || p.id === id,
+    );
     if (fromStore) return fromStore;
 
     const res = await fetch(`${API_URL}/products/${id}`);
@@ -26,12 +28,30 @@ export function useAddToCart() {
     if (!currentUser) {
       try {
         const product = await resolveProduct(id);
+
+        if ((product.stockQuantity ?? 0) <= 0) {
+          throw new Error("This item is out of stock.");
+        }
+
+        const existingItem = store
+          .getState()
+          .cart.cartItems.find((item) => item.id === id);
+        const targetQuantity = buyNow
+          ? quantity
+          : (existingItem?.quantity ?? 0) + quantity;
+
+        if (targetQuantity > product.stockQuantity) {
+          throw new Error(
+            `Only ${product.stockQuantity} item(s) available in stock.`,
+          );
+        }
+
         dispatch(cartActions.addOrUpdateItem({ product, quantity, buyNow }));
         syncAnonymousCartFromItems(store.getState().cart.cartItems);
 
         const updatedItems = store.getState().cart.cartItems;
-        const existingItem = updatedItems.find((item) => item.id === id);
-        if (buyNow && existingItem) return;
+        const updatedItem = updatedItems.find((item) => item.id === id);
+        if (buyNow && updatedItem) return;
 
         dispatch(
           uiActions.setAlert({

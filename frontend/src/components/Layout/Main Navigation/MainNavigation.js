@@ -14,6 +14,7 @@ import { uiActions } from "../../../store/ui-slice";
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Modal from "../../../UI/Modal";
+import UserAvatar from "../../../UI/UserAvatar";
 import useScrollNav from "../../../hooks/useIntersectionNav";
 import { useLogout } from "../../../hooks/useLogout";
 
@@ -79,7 +80,7 @@ const MainNavigation = () => {
     "transition-colors hover:text-lightBlack";
 
   return (
-    <div className="navigation z-[2] w-full bg-white py-6 font-Heebo shadow-small">
+    <div className="navigation z-[3] w-full bg-white py-6 font-Heebo shadow-small">
       <div className="my-container flex items-center gap-3 lg:gap-6">
         <div className="flex shrink-0 items-center gap-4 md:gap-6 lg:gap-8">
           <Link to="/" className="shrink-0">
@@ -155,10 +156,10 @@ const MainNavigation = () => {
             <div className="group relative shrink-0 cursor-pointer">
               <div className="h-9 w-9">
                 <Link to="profile">
-                  <img
-                    className="h-full w-full rounded-full"
-                    src={`${ASSET_URL}/images/users/${user.photo}`}
-                    alt="User"
+                  <UserAvatar
+                    photo={user.photo}
+                    assetUrl={ASSET_URL}
+                    className="h-full w-full"
                   />
                 </Link>
               </div>

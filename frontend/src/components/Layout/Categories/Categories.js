@@ -2,6 +2,7 @@ import ProductSmallItem from "../../Products/ProductSmallItem";
 import { useMemo, useState } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { sortOutOfStockLast } from "../../../utils/productStock";
 
 const categoryButtons = ["all", "chairs", "tables", "clocks", "lamps", "other"];
 
@@ -52,7 +53,7 @@ const Categories = () => {
         break;
     }
 
-    return products;
+    return sortOutOfStockLast(products);
   }, [allProducts, query, activeCategory, sort]);
 
   const heading = query

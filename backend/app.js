@@ -14,6 +14,7 @@ const orderRouter = require("./routes/orderRoutes");
 const globalErrorHandler = require("./controllers/errorController");
 const orderController = require("./controllers/orderController");
 const AppError = require("./utils/appError");
+const { userUploadDir } = require("./utils/uploadPaths");
 
 const app = express();
 app.set("trust proxy", 1);
@@ -31,6 +32,7 @@ app.use(
   orderController.webhookHandler,
 );
 
+app.use("/images/users", express.static(userUploadDir));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json({ limit: "10kb" }));
 app.use(cookieParser());

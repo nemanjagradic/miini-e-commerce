@@ -1,8 +1,11 @@
+const path = require("path");
+const fs = require("fs/promises");
 const catchAsync = require("../utils/catchAsync");
 const multer = require("multer");
 const sharp = require("sharp");
 const User = require("../models/userModel");
 const AppError = require("../utils/appError");
+const { userUploadDir } = require("../utils/uploadPaths");
 
 exports.getMe = catchAsync(async (req, res, next) => {
   if (!req.user) {
@@ -36,11 +39,17 @@ exports.resizeUserImage = catchAsync(async (req, res, next) => {
   if (!req.file) return next();
 
   req.file.filename = `user-${req.user.id}-${Date.now()}.jpeg`;
+  const filePath = path.join(userUploadDir, req.file.filename);
+
+  const user = await User.findById(req.user.id);
+  if (user?.photo?.startsWith("user-")) {
+    await fs.unlink(path.join(userUploadDir, user.photo)).catch(() => {});
+  }
 
   await sharp(req.file.buffer)
     .resize(500, 500)
     .toFormat("jpeg")
-    .toFile(`public/images/users/${req.file.filename}`);
+    .toFile(filePath);
 
   next();
 });

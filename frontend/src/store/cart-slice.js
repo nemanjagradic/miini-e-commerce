@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { capQuantity } from "../utils/productStock";
 
 const initialCartState = {
   cartItems: [],
@@ -32,6 +33,7 @@ const cartSlice = createSlice({
         title: item.product.title,
         imgs: item.product.imgs,
         price: item.product.price,
+        stockQuantity: item.product.stockQuantity,
         quantity: item.quantity,
         totalPrice: item.quantity * item.product.price,
       }));
@@ -47,22 +49,26 @@ const cartSlice = createSlice({
     addOrUpdateItem(state, action) {
       const { product, quantity, buyNow } = action.payload;
       const id = product._id;
+      const stockQuantity = product.stockQuantity ?? 0;
+      const cappedQuantity = capQuantity(quantity, stockQuantity);
       const existing = state.cartItems.find((item) => item.id === id);
 
       if (existing) {
-        if (buyNow) {
-          existing.quantity = quantity;
-        } else {
-          existing.quantity += quantity;
-        }
-      } else {
+        const targetQuantity = buyNow
+          ? cappedQuantity
+          : capQuantity(existing.quantity + quantity, stockQuantity);
+
+        existing.quantity = targetQuantity;
+        existing.stockQuantity = stockQuantity;
+      } else if (cappedQuantity > 0) {
         state.cartItems.push({
           id,
           title: product.title,
           imgs: product.imgs,
           price: product.price,
-          quantity,
-          totalPrice: quantity * product.price,
+          stockQuantity,
+          quantity: cappedQuantity,
+          totalPrice: cappedQuantity * product.price,
         });
       }
 
@@ -73,7 +79,10 @@ const cartSlice = createSlice({
       const item = state.cartItems.find((i) => i.id === productId);
       if (!item) return;
 
-      const newQuantity = item.quantity + quantityChange;
+      const newQuantity = capQuantity(
+        item.quantity + quantityChange,
+        item.stockQuantity,
+      );
       if (newQuantity < 1) return;
 
       item.quantity = newQuantity;

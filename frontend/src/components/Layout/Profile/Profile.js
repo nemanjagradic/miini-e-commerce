@@ -1,5 +1,6 @@
 import { useSelector } from "react-redux";
 import { NavLink, Outlet } from "react-router-dom";
+import UserAvatar from "../../../UI/UserAvatar";
 
 const Profile = () => {
   const user = useSelector((state) => state.user.currentUser);
@@ -12,10 +13,11 @@ const Profile = () => {
     <div className="mx-auto w-full max-w-6xl px-5 py-20 font-Heebo min-[1020px]:w-5/6 min-[1020px]:px-0 xl:w-4/6">
       <div className="mb-10 space-y-4 rounded-lg border-t-4 border-t-lightBlack py-3 text-center shadow-md min-[310px]:p-3 min-[700px]:p-6">
         <div className="m-auto h-28 w-28">
-          <img
-            className="h-full w-full rounded-full"
-            src={`${ASSET_URL}/images/users/${user.photo}`}
-            alt="profile"
+          <UserAvatar
+            photo={user.photo}
+            assetUrl={ASSET_URL}
+            className="h-full w-full"
+            iconClassName="text-gray-500 text-3xl"
           />
         </div>
         <h3 className="text-xl font-semibold">{user.name}</h3>

@@ -5,12 +5,11 @@ import { favoritesActions } from "../../store/favorites-slice";
 export function useFetchFavorites() {
   const API_URL = process.env.REACT_APP_API_URL;
   const dispatch = useDispatch();
-  const favorites = useSelector((state) => state.favorites?.favorites || []);
   const currentUser = useSelector((state) => state.user.currentUser);
+  const authChecked = useSelector((state) => state.user.authChecked);
 
   useEffect(() => {
-    if (!currentUser) return;
-    if (favorites.length > 0) return;
+    if (!authChecked || !currentUser) return;
 
     const fetchFavorites = async () => {
       dispatch(favoritesActions.setLoading(true));
@@ -22,6 +21,16 @@ export function useFetchFavorites() {
         });
 
         const data = await res.json();
+
+        if (!res.ok) {
+          dispatch(
+            favoritesActions.setError(
+              data.message || "Failed to load favorites",
+            ),
+          );
+          return;
+        }
+
         dispatch(favoritesActions.setFavorites(data.data || []));
       } catch (err) {
         dispatch(favoritesActions.setError("Failed to load favorites"));
@@ -31,5 +40,5 @@ export function useFetchFavorites() {
     };
 
     fetchFavorites();
-  }, [dispatch, favorites, API_URL, currentUser]);
+  }, [authChecked, currentUser, dispatch, API_URL]);
 }

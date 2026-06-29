@@ -15,6 +15,11 @@ const productSchema = new mongoose.Schema(
       type: Number,
       required: [true, "Product must have a price."],
     },
+    stockQuantity: {
+      type: Number,
+      required: [true, "Product must have stock quantity."],
+      min: [0, "Stock quantity cannot be negative."],
+    },
     description: {
       type: String,
       required: [true, "Product must have a description."],

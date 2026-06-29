@@ -1,11 +1,10 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 const TrendingProducts = () => {
-  const { productId } = useParams();
   const [slide, setSlide] = useState(0);
   const [margin, setMargin] = useState(0);
   const { allProducts, loading } = useSelector((state) => state.products);
@@ -34,15 +33,15 @@ const TrendingProducts = () => {
   const trendingProducts = productSliced.map((product) => {
     return (
       <div
-        key={product.id}
-        className="group mr-3 w-[220px] flex-shrink-0 overflow-hidden rounded-lg border border-black/10 transition duration-300 hover:shadow-lg lg:h-72 lg:w-[200px] xl:h-72 xl:w-[190px]"
+        key={product._id ?? product.id}
+        className="group mr-3 w-[220px] flex-shrink-0 overflow-hidden rounded-lg border border-black/10 transition duration-300 hover:-translate-y-1 hover:shadow-lg lg:h-72 lg:w-[200px] xl:h-72 xl:w-[190px]"
         style={{ transform: `translateX(calc(${100 * slide}% + ${margin}px))` }}
       >
-        <Link to={`/products/${product.id}`}>
+        <Link to={`/products/${product._id ?? product.id}`}>
           <div className="h-[200px] overflow-hidden">
             <img
               className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-              src={!productId ? product.imgs[0] : `/${product.imgs[0]}`}
+              src={`/${product.imgs[0]}`}
               alt={product.title}
             />
           </div>
