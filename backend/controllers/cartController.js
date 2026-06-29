@@ -175,19 +175,19 @@ exports.removeFromCart = catchAsync(async (req, res, next) => {
 
 exports.mergeCart = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.user.id);
-  const guestCart = req.body.cart;
+  const anonymousCart = req.body.cart;
 
-  guestCart.forEach((guestItem) => {
+  anonymousCart.forEach((anonymousItem) => {
     const existingItem = user.cart.find(
-      (userItem) => userItem.product.toString() === guestItem.id
+      (userItem) => userItem.product.toString() === anonymousItem.id
     );
 
     if (existingItem) {
-      existingItem.quantity += guestItem.quantity;
+      existingItem.quantity += anonymousItem.quantity;
     } else {
       user.cart.push({
-        product: guestItem.id,
-        quantity: guestItem.quantity,
+        product: anonymousItem.id,
+        quantity: anonymousItem.quantity,
       });
     }
   });

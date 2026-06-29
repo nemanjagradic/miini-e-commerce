@@ -1,9 +1,9 @@
 import HomePage from "./pages/HomePage";
 import SingleProductPage from "./pages/SingleProductPage";
 import CategoriesPage from "./pages/CategoriesPage";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import ProtectedLayout from "./pages/ProtectedLayout";
-import PublicLayout from "./pages/PublicLayout";
+import { createBrowserRouter, Navigate, RouterProvider } from "react-router-dom";
+import StoreLayout from "./pages/StoreLayout";
+import RequireAuth from "./pages/RequireAuth";
 import ProductPage from "./pages/ProductPage";
 import ErrorPage from "./pages/ErrorPage";
 import CheckoutPage from "./pages/CheckoutPage";
@@ -17,34 +17,33 @@ import Favorites from "./components/Layout/Profile/Favorites";
 
 const router = createBrowserRouter([
   {
-    element: <PublicLayout />,
+    path: "/",
+    element: <StoreLayout />,
     errorElement: <ErrorPage />,
     children: [
-      { index: true, element: <AuthPage /> },
+      { index: true, element: <HomePage /> },
+      { path: "home", element: <Navigate to="/" replace /> },
       { path: "auth", element: <AuthPage /> },
       { path: "forgot-password", element: <ForgotPasswordPage /> },
       { path: "reset-password/:token", element: <ResetPasswordPage /> },
-    ],
-  },
-  {
-    path: "/",
-    element: <ProtectedLayout />,
-    errorElement: <ErrorPage />,
-    children: [
-      { path: "home", element: <HomePage /> },
-      {
-        path: "profile",
-        element: <UserProfilePage />,
-        children: [
-          { index: true, element: <ProfileSettings /> },
-          { path: "orders", element: <OrderHistory /> },
-          { path: "favorites", element: <Favorites /> },
-        ],
-      },
       { path: "products/:productId", element: <SingleProductPage /> },
       { path: "categories/:categoryName", element: <CategoriesPage /> },
       { path: "product-page", element: <ProductPage /> },
       { path: "checkout", element: <CheckoutPage /> },
+      {
+        element: <RequireAuth />,
+        children: [
+          {
+            path: "profile",
+            element: <UserProfilePage />,
+            children: [
+              { index: true, element: <ProfileSettings /> },
+              { path: "orders", element: <OrderHistory /> },
+              { path: "favorites", element: <Favorites /> },
+            ],
+          },
+        ],
+      },
     ],
   },
 ]);

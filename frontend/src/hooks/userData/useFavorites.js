@@ -9,7 +9,7 @@ export function useFetchFavorites() {
   const currentUser = useSelector((state) => state.user.currentUser);
 
   useEffect(() => {
-    if (!currentUser || currentUser.isGuest) return;
+    if (!currentUser) return;
     if (favorites.length > 0) return;
 
     const fetchFavorites = async () => {

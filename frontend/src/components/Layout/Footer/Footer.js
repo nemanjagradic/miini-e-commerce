@@ -39,22 +39,22 @@ const Footer = () => {
       )}
       <ul className="mb-5 mt-24">
         <li className="mx-3 inline-block">
-          <Link to="/home">About</Link>
+          <Link to="/">About</Link>
         </li>
         <li className="mx-3 inline-block">
-          <Link to="/home">Store Locator</Link>
+          <Link to="/">Store Locator</Link>
         </li>
         <li className="mx-3 inline-block">
-          <Link to="/home">FAQs</Link>
+          <Link to="/">FAQs</Link>
         </li>
         <li className="mx-3 inline-block">
-          <Link to="/home">News</Link>
+          <Link to="/">News</Link>
         </li>
         <li className="mx-3 inline-block">
-          <Link to="/home">Careers</Link>
+          <Link to="/">Careers</Link>
         </li>
         <li className="mx-3 inline-block">
-          <Link to="/home">Contact Us</Link>
+          <Link to="/">Contact Us</Link>
         </li>
       </ul>
       <p className="text-sm text-white/60">

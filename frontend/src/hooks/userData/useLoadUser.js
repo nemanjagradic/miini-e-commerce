@@ -17,7 +17,11 @@ export function useFetchUser() {
         }
         const data = await res.json();
         dispatch(userActions.setUser(data.data));
-      } catch (err) {}
+      } catch (err) {
+        // not logged in
+      } finally {
+        dispatch(userActions.setAuthChecked(true));
+      }
     }
     fetchUser();
   }, [dispatch, API_URL]);

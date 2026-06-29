@@ -11,7 +11,7 @@ const ErrorPage = () => {
           Oops! The page you’re looking for doesn’t exist.
         </h3>
         <Link
-          to="/home"
+          to="/"
           className="rounded-2xl bg-lightBlack px-6 py-3 text-white shadow-md transition-all duration-300 hover:bg-black"
         >
           Back to Home

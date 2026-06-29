@@ -26,12 +26,6 @@ router.post("/resetPassword/:token", authController.resetPassword);
 
 router.get("/me", authController.protect, userController.getMe);
 
-router.post(
-  "/clear-guest-favorites",
-  authController.protect,
-  userController.clearGuestFavorites
-);
-
 router.get("/favorites", authController.protect, userController.getFavorites);
 router.post(
   "/favorites",

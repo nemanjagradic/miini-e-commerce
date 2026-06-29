@@ -32,7 +32,7 @@ const createSendToken = (user, statusCode, req, res) => {
 };
 
 exports.signup = catchAsync(async (req, res) => {
-  const { name, email, password, passwordConfirm, photo, isGuest } = req.body;
+  const { name, email, password, passwordConfirm, photo } = req.body;
 
   const url = `${process.env.FRONTEND_URL}/profile`;
 
@@ -42,7 +42,6 @@ exports.signup = catchAsync(async (req, res) => {
     password,
     passwordConfirm,
     photo,
-    isGuest,
   });
 
   await new Email(newUser, url).sendWelcome();
@@ -65,9 +64,6 @@ exports.login = catchAsync(async (req, res, next) => {
 });
 
 exports.logout = catchAsync(async (req, res) => {
-  if (req.user?.isGuest) {
-    await User.findByIdAndUpdate(req.user._id, { cart: [] });
-  }
   res.cookie("jwt", "", {
     expires: new Date(Date.now() + 10 * 1000),
     httpOnly: true,
@@ -176,15 +172,6 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 
 exports.updatePassword = catchAsync(async (req, res, next) => {
   const { currentPassword, newPassword, passwordConfirm } = req.body;
-
-  if (req.user.isGuest) {
-    return next(
-      new AppError(
-        "Password changes are disabled for the demo account. Please sign up to manage your own password.",
-        403
-      )
-    );
-  }
 
   if (!currentPassword)
     return next(new AppError("Please provide your current password.", 400));

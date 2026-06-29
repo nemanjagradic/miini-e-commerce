@@ -1,13 +1,28 @@
 import { uiActions } from "../store/ui-slice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { favoritesActions } from "../store/favorites-slice";
 
 export function useFavoriteToggle() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const API_URL = process.env.REACT_APP_API_URL;
+  const currentUser = useSelector((state) => state.user.currentUser);
 
   const toggleFavorite = async (productId) => {
     dispatch(uiActions.clearAlert());
+
+    if (!currentUser) {
+      dispatch(
+        uiActions.setAlert({
+          status: "notification",
+          message: "Please log in or sign up to save favorites.",
+          time: 4,
+        }),
+      );
+      navigate("/auth");
+      return;
+    }
 
     try {
       const res = await fetch(`${API_URL}/users/favorites`, {

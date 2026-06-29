@@ -67,10 +67,6 @@ const userSchema = new mongoose.Schema({
     default: true,
     select: false,
   },
-  isGuest: {
-    type: Boolean,
-    default: false,
-  },
 });
 
 userSchema.pre("save", function (next) {

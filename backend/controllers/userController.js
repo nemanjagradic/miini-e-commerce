@@ -56,15 +56,6 @@ const filterObj = (obj, ...alowwedFields) => {
 
 exports.updateMe = catchAsync(async (req, res, next) => {
   try {
-    if (req.user.isGuest) {
-      return next(
-        new AppError(
-          "Updates are disabled for the demo account. Please sign up to customize your profile.",
-          403
-        )
-      );
-    }
-
     if (req.body.password || req.body.passwordConfirm) {
       return next(
         new AppError("This route is not for updating password.", 400)
@@ -118,16 +109,4 @@ exports.getFavorites = catchAsync(async (req, res, next) => {
     results: user.favorites.length,
     data: user.favorites,
   });
-});
-
-exports.clearGuestFavorites = catchAsync(async (req, res, next) => {
-  if (req.user.email !== "guest@example.com") {
-    return res.status(200).json({ status: "success" });
-  }
-
-  const user = await User.findById(req.user.id);
-  user.favorites = [];
-  await user.save({ validateBeforeSave: false });
-
-  res.status(200).json({ status: "success", data: [] });
 });

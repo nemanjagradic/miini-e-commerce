@@ -19,9 +19,9 @@ const Authentication = () => {
 
   const { handleAuth, loading, errors, setErrors } = useAuth();
 
-  const onSubmit = (e, mode, guestUserData) => {
+  const onSubmit = (e, authMode) => {
     if (e) e.preventDefault();
-    handleAuth(mode, formData, guestUserData);
+    handleAuth(authMode, formData);
   };
 
   return (
@@ -85,37 +85,23 @@ const Authentication = () => {
           </button>
         </form>
         {mode === "login" && (
-          <>
-            <button
-              className="mt-2 w-full rounded-lg border border-gray-300 bg-white py-2 text-sm font-semibold text-gray-700 transition hover:bg-gray-100"
-              type="button"
-              onClick={() =>
-                onSubmit(null, "login", {
-                  email: "guest@example.com",
-                  password: "guestpassword",
-                })
-              }
+          <div className="mt-4 text-center text-sm">
+            <Link
+              to="/forgot-password"
+              className="text-blue-500 hover:underline"
             >
-              Log in as Guest
-            </button>
-            <div className="mt-4 text-center text-sm">
-              <Link
-                to="/forgot-password"
-                className="text-blue-500 hover:underline"
+              Forgot password?
+            </Link>
+            <p className="mt-1 text-gray-600">
+              Don’t have an account?{" "}
+              <span
+                onClick={() => setMode("signup")}
+                className="cursor-pointer text-blue-500 hover:underline"
               >
-                Forgot password?
-              </Link>
-              <p className="mt-1 text-gray-600">
-                Don’t have an account?{" "}
-                <span
-                  onClick={() => setMode("signup")}
-                  className="text-blue-500 hover:underline"
-                >
-                  Sign up
-                </span>
-              </p>
-            </div>
-          </>
+                Sign up
+              </span>
+            </p>
+          </div>
         )}
       </div>
     </div>

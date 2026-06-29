@@ -9,7 +9,7 @@ export function useFetchOrders() {
   const currentUser = useSelector((state) => state.user.currentUser);
 
   useEffect(() => {
-    if (!currentUser || currentUser.isGuest) return;
+    if (!currentUser) return;
     if (orders.length > 0) return;
 
     const fetchOrders = async () => {

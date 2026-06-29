@@ -71,7 +71,7 @@ const ShoppingCart = () => {
               <h5 className="mb-3 mt-6 text-xl">Your cart is empty.</h5>
               <Link
                 className="border-2 border-solid border-black bg-white px-5 py-2.5 text-center text-sm uppercase tracking-wider transition duration-300 hover:bg-lightBlack hover:text-white"
-                to="/home"
+                to="/"
               >
                 Keep Browsing
               </Link>

@@ -1,19 +1,30 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { userActions } from "../store/user-slice";
+import { cartActions } from "../store/cart-slice";
 import { uiActions } from "../store/ui-slice";
 import { parseApiErrors } from "../utils/parseApiErrors";
+import {
+  clearAnonymousCart,
+  getAnonymousCart,
+} from "../utils/anonymousCart";
 
 export function useAuth() {
   const API_URL = process.env.REACT_APP_API_URL;
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState(null);
 
-  const handleAuth = async (mode, formData, guestUserData = null) => {
+  const redirectAfterAuth = () => {
+    const from = location.state?.from?.pathname;
+    navigate(from || "/", { replace: true });
+  };
+
+  const handleAuth = async (mode, formData) => {
     try {
       setLoading(true);
       const url =
@@ -21,9 +32,8 @@ export function useAuth() {
           ? `${API_URL}/users/signup`
           : `${API_URL}/users/login`;
 
-      const body = guestUserData
-        ? guestUserData
-        : mode === "signup"
+      const body =
+        mode === "signup"
           ? {
               name: formData.name,
               email: formData.email,
@@ -34,6 +44,7 @@ export function useAuth() {
               email: formData.email,
               password: formData.password,
             };
+
       const res = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -51,47 +62,62 @@ export function useAuth() {
       const user = data.data;
       dispatch(userActions.setUser(user));
 
-      const guestCart = JSON.parse(localStorage.getItem("guestCart"));
-      if (guestCart && guestCart.length > 0 && user && !user.isGuest) {
+      const anonymousCart = getAnonymousCart();
+      if (anonymousCart.length > 0) {
         try {
-          const res = await fetch(`${API_URL}/cart/merge-cart`, {
+          const mergeRes = await fetch(`${API_URL}/cart/merge-cart`, {
             method: "POST",
             credentials: "include",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ cart: guestCart }),
+            body: JSON.stringify({ cart: anonymousCart }),
           });
 
-          const data = await res.json();
-          if (!res.ok) throw new Error(data.message || "Failed to merge cart");
+          const mergeData = await mergeRes.json();
+          if (!mergeRes.ok) {
+            throw new Error(mergeData.message || "Failed to merge cart");
+          }
 
-          localStorage.removeItem("guestCart");
+          clearAnonymousCart();
+
+          const cartRes = await fetch(`${API_URL}/cart`, {
+            credentials: "include",
+          });
+          const cartData = await cartRes.json();
+          if (cartRes.ok) {
+            dispatch(
+              cartActions.setCart({
+                cart: cartData.cart,
+                subtotal: cartData.subtotal,
+                totalQuantity: cartData.totalQuantity,
+              }),
+            );
+          }
         } catch (err) {
           dispatch(
             uiActions.setAlert({
               status: "error",
               message:
-                "We couldn't merge your guest cart. Please add items again.",
+                "We couldn't merge your cart. Please add items again.",
               time: 3,
             }),
           );
         }
       }
+
       setErrors(null);
 
-      if (user.isGuest) {
-        navigate("/home");
-      } else {
-        dispatch(
-          uiActions.setAlert({
-            status: "success",
-            message: `${mode === "login" ? "You have successfully logged in!" : "You have successfully signed up"}`,
-            time: 2,
-          }),
-        );
-        setTimeout(() => {
-          navigate("/home");
-        }, 2000);
-      }
+      dispatch(
+        uiActions.setAlert({
+          status: "success",
+          message:
+            mode === "login"
+              ? "You have successfully logged in!"
+              : "You have successfully signed up!",
+          time: 2,
+        }),
+      );
+
+      setTimeout(redirectAfterAuth, 2000);
     } catch (err) {
       dispatch(
         uiActions.setAlert({

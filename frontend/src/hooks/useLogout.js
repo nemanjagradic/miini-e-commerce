@@ -13,15 +13,6 @@ export function useLogout() {
 
   const logout = async (setModal = null) => {
     try {
-      const clearRes = await fetch(`${API_URL}/users/clear-guest-favorites`, {
-        method: "POST",
-        credentials: "include",
-      });
-      if (!clearRes.ok) {
-        const data = await clearRes.json();
-        throw new Error(data.message || "Failed to clear guest favorites");
-      }
-
       const logoutRes = await fetch(`${API_URL}/users/logout`, {
         method: "POST",
         credentials: "include",
@@ -37,8 +28,8 @@ export function useLogout() {
       dispatch(orderActions.setOrders([]));
       dispatch(uiActions.clearAlert());
 
-      if (typeof setModal === "function") setModal(false); // ✅ safe check
-      navigate("/auth");
+      if (typeof setModal === "function") setModal(false);
+      navigate("/");
     } catch (err) {
       dispatch(
         uiActions.setAlert({

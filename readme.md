@@ -1,6 +1,6 @@
 # Miini E-commerce App
 
-A full-stack e-commerce web application where users can browse products, manage favorites, add items to the cart, and complete purchases using Stripe. Includes authentication, email notifications, and guest user functionality.
+A full-stack e-commerce web application where users can browse products freely, manage favorites, add items to the cart, and complete purchases using Stripe. Includes authentication and email notifications.
 
 ---
 
@@ -9,8 +9,9 @@ A full-stack e-commerce web application where users can browse products, manage 
 ### Authentication & Users
 
 - Sign Up / Log In (email & password)
-- Guest User Login – explore the app without signing up
-- Guest Cart Merge – items added as a guest are merged with the user's cart after logging in
+- Public storefront – browse products without an account
+- Anonymous cart – items saved locally until you log in or sign up
+- Cart merge – anonymous cart items are merged after authentication
 - Forgot / Reset Password
 - Profile Management – update name, email, profile picture, and password
 
@@ -22,8 +23,9 @@ A full-stack e-commerce web application where users can browse products, manage 
 
 ### Cart & Checkout
 
-- Add, update quantity, and delete products in the cart
-- Checkout flow with Stripe payment
+- Add, update quantity, and delete products in the cart (works without login)
+- Checkout review without an account; login required at payment
+- Stripe payment integration
 - Order history – view active and canceled orders; continue payment if needed
 
 ### Email Notifications
