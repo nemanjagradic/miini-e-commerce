@@ -13,4 +13,10 @@ router.post(
   orderController.getCheckoutSession
 );
 
+router.post(
+  "/:orderId/resume-payment",
+  authController.protect,
+  orderController.resumePayment
+);
+
 module.exports = router;

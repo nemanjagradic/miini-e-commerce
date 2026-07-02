@@ -1,21 +1,28 @@
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { loadStripe } from "@stripe/stripe-js";
 import Modal from "../../../UI/Modal";
 import { useOrderCancel } from "../../../hooks/useOrderCancel";
+import { useResumePayment } from "../../../hooks/useResumePayment";
+import ProfilePanel from "./ProfilePanel";
+import ProfileEmptyState from "./ProfileEmptyState";
+
+const orderFilterOptions = [
+  { value: "active", label: "Active orders" },
+  { value: "canceled", label: "Canceled orders" },
+];
 
 const OrderHistory = () => {
   const { orders } = useSelector((state) => state.orders);
-  const dropdownRef = useRef();
   const [showOrdersType, setShowOrdersType] = useState("active");
-  const [isOpen, setIsOpen] = useState(false);
   const [modalOrderId, setModalOrderId] = useState(null);
+  const [payingOrderId, setPayingOrderId] = useState(null);
   const stripePromise = loadStripe(
     "pk_test_51QyE9d05dl18p79dS3qX7YWYCsuujpjtPIw6xraEBmuULgy8Gy5E2Deraeqb6y4ys62XIcAVpgEJSFHh8Ppmyggm002JrhaXbw",
   );
   const cancelOrder = useOrderCancel();
+  const resumePayment = useResumePayment();
 
   const handleCancelConfirm = async () => {
     const success = await cancelOrder(modalOrderId);
@@ -24,156 +31,154 @@ const OrderHistory = () => {
     }
   };
 
-  const continuePayment = async (sessionId) => {
-    const stripe = await stripePromise;
-    await stripe.redirectToCheckout({ sessionId });
+  const handleResumePayment = async (orderId) => {
+    setPayingOrderId(orderId);
+    await resumePayment(orderId, stripePromise);
+    setPayingOrderId(null);
   };
 
-  const toggleDropdown = () => setIsOpen((prev) => !prev);
-
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-        setIsOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  const handleOrders = (status) => {
-    setShowOrdersType(status);
-    setIsOpen(false);
-  };
-
-  const showOrders = orders.filter((order) => {
+  const showOrders = (orders ?? []).filter((order) => {
     if (showOrdersType === "active") {
       return order.status === "pending" || order.status === "paid";
-    } else if (showOrdersType === "canceled") {
+    }
+    if (showOrdersType === "canceled") {
       return order.status === "canceled";
     }
     return true;
   });
 
-  if (!orders || orders.length === 0) {
-    return (
-      <div className="p-10 text-gray-500">
-        <p className="text-lg">You have no orders yet.</p>
-      </div>
-    );
-  }
+  const formatPrice = (amount) =>
+    new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+    }).format(amount);
 
   return (
-    <div className="flex-1 px-3 py-10 shadow-[0_2px_6px_rgba(0,0,0,0.1)] sm:px-10 sm:py-12">
-      <div className="mb-8 flex items-center justify-between">
-        <h3 className="text-xl font-semibold uppercase">Order history</h3>
-        <div
-          ref={dropdownRef}
-          className="group relative w-36 text-center text-sm"
-        >
-          <button
-            onClick={toggleDropdown}
-            className="flex w-full items-center justify-center gap-2 bg-darker py-2 text-white"
-          >
-            Order status
-            <FontAwesomeIcon
-              icon={faChevronDown}
-              className={`transition-transform ${isOpen ? "rotate-180" : ""}`}
-            />
-          </button>
-
-          <ul
-            className={`absolute left-0 w-full origin-top transform bg-white shadow-lg transition-all duration-200 ease-out 
-        ${isOpen ? "scale-y-100 opacity-100" : "pointer-events-none scale-y-0 opacity-0"}`}
-          >
-            <li
-              className="cursor-pointer px-3 py-2 hover:bg-gray-100"
-              onClick={() => handleOrders("active")}
+    <ProfilePanel>
+      <div className="mb-8 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+        <h2 className="text-2xl font-semibold sm:text-3xl">Order history</h2>
+        {orders?.length > 0 && (
+          <div className="flex items-center gap-2">
+            <label htmlFor="order-filter" className="text-sm text-gray-500">
+              Show
+            </label>
+            <select
+              id="order-filter"
+              value={showOrdersType}
+              onChange={(e) => setShowOrdersType(e.target.value)}
+              className="rounded-full border border-gray-300 px-3 py-1.5 text-sm outline-none focus:border-lightBlack"
             >
-              Active orders
-            </li>
-            <li
-              className="cursor-pointer px-3 py-2 hover:bg-gray-100"
-              onClick={() => handleOrders("canceled")}
-            >
-              Canceled orders
-            </li>
-          </ul>
-        </div>
+              {orderFilterOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
       </div>
 
-      {showOrders.length === 0 ? (
-        <div className="p-10 text-gray-500">
-          <p className="text-lg">You have no {showOrdersType} orders yet.</p>
-        </div>
+      {!orders || orders.length === 0 ? (
+        <ProfileEmptyState
+          title="You have no orders yet"
+          description="When you place an order, it will show up here."
+          ctaLabel="Browse all products"
+          ctaTo="/categories/all"
+        />
+      ) : showOrders.length === 0 ? (
+        <ProfileEmptyState
+          title={`No ${showOrdersType} orders`}
+          description="Try switching the filter to see other orders."
+          ctaLabel="Browse all products"
+          ctaTo="/categories/all"
+        />
       ) : (
         showOrders.map((order) => (
           <div
             key={order._id}
-            className="mb-4 space-y-4 border p-4 shadow-sm transition hover:bg-gray-50 sm:p-5"
+            className="mb-4 space-y-4 rounded-lg border border-black/10 p-4 transition hover:-translate-y-0.5 hover:shadow-md sm:p-5"
           >
             <div className="flex flex-col items-center justify-between gap-2 sm:flex-row">
-              <h5 className="font-semibold">Order #{order._id.slice(-6)}</h5>
+              <h3 className="font-semibold">Order #{order._id.slice(-6)}</h3>
               <span
-                className={`${
-                  order.status === "pending" && "bg-yellow-200 text-yellow-800"
-                } ${order.status === "paid" && "bg-green-200 text-green-800"} ${
-                  order.status === "canceled" && "bg-red-200 text-red-800"
-                } rounded-full px-3 py-1.5 text-xs font-semibold uppercase`}
+                className={`rounded-full px-3 py-1.5 text-xs font-semibold uppercase ${
+                  order.status === "pending"
+                    ? "bg-yellow-200 text-yellow-800"
+                    : order.status === "paid"
+                      ? "bg-green-200 text-green-800"
+                      : "bg-red-200 text-red-800"
+                }`}
               >
                 {order.status}
               </span>
             </div>
             <div className="flex flex-col items-center justify-between gap-3 sm:flex-row">
               <div className="text-lightBlack">
-                <h5 className="mb-1 text-center text-xs sm:text-start">
+                <p className="mb-1 text-center text-xs text-gray-500 sm:text-start">
                   {new Date(order.createdAt).toLocaleDateString("en-US", {
                     year: "numeric",
                     month: "long",
                     day: "numeric",
                   })}
-                </h5>
+                </p>
                 <div className="flex flex-wrap justify-center sm:justify-start">
-                  {order.products.map((product, index) => (
-                    <span
-                      key={index}
-                      className="mb-1 mr-2 inline-block text-sm"
-                    >
-                      {product.title}{" "}
-                      <span className="text-xs text-gray-500">
-                        x {product.quantity}
+                  {order.products.map((product, index) => {
+                    const productId = product.product?._id ?? product.product;
+                    const title = product.title;
+
+                    return (
+                      <span
+                        key={index}
+                        className="mb-1 mr-2 inline-block text-sm"
+                      >
+                        {productId ? (
+                          <Link
+                            to={`/products/${productId}`}
+                            className="transition hover:text-lightBlack hover:underline"
+                          >
+                            {title}
+                          </Link>
+                        ) : (
+                          title
+                        )}{" "}
+                        <span className="text-xs text-gray-500">
+                          x {product.quantity}
+                        </span>
+                        {index < order.products.length - 1 && ","}
                       </span>
-                      {index < order.products.length - 1 && ","}
-                    </span>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
               <p className="whitespace-nowrap text-sm font-semibold text-lightBlack">
-                {new Intl.NumberFormat("en-US", {
-                  style: "currency",
-                  currency: "USD",
-                }).format(order.totalPrice)}
+                {formatPrice(order.totalPrice)}
               </p>
             </div>
             {order.status === "pending" && (
-              <div className="flex flex-col gap-2 border-t pt-4 sm:flex-row sm:justify-end">
+              <div className="flex flex-col gap-2 border-t border-gray-200 pt-4 sm:flex-row sm:justify-end">
                 <button
+                  type="button"
                   onClick={() => setModalOrderId(order._id)}
-                  className="border border-red-300 bg-white px-4 py-2 text-sm font-medium text-red-700 transition hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                  className="rounded-lg border border-red-300 bg-white px-4 py-2 text-sm font-medium text-red-700 transition hover:bg-red-50"
                 >
-                  Cancel Order
+                  Cancel order
                 </button>
                 <button
-                  onClick={() => continuePayment(order.stripeSessionId)}
-                  className="bg-blue-500 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                  type="button"
+                  disabled={payingOrderId === order._id}
+                  onClick={() => handleResumePayment(order._id)}
+                  className="rounded-lg bg-lightBlack px-4 py-2 text-sm font-semibold text-white transition hover:bg-black disabled:opacity-60"
                 >
-                  Continue Payment
+                  {payingOrderId === order._id
+                    ? "Redirecting..."
+                    : "Continue payment"}
                 </button>
               </div>
             )}
           </div>
         ))
       )}
+
       {modalOrderId && (
         <Modal
           message="Cancel this order?"
@@ -184,7 +189,7 @@ const OrderHistory = () => {
           handleConfirm={handleCancelConfirm}
         />
       )}
-    </div>
+    </ProfilePanel>
   );
 };
 

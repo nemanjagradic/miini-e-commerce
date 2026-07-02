@@ -15,6 +15,13 @@ const sortOptions = [
 
 const capitalize = (str) => `${str[0].toUpperCase()}${str.slice(1)}`;
 
+const getCategoryChipClass = (active) =>
+  `shrink-0 rounded-full px-4 py-1.5 text-sm font-medium transition ${
+    active
+      ? "bg-lightBlack text-white"
+      : "border border-gray-300 text-darker/70 hover:border-lightBlack hover:text-lightBlack"
+  }`;
+
 const Categories = () => {
   const { categoryName = "all" } = useParams();
   const [searchParams] = useSearchParams();
@@ -62,43 +69,50 @@ const Categories = () => {
 
   return (
     <div className="my-container">
-      <h3 className="my-8 text-center text-3xl font-semibold">{heading}</h3>
+      <h3 className="mb-6 mt-8 text-center text-3xl font-semibold">{heading}</h3>
 
-      <ul className="text-center font-Heebo">
-        {categoryButtons.map((button) => (
-          <Link
-            to={`/categories/${button}`}
-            key={button}
-            className={`mx-4 mt-4 inline-block border border-black px-4 py-1 transition hover:shadow-md md:mt-0 ${
-              activeCategory === button ? "bg-light" : ""
-            }`}
-          >
-            {capitalize(button)}
-          </Link>
-        ))}
-      </ul>
+      <div className="mb-8 flex flex-col gap-4 font-Heebo">
+        <nav
+          aria-label="Product categories"
+          className="flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] sm:flex-wrap sm:justify-center sm:overflow-visible [&::-webkit-scrollbar]:hidden"
+        >
+          {categoryButtons.map((button) => {
+            const active = activeCategory === button;
+            return (
+              <Link
+                to={`/categories/${button}`}
+                key={button}
+                aria-current={active ? "page" : undefined}
+                className={getCategoryChipClass(active)}
+              >
+                {capitalize(button)}
+              </Link>
+            );
+          })}
+        </nav>
 
-      <div className="mt-8 flex flex-col items-center justify-between gap-3 font-Heebo sm:flex-row">
-        <p className="text-sm text-gray-500">
-          {displayedProducts.length}{" "}
-          {displayedProducts.length === 1 ? "product" : "products"}
-        </p>
-        <div className="flex items-center gap-2">
-          <label htmlFor="sort" className="text-sm text-gray-500">
-            Sort by
-          </label>
-          <select
-            id="sort"
-            value={sort}
-            onChange={(e) => setSort(e.target.value)}
-            className="rounded-md border border-gray-300 px-3 py-1.5 text-sm outline-none focus:border-lightBlack"
-          >
-            {sortOptions.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
+        <div className="flex flex-col items-center justify-between gap-3 sm:flex-row">
+          <p className="text-sm text-gray-500">
+            {displayedProducts.length}{" "}
+            {displayedProducts.length === 1 ? "product" : "products"}
+          </p>
+          <div className="flex items-center gap-2">
+            <label htmlFor="sort" className="text-sm text-gray-500">
+              Sort by
+            </label>
+            <select
+              id="sort"
+              value={sort}
+              onChange={(e) => setSort(e.target.value)}
+              className="rounded-full border border-gray-300 px-3 py-1.5 text-sm outline-none focus:border-lightBlack"
+            >
+              {sortOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
       </div>
 
@@ -123,7 +137,7 @@ const Categories = () => {
           </Link>
         </div>
       ) : (
-        <div className="mt-8 flex flex-wrap justify-center gap-8">
+        <div className="flex flex-wrap justify-center gap-8">
           {displayedProducts.map((product) => (
             <ProductSmallItem
               key={product._id || product.id}

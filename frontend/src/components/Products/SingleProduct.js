@@ -8,6 +8,7 @@ import Breadcrumb from "../../UI/Breadcrumb";
 import ImageLightbox from "../../UI/ImageLightbox";
 import StockBadge from "../../UI/StockBadge";
 import ProductSpecs from "./ProductSpecs";
+import Spinner from "../../UI/Spinner";
 import { capQuantity, LOW_STOCK_THRESHOLD } from "../../utils/productStock";
 
 const capitalize = (str) => `${str[0].toUpperCase()}${str.slice(1)}`;
@@ -101,7 +102,7 @@ const SingleProduct = ({ tableProductId }) => {
   if (loading || !curProduct) {
     return (
       <div className="flex justify-center py-20">
-        <div className="h-12 w-12 animate-spin rounded-full border-4 border-gray-300 border-t-black" />
+        <Spinner />
       </div>
     );
   }
@@ -130,20 +131,20 @@ const SingleProduct = ({ tableProductId }) => {
   return (
     <>
       <div className="my-container flex flex-wrap gap-8 py-8">
-        <div className="mx-auto basis-11/12 min-[910px]:basis-6/12">
+        <div className="basis-11/12 min-[910px]:basis-6/12">
           <button
             type="button"
-            className="mx-auto block h-[400px] w-full cursor-zoom-in md:w-9/12"
+            className="block aspect-square w-full max-h-[520px] cursor-zoom-in overflow-hidden rounded-sm"
             onClick={() => setLightboxOpen(true)}
             aria-label="Open image gallery"
           >
             <img
-              className="h-full w-full object-contain"
+              className="h-full w-full object-cover"
               src={`/${bigImage}`}
               alt={curProduct.title}
             />
           </button>
-          <div className="mx-auto mt-2 flex gap-2 md:w-9/12">{smallImgs}</div>
+          <div className="mt-2 flex flex-wrap gap-2">{smallImgs}</div>
         </div>
 
         <div className="mx-auto basis-11/12 min-[910px]:basis-[45%]">

@@ -1,25 +1,43 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+import { useLocation } from "react-router-dom";
 
-const useScrollNav = (percentage = 0.4) => {
+const useScrollNav = ({
+  homeOffset = 80,
+  defaultOffset = 200,
+  scrollDelta = 8,
+} = {}) => {
+  const { pathname } = useLocation();
+  const lastScrollY = useRef(0);
+
   useEffect(() => {
     const nav = document.querySelector(".navigation");
     if (!nav) return;
 
-    const handleScroll = () => {
-      const scrollPos = window.scrollY;
-      const triggerPoint =
-        (document.body.scrollHeight - window.innerHeight) * percentage;
+    const trigger = pathname === "/" ? homeOffset : defaultOffset;
 
-      if (scrollPos >= triggerPoint) {
-        nav.classList.add("sticky");
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      const delta = scrollY - lastScrollY.current;
+
+      if (Math.abs(delta) < scrollDelta) return;
+
+      if (scrollY <= trigger) {
+        nav.classList.remove("sticky-hidden");
+      } else if (delta > 0) {
+        nav.classList.add("sticky-hidden");
       } else {
-        nav.classList.remove("sticky");
+        nav.classList.remove("sticky-hidden");
       }
+
+      lastScrollY.current = scrollY;
     };
 
-    window.addEventListener("scroll", handleScroll);
+    nav.classList.remove("sticky-hidden");
+    lastScrollY.current = window.scrollY;
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [percentage]);
+  }, [pathname, homeOffset, defaultOffset, scrollDelta]);
 };
 
 export default useScrollNav;

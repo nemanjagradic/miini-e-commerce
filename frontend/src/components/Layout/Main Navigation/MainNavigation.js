@@ -11,12 +11,38 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { uiActions } from "../../../store/ui-slice";
-import { Link, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
 import Modal from "../../../UI/Modal";
 import UserAvatar from "../../../UI/UserAvatar";
 import useScrollNav from "../../../hooks/useIntersectionNav";
 import { useLogout } from "../../../hooks/useLogout";
+
+const NAV_ITEMS = [
+  { label: "Home", to: "/", end: true },
+  {
+    label: "Categories",
+    to: "/categories/all",
+    isActive: (pathname) => pathname.startsWith("/categories"),
+  },
+  {
+    label: "Product Page",
+    to: "/product-page",
+    isActive: (pathname) => pathname === "/product-page",
+  },
+];
+
+const getNavLinkClass = (active) =>
+  `relative pb-1 text-base font-extrabold uppercase tracking-wide transition-colors lg:text-lg ${
+    active
+      ? "text-lightBlack after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:bg-lightBlack"
+      : "text-darker/60 hover:text-lightBlack"
+  }`;
+
+const getMobileNavLinkClass = (active) =>
+  `block rounded-md px-3 py-2 normal-case transition-colors ${
+    active ? "bg-light text-lightBlack" : "hover:bg-gray-50"
+  }`;
 
 const MainNavigation = () => {
   const [showNav, setShowNav] = useState(false);
@@ -25,7 +51,8 @@ const MainNavigation = () => {
   const [modal, setModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
-  useScrollNav(0.3);
+  const { pathname } = useLocation();
+  useScrollNav();
   const API_URL = process.env.REACT_APP_API_URL;
   const ASSET_URL = API_URL.replace("/api", "");
 
@@ -49,41 +76,47 @@ const MainNavigation = () => {
   };
   const logout = useLogout();
 
-  let totalQuantityClasses;
+  const prevQuantityRef = useRef(null);
+  const hasInitializedRef = useRef(false);
 
-  if (!highlighted) {
-    totalQuantityClasses = "shopping-items";
-  }
-  if (highlighted) {
-    totalQuantityClasses = "shopping-items bump";
-  }
-  if (totalQuantity === 0) {
-    totalQuantityClasses = "shopping-items hidden";
-  }
+  const badgeClasses = [
+    "absolute -right-1 -top-1 z-[2] flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-lightBlack px-1 text-[10px] font-bold leading-none text-white ring-2 ring-white transition",
+    highlighted && "bump",
+    totalQuantity === 0 && "hidden",
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   useEffect(() => {
-    setHighlighted(true);
+    const prev = prevQuantityRef.current;
+    prevQuantityRef.current = totalQuantity;
 
-    const timer = setTimeout(() => {
-      setHighlighted(false);
-    }, 400);
+    if (prev === null) return;
 
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [totalQuantity, dispatch]);
+    if (!hasInitializedRef.current) {
+      hasInitializedRef.current = true;
+      return;
+    }
+
+    if (totalQuantity > prev) {
+      setHighlighted(true);
+      const timer = setTimeout(() => setHighlighted(false), 350);
+      return () => clearTimeout(timer);
+    }
+  }, [totalQuantity]);
+
+  useEffect(() => {
+    setShowNav(false);
+  }, [pathname]);
 
   const searchFormClassName =
-    "h-9 rounded-l-md border border-gray-300 px-3 text-sm outline-none focus:border-lightBlack";
-
-  const navLinkClassName =
-    "transition-colors hover:text-lightBlack";
+    "h-9 rounded-l-full border border-gray-300 px-4 text-sm outline-none focus:border-lightBlack";
 
   return (
-    <div className="navigation z-[3] w-full bg-white py-6 font-Heebo shadow-small">
+    <div className="navigation z-[3] w-full border-b border-borderColor bg-white py-4 font-Heebo shadow-small">
       <div className="my-container flex items-center gap-3 lg:gap-6">
         <div className="flex shrink-0 items-center gap-4 md:gap-6 lg:gap-8">
-          <Link to="/" className="shrink-0">
+          <Link to="/" className="shrink-0 opacity-90 transition-opacity hover:opacity-100">
             <img
               src="/images/logo.png"
               alt="Logo"
@@ -91,22 +124,20 @@ const MainNavigation = () => {
             />
           </Link>
 
-          <ul className="hidden items-center gap-4 text-base font-extrabold uppercase text-darker md:flex lg:gap-6 lg:text-lg">
-            <li>
-              <Link to="/" className={navLinkClassName}>
-                Home
-              </Link>
-            </li>
-            <li>
-              <Link to="categories/all" className={navLinkClassName}>
-                Categories
-              </Link>
-            </li>
-            <li>
-              <Link to="product-page" className={navLinkClassName}>
-                Product Page
-              </Link>
-            </li>
+          <ul className="hidden items-center gap-4 md:flex lg:gap-6">
+            {NAV_ITEMS.map(({ label, to, end, isActive }) => (
+              <li key={to}>
+                <NavLink
+                  to={to}
+                  end={end}
+                  className={({ isActive: rrActive }) =>
+                    getNavLinkClass(isActive ? isActive(pathname) : rrActive)
+                  }
+                >
+                  {label}
+                </NavLink>
+              </li>
+            ))}
           </ul>
         </div>
 
@@ -126,7 +157,7 @@ const MainNavigation = () => {
             <button
               type="submit"
               aria-label="Search"
-              className="h-9 shrink-0 rounded-r-md border border-l-0 border-gray-300 bg-lightBlack px-3 text-white transition hover:bg-black"
+              className="h-9 shrink-0 rounded-r-full border border-l-0 border-gray-300 bg-lightBlack px-3 text-white transition hover:bg-black"
             >
               <FontAwesomeIcon icon={faMagnifyingGlass} />
             </button>
@@ -145,17 +176,26 @@ const MainNavigation = () => {
           </button>
 
           <div
-            className="relative flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center text-xl"
+            className="relative flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-md border border-gray-300 text-base transition hover:bg-gray-100"
             onClick={showModal}
+            role="button"
+            tabIndex={0}
+            aria-label="Open shopping cart"
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                showModal();
+              }
+            }}
           >
-            <div className={totalQuantityClasses}>{totalQuantity}</div>
+            <span className={badgeClasses}>{totalQuantity}</span>
             <FontAwesomeIcon icon={faCartShopping} />
           </div>
 
           {user ? (
             <div className="group relative shrink-0 cursor-pointer">
               <div className="h-9 w-9">
-                <Link to="profile">
+                <Link to="/profile">
                   <UserAvatar
                     photo={user.photo}
                     assetUrl={ASSET_URL}
@@ -200,7 +240,7 @@ const MainNavigation = () => {
                 Log in
               </Link>
               <Link
-                to="/auth"
+                to="/auth?mode=signup"
                 className="whitespace-nowrap rounded-lg bg-lightBlack px-3 py-2 text-sm font-semibold text-white transition hover:bg-black lg:px-4"
               >
                 Sign up
@@ -236,7 +276,7 @@ const MainNavigation = () => {
           <button
             type="submit"
             aria-label="Search"
-            className="h-9 shrink-0 rounded-r-md border border-l-0 border-gray-300 bg-lightBlack px-4 text-white transition hover:bg-black"
+            className="h-9 shrink-0 rounded-r-full border border-l-0 border-gray-300 bg-lightBlack px-4 text-white transition hover:bg-black"
           >
             <FontAwesomeIcon icon={faMagnifyingGlass} />
           </button>
@@ -257,36 +297,46 @@ const MainNavigation = () => {
             <button
               type="submit"
               aria-label="Search"
-              className="h-9 rounded-r-md border border-l-0 border-gray-300 bg-lightBlack px-3 text-white"
+              className="h-9 rounded-r-full border border-l-0 border-gray-300 bg-lightBlack px-3 text-white"
             >
               <FontAwesomeIcon icon={faMagnifyingGlass} />
             </button>
           </form>
-          <ul className="flex flex-col gap-2 px-5 py-3">
-            <li>
-              <Link to="/" onClick={() => setShowNav(false)}>
-                Home
-              </Link>
-            </li>
-            <li>
-              <Link to="categories/all" onClick={() => setShowNav(false)}>
-                Categories
-              </Link>
-            </li>
-            <li>
-              <Link to="product-page" onClick={() => setShowNav(false)}>
-                Product Page
-              </Link>
-            </li>
+          <ul className="flex flex-col gap-1 px-5 py-3">
+            {NAV_ITEMS.map(({ label, to, end, isActive }) => (
+              <li key={to}>
+                <NavLink
+                  to={to}
+                  end={end}
+                  onClick={() => setShowNav(false)}
+                  className={({ isActive: rrActive }) =>
+                    getMobileNavLinkClass(
+                      isActive ? isActive(pathname) : rrActive,
+                    )
+                  }
+                >
+                  {label}
+                </NavLink>
+              </li>
+            ))}
             {!user && (
               <>
+                <li className="my-2 border-t border-borderColor" aria-hidden="true" />
                 <li>
-                  <Link to="/auth" onClick={() => setShowNav(false)}>
+                  <Link
+                    to="/auth"
+                    onClick={() => setShowNav(false)}
+                    className="block rounded-md px-3 py-2 normal-case transition-colors hover:bg-gray-50"
+                  >
                     Log in
                   </Link>
                 </li>
                 <li>
-                  <Link to="/auth" onClick={() => setShowNav(false)}>
+                  <Link
+                    to="/auth?mode=signup"
+                    onClick={() => setShowNav(false)}
+                    className="block rounded-md px-3 py-2 normal-case transition-colors hover:bg-gray-50"
+                  >
                     Sign up
                   </Link>
                 </li>

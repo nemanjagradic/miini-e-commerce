@@ -1,19 +1,11 @@
 import { capQuantity } from "./productStock";
 
 const STORAGE_KEY = "anonymousCart";
-const LEGACY_KEY = "guestCart";
 
 export function getAnonymousCart() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) return JSON.parse(raw);
-
-    const legacy = localStorage.getItem(LEGACY_KEY);
-    if (legacy) {
-      localStorage.setItem(STORAGE_KEY, legacy);
-      localStorage.removeItem(LEGACY_KEY);
-      return JSON.parse(legacy);
-    }
   } catch {
     // ignore parse errors
   }
@@ -26,7 +18,6 @@ export function setAnonymousCart(items) {
 
 export function clearAnonymousCart() {
   localStorage.removeItem(STORAGE_KEY);
-  localStorage.removeItem(LEGACY_KEY);
 }
 
 export function syncAnonymousCartFromItems(cartItems) {

@@ -6,6 +6,32 @@ const catchAsync = require("../utils/catchAsync");
 
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
+const createCheckoutSessionForOrder = async (order, email) => {
+  return stripe.checkout.sessions.create({
+    payment_method_types: ["card"],
+    mode: "payment",
+    success_url: `${process.env.FRONTEND_URL}/?payment=success`,
+    cancel_url: `${process.env.FRONTEND_URL}/?payment=cancel`,
+    customer_email: email,
+    client_reference_id: order._id.toString(),
+    metadata: {
+      userId: order.user.toString(),
+      orderId: order._id.toString(),
+    },
+    line_items: order.products.map((item) => ({
+      price_data: {
+        currency: "usd",
+        unit_amount: item.price * 100,
+        product_data: {
+          name: item.title,
+          images: [`https://miini-backend.up.railway.app/api/${item.img}`],
+        },
+      },
+      quantity: item.quantity,
+    })),
+  });
+};
+
 exports.getCheckoutSession = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.user.id).populate("cart.product");
   if (!user) return next(new AppError("User not found.", 400));
@@ -44,29 +70,7 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
     totalPrice,
   });
 
-  const session = await stripe.checkout.sessions.create({
-    payment_method_types: ["card"],
-    mode: "payment",
-    success_url: `${process.env.FRONTEND_URL}/?payment=success`,
-    cancel_url: `${process.env.FRONTEND_URL}/?payment=cancel`,
-    customer_email: req.user.email,
-    client_reference_id: order._id.toString(),
-    metadata: {
-      userId: req.user._id.toString(),
-      orderId: order._id.toString(),
-    },
-    line_items: order.products.map((item) => ({
-      price_data: {
-        currency: "usd",
-        unit_amount: item.price * 100,
-        product_data: {
-          name: item.title,
-          images: [`https://miini-backend.up.railway.app/api/${item.img}`],
-        },
-      },
-      quantity: item.quantity,
-    })),
-  });
+  const session = await createCheckoutSessionForOrder(order, req.user.email);
 
   order.stripeSessionId = session.id;
   await order.save();
@@ -80,8 +84,62 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
       totalPrice: order.totalPrice,
       status: order.status,
       createdAt: order.createdAt,
-      stripeSessionId: session.sessionId,
+      stripeSessionId: session.id,
     },
+  });
+});
+
+exports.resumePayment = catchAsync(async (req, res, next) => {
+  const order = await Order.findOne({
+    _id: req.params.orderId,
+    user: req.user.id,
+    status: "pending",
+  });
+
+  if (!order) {
+    return next(new AppError("Order not found.", 404));
+  }
+
+  for (const item of order.products) {
+    const product = await Product.findById(item.product);
+    if (!product || item.quantity > product.stockQuantity) {
+      return next(
+        new AppError(
+          `Only ${product?.stockQuantity ?? 0} item(s) of "${item.title}" available in stock.`,
+          400
+        )
+      );
+    }
+  }
+
+  let session = null;
+  if (order.stripeSessionId) {
+    session = await stripe.checkout.sessions.retrieve(order.stripeSessionId);
+  }
+
+  if (session?.status === "open") {
+    return res.status(200).json({
+      status: "success",
+      session: { id: session.id },
+    });
+  }
+
+  if (session?.status === "complete") {
+    return next(
+      new AppError(
+        "Payment was already completed. Please refresh your orders.",
+        400
+      )
+    );
+  }
+
+  const newSession = await createCheckoutSessionForOrder(order, req.user.email);
+  order.stripeSessionId = newSession.id;
+  await order.save();
+
+  res.status(200).json({
+    status: "success",
+    session: { id: newSession.id },
   });
 });
 

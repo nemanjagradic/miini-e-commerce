@@ -1,11 +1,18 @@
-import { Link } from "react-router-dom";
-import { useState } from "react";
+import { Link, useSearchParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { useAuth } from "../../../hooks/useAuth";
 import LoginForm from "./LoginForm";
 import SignupForm from "./SignupForm";
 
 const Authentication = () => {
-  const [mode, setMode] = useState("login");
+  const [searchParams] = useSearchParams();
+  const [mode, setMode] = useState(() =>
+    searchParams.get("mode") === "signup" ? "signup" : "login",
+  );
+
+  useEffect(() => {
+    setMode(searchParams.get("mode") === "signup" ? "signup" : "login");
+  }, [searchParams]);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
