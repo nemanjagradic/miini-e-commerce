@@ -137,7 +137,7 @@ const Categories = () => {
           </Link>
         </div>
       ) : (
-        <div className="flex flex-wrap justify-center gap-8">
+        <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 xl:grid-cols-4 xl:gap-8">
           {displayedProducts.map((product) => (
             <ProductSmallItem
               key={product._id || product.id}

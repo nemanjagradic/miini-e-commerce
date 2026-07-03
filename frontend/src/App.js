@@ -26,7 +26,7 @@ const router = createBrowserRouter([
       { path: "auth", element: <AuthPage /> },
       { path: "forgot-password", element: <ForgotPasswordPage /> },
       { path: "reset-password/:token", element: <ResetPasswordPage /> },
-      { path: "products/:productId", element: <SingleProductPage /> },
+      { path: "products/:slug", element: <SingleProductPage /> },
       { path: "categories/:categoryName", element: <CategoriesPage /> },
       { path: "product-page", element: <ProductPage /> },
       { path: "checkout", element: <CheckoutPage /> },

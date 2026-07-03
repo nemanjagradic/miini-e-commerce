@@ -21,6 +21,7 @@ const ProductSmallItem = ({ product }) => {
   const [addStatus, setAddStatus] = useState("idle");
 
   const productId = product._id ?? product.id;
+  const productSlug = product.slug;
   const outOfStock = (product.stockQuantity ?? 0) === 0;
 
   const isFavorite = favorites.some(
@@ -44,7 +45,7 @@ const ProductSmallItem = ({ product }) => {
         : faCartShopping;
 
   return (
-    <div className="group relative overflow-hidden rounded-lg border border-black/10 transition duration-300 hover:-translate-y-1 hover:shadow-lg">
+    <div className="group relative w-full overflow-hidden rounded-lg border border-black/10 transition duration-300 hover:-translate-y-1 hover:shadow-lg">
       <button
         onClick={(e) => {
           e.preventDefault();
@@ -79,8 +80,8 @@ const ProductSmallItem = ({ product }) => {
         <StockBadge stockQuantity={product.stockQuantity} />
       </div>
 
-      <Link to={`/products/${productId}`}>
-        <div className="h-[220px] w-[220px] overflow-hidden xl:h-[250px] xl:w-[270px]">
+      <Link to={`/products/${productSlug}`}>
+        <div className="aspect-square w-full overflow-hidden">
           <img
             className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
             src={`/${product.imgs[0]}`}
@@ -90,7 +91,7 @@ const ProductSmallItem = ({ product }) => {
       </Link>
 
       <div className="flex items-center gap-2 m-2.5">
-        <Link to={`/products/${productId}`} className="min-w-0 flex-1">
+        <Link to={`/products/${productSlug}`} className="min-w-0 flex-1">
           <h3 className="truncate font-Heebo text-xl xl:text-2xl">
             {product.title}
           </h3>

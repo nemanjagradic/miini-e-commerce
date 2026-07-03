@@ -7,7 +7,6 @@ const initialUiState = {
     status: null,
     message: "",
     time: null,
-    showLogoutButton: false,
   },
 };
 
@@ -22,13 +21,8 @@ const uiSlice = createSlice({
       state.isShow = false;
     },
     setAlert(state, action) {
-      const {
-        status,
-        message,
-        time,
-        showLogoutButton = false,
-      } = action.payload;
-      state.alert = { isShow: true, status, message, time, showLogoutButton };
+      const { status, message, time } = action.payload;
+      state.alert = { isShow: true, status, message, time };
     },
     clearAlert(state) {
       state.alert = {
@@ -36,7 +30,6 @@ const uiSlice = createSlice({
         status: null,
         message: "",
         time: null,
-        showLogoutButton: false,
       };
     },
   },

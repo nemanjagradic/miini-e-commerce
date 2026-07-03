@@ -37,7 +37,7 @@ const TrendingProducts = () => {
         className="group mr-3 w-[220px] flex-shrink-0 overflow-hidden rounded-lg border border-black/10 transition duration-300 hover:-translate-y-1 hover:shadow-lg lg:h-72 lg:w-[200px] xl:h-72 xl:w-[190px]"
         style={{ transform: `translateX(calc(${100 * slide}% + ${margin}px))` }}
       >
-        <Link to={`/products/${product._id ?? product.id}`}>
+        <Link to={`/products/${product.slug}`}>
           <div className="h-[200px] overflow-hidden">
             <img
               className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"

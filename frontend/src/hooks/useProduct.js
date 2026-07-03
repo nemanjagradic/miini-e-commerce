@@ -1,17 +1,17 @@
 import { useState, useEffect } from "react";
 
-export function useProduct(productId) {
+export function useProduct(slug) {
   const API_URL = process.env.REACT_APP_API_URL;
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (!productId) return;
+    if (!slug) return;
 
     const fetchProduct = async () => {
       try {
         setLoading(true);
-        const res = await fetch(`${API_URL}/products/${productId}`);
+        const res = await fetch(`${API_URL}/products/${slug}`);
         const data = await res.json();
         setProduct(data.data);
       } catch (err) {
@@ -23,7 +23,7 @@ export function useProduct(productId) {
     };
 
     fetchProduct();
-  }, [productId, API_URL]);
+  }, [slug, API_URL]);
 
   return { product, loading };
 }

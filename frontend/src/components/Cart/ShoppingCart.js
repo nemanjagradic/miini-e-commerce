@@ -5,6 +5,10 @@ import { uiActions } from "../../store/ui-slice";
 import CartItem from "./CartItem";
 import { useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import {
+  FREE_SHIPPING_THRESHOLD,
+  getAmountUntilFreeShipping,
+} from "../../utils/shipping";
 
 const ShoppingCart = () => {
   const dispatch = useDispatch();
@@ -14,6 +18,7 @@ const ShoppingCart = () => {
   const cartItems = useSelector((state) => state.cart.cartItems);
   const subtotal = useSelector((state) => state.cart.subtotal);
   const totalQuantity = useSelector((state) => state.cart.totalQuantity);
+  const amountUntilFreeShipping = getAmountUntilFreeShipping(subtotal);
   const closeModal = () => {
     dispatch(uiActions.closeModal());
   };
@@ -92,6 +97,16 @@ const ShoppingCart = () => {
                   currency: "USD",
                 }).format(subtotal)}
               </p>
+              {amountUntilFreeShipping > 0 && (
+                <p className="text-xs font-normal text-slate-500">
+                  Add{" "}
+                  {new Intl.NumberFormat("en-US", {
+                    style: "currency",
+                    currency: "USD",
+                  }).format(amountUntilFreeShipping)}{" "}
+                  for free delivery over ${FREE_SHIPPING_THRESHOLD}
+                </p>
+              )}
             </div>
             <button
               onClick={() => navigate("/checkout")}

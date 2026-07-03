@@ -5,6 +5,49 @@ const AppError = require("../utils/appError");
 const catchAsync = require("../utils/catchAsync");
 
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
+const { getShippingCost } = require("../utils/shipping");
+
+const buildStripeLineItems = (order) => {
+  const lineItems = order.products.map((item) => ({
+    price_data: {
+      currency: "usd",
+      unit_amount: item.price * 100,
+      product_data: {
+        name: item.title,
+        images: [`https://miini-backend.up.railway.app/api/${item.img}`],
+      },
+    },
+    quantity: item.quantity,
+  }));
+
+  if (order.shippingCost > 0) {
+    lineItems.push({
+      price_data: {
+        currency: "usd",
+        unit_amount: order.shippingCost * 100,
+        product_data: { name: "Standard delivery" },
+      },
+      quantity: 1,
+    });
+  }
+
+  return lineItems;
+};
+
+const getOrderSubtotal = (order) =>
+  order.subtotal ??
+  order.products.reduce((acc, item) => acc + item.price * item.quantity, 0);
+
+const ensureOrderShipping = (order) => {
+  const subtotal = getOrderSubtotal(order);
+  const shippingCost = order.shippingCost ?? getShippingCost(subtotal);
+
+  order.subtotal = subtotal;
+  order.shippingCost = shippingCost;
+  order.totalPrice = subtotal + shippingCost;
+
+  return order;
+};
 
 const createCheckoutSessionForOrder = async (order, email) => {
   return stripe.checkout.sessions.create({
@@ -18,17 +61,7 @@ const createCheckoutSessionForOrder = async (order, email) => {
       userId: order.user.toString(),
       orderId: order._id.toString(),
     },
-    line_items: order.products.map((item) => ({
-      price_data: {
-        currency: "usd",
-        unit_amount: item.price * 100,
-        product_data: {
-          name: item.title,
-          images: [`https://miini-backend.up.railway.app/api/${item.img}`],
-        },
-      },
-      quantity: item.quantity,
-    })),
+    line_items: buildStripeLineItems(order),
   });
 };
 
@@ -58,16 +91,19 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
     img: item.product.imgs[0],
   }));
 
-  const totalPrice = products.reduce(
+  const subtotal = products.reduce(
     (acc, item) => acc + item.price * item.quantity,
     0
   );
+  const shippingCost = getShippingCost(subtotal);
 
   const order = await Order.create({
     user: req.user.id,
     products,
     status: "pending",
-    totalPrice,
+    subtotal,
+    shippingCost,
+    totalPrice: subtotal + shippingCost,
   });
 
   const session = await createCheckoutSessionForOrder(order, req.user.email);
@@ -81,6 +117,8 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
     order: {
       id: order._id,
       products: order.products,
+      subtotal: order.subtotal,
+      shippingCost: order.shippingCost,
       totalPrice: order.totalPrice,
       status: order.status,
       createdAt: order.createdAt,
@@ -133,6 +171,7 @@ exports.resumePayment = catchAsync(async (req, res, next) => {
     );
   }
 
+  ensureOrderShipping(order);
   const newSession = await createCheckoutSessionForOrder(order, req.user.email);
   order.stripeSessionId = newSession.id;
   await order.save();
@@ -177,9 +216,9 @@ exports.webhookHandler = catchAsync(async (req, res, next) => {
 });
 
 exports.getMyOrders = catchAsync(async (req, res, next) => {
-  const orders = await Order.find({ user: req.user.id }).sort({
-    createdAt: -1,
-  });
+  const orders = await Order.find({ user: req.user.id })
+    .sort({ createdAt: -1 })
+    .populate("products.product", "slug");
 
   res.status(200).json({ status: "success", data: orders });
 });
@@ -194,8 +233,9 @@ exports.cancelOrder = catchAsync(async (req, res, next) => {
     return next(new AppError("Order not found or not yours", 404));
   }
 
-  const orders = await Order.find({ user: req.user.id }).sort({
-    createdAt: -1,
-  });
+  const orders = await Order.find({ user: req.user.id })
+    .sort({ createdAt: -1 })
+    .populate("products.product", "slug");
+
   res.status(200).json({ status: "success", data: orders });
 });

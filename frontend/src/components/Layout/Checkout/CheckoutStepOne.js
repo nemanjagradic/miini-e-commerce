@@ -5,6 +5,12 @@ import { Link } from "react-router-dom";
 import { useUpdateQuantity } from "../../../hooks/useUpdateQuantity";
 import { useRemoveItem } from "../../../hooks/useRemoveItem";
 import { useContinuePayment } from "../../../hooks/useContinuePayment";
+import {
+  getAmountUntilFreeShipping,
+  getOrderTotal,
+  getShippingCost,
+  TRUST_LINE,
+} from "../../../utils/shipping";
 
 const CheckoutStepOne = () => {
   const { cartItems, subtotal } = useSelector((state) => state.cart);
@@ -18,6 +24,10 @@ const CheckoutStepOne = () => {
       style: "currency",
       currency: "USD",
     }).format(number);
+
+  const shippingCost = getShippingCost(subtotal);
+  const orderTotal = getOrderTotal(subtotal);
+  const amountUntilFreeShipping = getAmountUntilFreeShipping(subtotal);
 
   return (
     <div className="my-container mt-12">
@@ -113,20 +123,35 @@ const CheckoutStepOne = () => {
           </Link>
         </div>
         <div className="basis-full min-[1000px]:basis-[30%] min-[1000px]:border-l-2 min-[1000px]:pl-7">
-          <div className="align-center flex justify-between border-b-2 pb-3">
+          <div className="flex items-center justify-between border-b-2 pb-3">
             <h1 className="uppercase">Order summary</h1>
-            <p className="text-slate-500">{formatNumber(subtotal)}</p>
           </div>
-          <h2 className="border-b-2 py-3">
-            The delivery price will be calculated on the next step.
-          </h2>
+          <div className="space-y-3 border-b-2 py-3">
+            <div className="flex justify-between text-sm">
+              <span className="text-slate-600">Subtotal</span>
+              <span>{formatNumber(subtotal)}</span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span className="text-slate-600">Delivery</span>
+              <span>
+                {shippingCost === 0 ? "Free" : formatNumber(shippingCost)}
+              </span>
+            </div>
+            {amountUntilFreeShipping > 0 && (
+              <p className="text-xs text-slate-500">
+                Add {formatNumber(amountUntilFreeShipping)} more for free
+                delivery
+              </p>
+            )}
+          </div>
           <div className="mt-7 flex justify-between">
             <h3 className="uppercase">Total</h3>
             <div className="text-right">
-              <p className="mb-3 text-xl">{formatNumber(subtotal)}</p>
+              <p className="mb-3 text-xl">{formatNumber(orderTotal)}</p>
               <p className="text-xs text-slate-500">
                 VAT is included in the price (20%)
               </p>
+              <p className="mt-2 text-xs text-slate-500">{TRUST_LINE}</p>
             </div>
           </div>
           <button

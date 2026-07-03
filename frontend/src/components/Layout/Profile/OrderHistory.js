@@ -123,7 +123,7 @@ const OrderHistory = () => {
                 </p>
                 <div className="flex flex-wrap justify-center sm:justify-start">
                   {order.products.map((product, index) => {
-                    const productId = product.product?._id ?? product.product;
+                    const productSlug = product.product?.slug;
                     const title = product.title;
 
                     return (
@@ -131,9 +131,9 @@ const OrderHistory = () => {
                         key={index}
                         className="mb-1 mr-2 inline-block text-sm"
                       >
-                        {productId ? (
+                        {productSlug ? (
                           <Link
-                            to={`/products/${productId}`}
+                            to={`/products/${productSlug}`}
                             className="transition hover:text-lightBlack hover:underline"
                           >
                             {title}
@@ -150,9 +150,16 @@ const OrderHistory = () => {
                   })}
                 </div>
               </div>
-              <p className="whitespace-nowrap text-sm font-semibold text-lightBlack">
-                {formatPrice(order.totalPrice)}
-              </p>
+              <div className="text-right">
+                <p className="whitespace-nowrap text-sm font-semibold text-lightBlack">
+                  {formatPrice(order.totalPrice)}
+                </p>
+                {(order.shippingCost ?? 0) > 0 && (
+                  <p className="text-xs text-gray-500">
+                    Includes {formatPrice(order.shippingCost)} delivery
+                  </p>
+                )}
+              </div>
             </div>
             {order.status === "pending" && (
               <div className="flex flex-col gap-2 border-t border-gray-200 pt-4 sm:flex-row sm:justify-end">

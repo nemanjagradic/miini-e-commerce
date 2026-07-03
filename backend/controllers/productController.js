@@ -2,6 +2,8 @@ const Product = require("../models/productModel");
 const catchAsync = require("../utils/catchAsync");
 const AppError = require("../utils/appError");
 
+const OBJECT_ID_RE = /^[0-9a-fA-F]{24}$/;
+
 exports.getAllProducts = catchAsync(async (req, res, next) => {
   const filter = {};
 
@@ -17,10 +19,19 @@ exports.getAllProducts = catchAsync(async (req, res, next) => {
 });
 
 exports.getProduct = catchAsync(async (req, res, next) => {
-  const product = await Product.findById(req.params.id);
+  const { slugOrId } = req.params;
+  let product;
+
+  if (OBJECT_ID_RE.test(slugOrId)) {
+    product = await Product.findById(slugOrId);
+  }
 
   if (!product) {
-    return next(new AppError("Can't find product with that ID.", 404));
+    product = await Product.findOne({ slug: slugOrId });
+  }
+
+  if (!product) {
+    return next(new AppError("Can't find product with that slug.", 404));
   }
 
   res.status(200).json({

@@ -5,11 +5,16 @@ module.exports = {
     extend: {
       animation: {
         slideDown: "slideDown 0.3s ease-out",
+        alertIn: "alertIn 0.28s cubic-bezier(0.16, 1, 0.3, 1)",
       },
       keyframes: {
         slideDown: {
-          "0%": { transform: "translateY(-20px) translateX(-50%)", opacity: 0 },
-          "100%": { transform: "translateY(0) translateX(-50%)", opacity: 1 },
+          "0%": { transform: "translateY(-20px)", opacity: 0 },
+          "100%": { transform: "translateY(0)", opacity: 1 },
+        },
+        alertIn: {
+          "0%": { opacity: 0, transform: "scale(0.96) translateY(6px)" },
+          "100%": { opacity: 1, transform: "scale(1) translateY(0)" },
         },
       },
       colors: {

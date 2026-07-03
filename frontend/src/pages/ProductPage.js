@@ -12,11 +12,11 @@ const ProductPage = () => {
       </div>
     );
   }
-  const productId = products[1].id;
+  const productSlug = products[1].slug;
 
   return (
     <>
-      <SingleProduct tableProductId={productId} />
+      <SingleProduct tableProductSlug={productSlug} />
       <TrendingProducts />
     </>
   );

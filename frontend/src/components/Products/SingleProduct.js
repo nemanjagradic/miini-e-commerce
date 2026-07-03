@@ -10,6 +10,7 @@ import StockBadge from "../../UI/StockBadge";
 import ProductSpecs from "./ProductSpecs";
 import Spinner from "../../UI/Spinner";
 import { capQuantity, LOW_STOCK_THRESHOLD } from "../../utils/productStock";
+import { TRUST_LINE } from "../../utils/shipping";
 
 const capitalize = (str) => `${str[0].toUpperCase()}${str.slice(1)}`;
 
@@ -19,13 +20,10 @@ const formatPrice = (amount) =>
     currency: "USD",
   }).format(amount);
 
-const TRUST_LINE =
-  "Free delivery on orders over $100 · 30-day returns · Delivery calculated at checkout";
-
-const SingleProduct = ({ tableProductId }) => {
-  const { productId } = useParams();
-  const idToUse = tableProductId ?? productId;
-  const { product: curProduct, loading } = useProduct(idToUse);
+const SingleProduct = ({ tableProductSlug }) => {
+  const { slug } = useParams();
+  const slugToUse = tableProductSlug ?? slug;
+  const { product: curProduct, loading } = useProduct(slugToUse);
   const addToCart = useAddToCart();
 
   const navigate = useNavigate();
@@ -87,7 +85,8 @@ const SingleProduct = ({ tableProductId }) => {
   const addToCartHandler = async () => {
     if (addStatus === "adding" || buying || outOfStock) return;
     setAddStatus("adding");
-    await addToCart(idToUse, itemData.quantity, false);
+    const productId = curProduct._id;
+    await addToCart(productId, itemData.quantity, false);
     setAddStatus("added");
     setTimeout(() => setAddStatus("idle"), 1500);
   };
@@ -95,7 +94,8 @@ const SingleProduct = ({ tableProductId }) => {
   const buyHandler = async () => {
     if (buying || addStatus === "adding" || outOfStock) return;
     setBuying(true);
-    await addToCart(idToUse, itemData.quantity, true);
+    const productId = curProduct._id;
+    await addToCart(productId, itemData.quantity, true);
     navigate("/checkout");
   };
 

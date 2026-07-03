@@ -7,6 +7,13 @@ const productSchema = new mongoose.Schema(
       required: [true, "Product must have a title."],
       trim: true,
     },
+    slug: {
+      type: String,
+      required: [true, "Product must have a slug."],
+      unique: true,
+      lowercase: true,
+      trim: true,
+    },
     imgs: {
       type: [String],
       required: [true, "Product must have a images."],

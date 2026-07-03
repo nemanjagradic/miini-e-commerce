@@ -18,7 +18,7 @@ const Favorites = () => {
           ctaTo="/categories/all"
         />
       ) : (
-        <div className="flex flex-wrap justify-center gap-8">
+        <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 xl:grid-cols-4 xl:gap-8">
           {favorites.map((product) => (
             <ProductSmallItem
               key={product._id ?? product.id}

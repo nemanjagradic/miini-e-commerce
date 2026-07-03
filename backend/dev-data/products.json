@@ -1,158 +1,282 @@
 [
   {
-    "id": 1,
-    "imgs": ["images/chair-1.png", "images/chair-2.png", "images/chair-3.png"],
-    "title": "Kimme Chair",
-    "description": "Kyuzo is a capsule collection of desk aKyuzo is a capsule collection of desk and home accessories, driven by materiality and designed to provide divisions of space through subtle hierarchies.",
-    "weight": "1.5kg",
-    "dimensions": "700 x 500 x 800 cm",
+    "title": "Sora Dining Chair",
+    "imgs": [
+      "images/sora-dining-chair-1.jpg",
+      "images/sora-dining-chair-2.jpg",
+      "images/sora-dining-chair-3.jpg"
+    ],
+    "description": "A light oak dining chair with a curved back and matte finish for everyday meals. Stable, comfortable, and easy to pair with mixed table styles.",
+    "weight": "4.5 kg",
+    "dimensions": "46 x 54 x 82 cm",
     "size": "M",
-    "price": 95,
-    "stockQuantity": 42,
-    "category": "chairs"
-  },
-  {
-    "id": 2,
-    "imgs": ["images/teacaddy-1.png", "images/teacaddy-2.png"],
-    "title": "Kimme Tea Caddy",
-    "description": "Kyuzo is a capsule collection of desk and home accessories, driven by materiality and designed to provide divisions of space through subtle hierarchies.",
-    "weight": "0.2 kg",
-    "dimensions": "35 x 50 x 40cm",
-    "price": 30,
-    "stockQuantity": 3,
-    "category": "other"
-  },
-  {
-    "id": 3,
-    "imgs": ["images/earphonecase-1.png", "images/earphonecase-2.png"],
-    "title": "Earphone Case",
-    "description": "Kyuzo is a capsule collection of desk and home accessories, driven by materiality and designed to provide divisions of space through subtle hierarchies.",
-    "weight": "0.2 kg",
-    "dimensions": "100 x 50 x 40 cm",
-    "price": 25,
-    "stockQuantity": 38,
-    "category": "other"
-  },
-  {
-    "id": 4,
-    "imgs": ["images/table-1.png", "images/table-2.png"],
-    "title": "Horrison Table",
-    "description": "Kyuzo is a capsule collection of desk and home accessories, driven by materiality and designed to provide divisions of space through subtle hierarchies.",
-    "weight": "1.5 kg",
-    "dimensions": "35 x 200 x 230 cm",
-    "price": 350,
-    "stockQuantity": 45,
-    "category": "tables"
-  },
-  {
-    "id": 5,
-    "imgs": ["images/clock-1.jpg"],
-    "title": "Wallnut Wall Clock",
-    "description": "Kyuzo is a capsule collection of desk and home accessories, driven by materiality and designed to provide divisions of space through subtle hierarchies.",
-    "weight": "0.2 kg",
-    "dimensions": "700 x 200 x 800 cm",
-    "price": 35,
-    "stockQuantity": 0,
-    "category": "clocks"
-  },
-  {
-    "id": 6,
-    "imgs": ["images/roundtable-1.png"],
-    "title": "Arper Round Table",
-    "description": "Kyuzo is a capsule collection of desk and home accessories, driven by materiality and designed to provide divisions of space through subtle hierarchies.",
-    "weight": "1.7 kg",
-    "dimensions": "700 x 20 x 230 cm",
-    "price": 200,
+    "price": 79,
     "stockQuantity": 40,
-    "category": "tables"
+    "category": "chairs",
+    "slug": "sora-dining-chair"
   },
   {
-    "id": 7,
-    "imgs": ["images/yamanami-chair-1.png"],
-    "title": "Yamanami Chair",
-    "description": "Kyuzo is a capsule collection of desk and home accessories, driven by materiality and designed to provide divisions of space through subtle hierarchies.",
-    "weight": "2.5 kg",
-    "dimensions": "1530 x 800 x 1250 cm",
-    "price": 200,
-    "stockQuantity": 35,
-    "category": "chairs"
+    "title": "Lina Armchair",
+    "imgs": [
+      "images/lina-armchair-1.jpg",
+      "images/lina-armchair-2.jpg"
+    ],
+    "description": "A low-profile lounge armchair with soft upholstery and a sculptural wooden frame. Ideal for living rooms, reading corners, and open-plan spaces.",
+    "weight": "11 kg",
+    "dimensions": "72 x 78 x 76 cm",
+    "price": 149,
+    "stockQuantity": 18,
+    "category": "chairs",
+    "slug": "lina-armchair"
   },
   {
-    "id": 8,
-    "imgs": ["images/vase-1.jpg", "images/vase-2.jpg"],
-    "title": "Concrete Vase",
-    "description": "Donec accumsan auctor iaculis. Sed suscipit arcu ligula, at egestas magna molestie a. Proin ac ex maximus, ultrices justo eget, sodales orci.",
-    "weight": "0.2 kg",
-    "dimensions": "35 x 50 x 20 cm",
-    "price": 120,
-    "stockQuantity": 4,
-    "category": "other"
+    "title": "Mira Bar Stool",
+    "imgs": [
+      "images/mira-bar-stool-1.jpg",
+      "images/mira-bar-stool-2.jpg"
+    ],
+    "description": "A counter-height stool with a padded seat and footrest for kitchen islands and home bars. Minimal profile with a stable weighted base.",
+    "weight": "6.8 kg",
+    "dimensions": "40 x 40 x 75 cm",
+    "price": 89,
+    "stockQuantity": 22,
+    "category": "chairs",
+    "slug": "mira-bar-stool"
   },
   {
-    "id": 9,
-    "imgs": ["images/oak-chair-1.jpg", "images/oak-chair-2.jpg"],
-    "title": "Oak Wooden Chair",
-    "description": "Donec accumsan auctor iaculis. Sed suscipit arcu ligula, at egestas magna molestie a. Proin ac ex maximus, ultrices justo eget, sodales orci.",
-    "weight": "1.5kg",
-    "dimensions": "700 x 500 x 800 cm",
-    "size": "S",
-    "price": 60,
-    "stockQuantity": 50,
-    "category": "chairs"
+    "title": "Hearth Dining Table",
+    "imgs": [
+      "images/hearth-dining-table-1.jpg",
+      "images/hearth-dining-table-2.jpg"
+    ],
+    "description": "A rectangular dining table in warm oak with clean lines for modern interiors. Seats six comfortably and anchors open dining areas.",
+    "weight": "38 kg",
+    "dimensions": "180 x 90 x 75 cm",
+    "price": 249,
+    "stockQuantity": 14,
+    "category": "tables",
+    "slug": "hearth-dining-table"
   },
   {
-    "id": 10,
-    "imgs": ["images/takata-clock-1.png"],
-    "title": "Takata lemnos clock",
-    "description": "Kyuzo is a capsule collection of desk and home accessories, driven by materiality and designed to provide divisions of space through subtle hierarchies.",
+    "title": "Oslo Coffee Table",
+    "imgs": [
+      "images/oslo-coffee-table-1.jpg",
+      "images/oslo-coffee-table-2.jpg"
+    ],
+    "description": "A low coffee table with rounded edges and light wood tones. Sized for sofas and lounge seating in contemporary living rooms.",
+    "weight": "14 kg",
+    "dimensions": "100 x 60 x 40 cm",
+    "price": 149,
+    "stockQuantity": 20,
+    "category": "tables",
+    "slug": "oslo-coffee-table"
+  },
+  {
+    "title": "Nook Side Table",
+    "imgs": [
+      "images/nook-side-table-1.jpg",
+      "images/nook-side-table-2.jpg"
+    ],
+    "description": "A compact round side table for next to a sofa, bed, or reading chair. Soft shape suits smaller spaces and layered layouts.",
+    "weight": "7 kg",
+    "dimensions": "45 x 45 x 50 cm",
+    "price": 79,
+    "stockQuantity": 28,
+    "category": "tables",
+    "slug": "nook-side-table"
+  },
+  {
+    "title": "Arc Floor Lamp",
+    "imgs": [
+      "images/arc-floor-lamp-1.jpg",
+      "images/arc-floor-lamp-2.jpg"
+    ],
+    "description": "A curved floor lamp with a fabric shade for living rooms and reading corners. Warm, diffused light with a small footprint.",
+    "weight": "5.2 kg",
+    "dimensions": "150 x 40 x 40 cm",
+    "price": 129,
+    "stockQuantity": 16,
+    "category": "lamps",
+    "slug": "arc-floor-lamp"
+  },
+  {
+    "title": "Studio Desk Lamp",
+    "imgs": [
+      "images/studio-desk-lamp-1.jpg",
+      "images/studio-desk-lamp-2.jpg"
+    ],
+    "description": "An adjustable desk lamp with a soft shade for focused work and evening reading. Compact base fits desks and nightstands.",
+    "weight": "1.0 kg",
+    "dimensions": "22 x 22 x 45 cm",
+    "price": 54,
+    "stockQuantity": 30,
+    "category": "lamps",
+    "slug": "studio-desk-lamp"
+  },
+  {
+    "title": "Dome Pendant Black",
+    "imgs": [
+      "images/dome-pendant-black-1.jpg"
+    ],
+    "description": "A matte black dome pendant for kitchen islands, dining tables, and home offices. Focused downward glow with an industrial edge.",
+    "weight": "1.2 kg",
+    "dimensions": "18 cm diameter x 25 cm height",
+    "price": 79,
+    "stockQuantity": 24,
+    "category": "lamps",
+    "slug": "dome-pendant-black"
+  },
+  {
+    "title": "Dome Pendant Brass",
+    "imgs": [
+      "images/dome-pendant-brass-1.jpg"
+    ],
+    "description": "A brushed brass dome pendant that adds warmth above dining areas and countertops. Works well in pairs over a table or bar.",
+    "weight": "1.2 kg",
+    "dimensions": "18 cm diameter x 25 cm height",
+    "price": 84,
+    "stockQuantity": 21,
+    "category": "lamps",
+    "slug": "dome-pendant-brass"
+  },
+  {
+    "title": "Birch Wall Clock",
+    "imgs": [
+      "images/birch-wall-clock-1.jpg",
+      "images/birch-wall-clock-2.jpg"
+    ],
+    "description": "A quiet birch wall clock with minimal markers for calm, uncluttered rooms. Easy to read without dominating the wall.",
+    "weight": "0.6 kg",
+    "dimensions": "30 cm diameter x 4 cm depth",
+    "price": 39,
+    "stockQuantity": 32,
+    "category": "clocks",
+    "slug": "birch-wall-clock"
+  },
+  {
+    "title": "Takumi Desk Clock",
+    "imgs": [
+      "images/takumi-desk-clock-1.jpg",
+      "images/takumi-desk-clock-2.jpg"
+    ],
+    "description": "A tabletop clock with a clean dial for desks, shelves, and bedside tables. Compact size suits workspaces and entry consoles.",
     "weight": "0.4 kg",
-    "dimensions": "50 x 60 x 30 cm",
-    "price": 50,
-    "stockQuantity": 36,
-    "category": "clocks"
+    "dimensions": "10 x 10 x 6 cm",
+    "price": 48,
+    "stockQuantity": 26,
+    "category": "clocks",
+    "slug": "takumi-desk-clock"
   },
   {
-    "id": 11,
-    "imgs": ["images/ottoman-chair-1.png"],
-    "title": "Ottoman Chair",
-    "description": "Kyuzo is a capsule collection of desk and home accessories, driven by materiality and designed to provide divisions of space through subtle hierarchies.",
-    "weight": "1.8 kg",
-    "dimensions": "700 x 500 x 20 cm",
-    "price": 80,
-    "stockQuantity": 44,
-    "category": "chairs"
+    "title": "Nord Entry Bench",
+    "imgs": [
+      "images/nord-entry-bench-1.jpg",
+      "images/nord-entry-bench-2.jpg"
+    ],
+    "description": "A slim oak bench for entryways, the foot of the bed, or extra dining seating. Simple form with a natural finish for daily use.",
+    "weight": "7.5 kg",
+    "dimensions": "120 x 35 x 45 cm",
+    "price": 119,
+    "stockQuantity": 18,
+    "category": "other",
+    "slug": "nord-entry-bench"
   },
   {
-    "id": 12,
-    "imgs": ["images/task-pendant-black-1.jpg"],
-    "title": "Task Pendant Black",
-    "description": "Donec accumsan auctor iaculis. Sed suscipit arcu ligula, at egestas magna molestie a. Proin ac ex maximus, ultrices justo eget, sodales orci.",
+    "title": "Birch Wall Shelf",
+    "imgs": [
+      "images/birch-wall-shelf-1.jpg",
+      "images/birch-wall-shelf-2.jpg"
+    ],
+    "description": "A floating wall shelf for books, plants, and display objects. Clean birch finish suits kitchens, offices, and bedrooms.",
+    "weight": "2.4 kg",
+    "dimensions": "80 x 20 x 4 cm",
+    "price": 59,
+    "stockQuantity": 34,
+    "category": "other",
+    "slug": "birch-wall-shelf"
+  },
+  {
+    "title": "Concrete Planter",
+    "imgs": [
+      "images/concrete-planter-1.jpg",
+      "images/concrete-planter-2.jpg"
+    ],
+    "description": "A textured concrete planter for indoor greenery and succulents. Neutral tone complements minimalist and natural decor.",
+    "weight": "2.8 kg",
+    "dimensions": "18 x 18 x 20 cm",
+    "price": 38,
+    "stockQuantity": 45,
+    "category": "other",
+    "slug": "concrete-planter"
+  },
+  {
+    "title": "Linen Throw Blanket",
+    "imgs": [
+      "images/linen-throw-blanket-1.jpg",
+      "images/linen-throw-blanket-2.jpg"
+    ],
+    "description": "A lightweight linen throw for sofas, beds, and lounge chairs. Breathable weave adds texture without heavy bulk.",
+    "weight": "0.9 kg",
+    "dimensions": "130 x 170 cm",
+    "price": 45,
+    "stockQuantity": 50,
+    "category": "other",
+    "slug": "linen-throw-blanket"
+  },
+  {
+    "title": "Ceramic Mug Set",
+    "imgs": [
+      "images/ceramic-mug-set-1.jpg",
+      "images/ceramic-mug-set-2.jpg"
+    ],
+    "description": "A set of two matte ceramic mugs with a rounded handle for daily coffee and tea. Dishwasher-safe glaze in soft neutral tones.",
+    "weight": "0.6 kg",
+    "dimensions": "9 x 12 cm each",
+    "price": 28,
+    "stockQuantity": 60,
+    "category": "other",
+    "slug": "ceramic-mug-set"
+  },
+  {
+    "title": "Oak Tray",
+    "imgs": [
+      "images/oak-tray-1.jpg",
+      "images/oak-tray-2.jpg"
+    ],
+    "description": "A solid oak serving tray for breakfast in bed, coffee tables, and ottoman styling. Raised edges keep items secure while carrying.",
     "weight": "0.8 kg",
-    "dimensions": "35 x 50 x 40 cm",
-    "price": 110,
-    "stockQuantity": 39,
-    "category": "lamps"
+    "dimensions": "40 x 28 x 4 cm",
+    "price": 32,
+    "stockQuantity": 42,
+    "category": "other",
+    "slug": "oak-tray"
   },
   {
-    "id": 13,
-    "imgs": ["images/task-pendant-gold-1.jpg"],
-    "title": "Task Pendant Gold",
-    "description": "Donec accumsan auctor iaculis. Sed suscipit arcu ligula, at egestas magna molestie a. Proin ac ex maximus, ultrices justo eget, sodales orci.",
-    "weight": "0.8 kg",
-    "dimensions": "35 x 50 x 40 cm",
-    "price": 110,
-    "stockQuantity": 41,
-    "category": "lamps"
+    "title": "Woven Storage Basket",
+    "imgs": [
+      "images/woven-storage-basket-1.jpg",
+      "images/woven-storage-basket-2.jpg"
+    ],
+    "description": "A hand-woven storage basket for blankets, magazines, and everyday clutter. Natural fibers add warmth to any room.",
+    "weight": "0.7 kg",
+    "dimensions": "35 x 35 x 30 cm",
+    "price": 36,
+    "stockQuantity": 38,
+    "category": "other",
+    "slug": "woven-storage-basket"
   },
   {
-    "id": 14,
-    "imgs": ["images/task-pendant-grey-1.jpg"],
-    "title": "Task Pendant Grey",
-    "description": "Donec accumsan auctor iaculis. Sed suscipit arcu ligula, at egestas magna molestie a. Proin ac ex maximus, ultrices justo eget, sodales orci.",
-    "weight": "0.8 kg",
-    "dimensions": "35 x 50 x 40 cm",
-    "price": 110,
-    "stockQuantity": 37,
-    "category": "lamps"
+    "title": "Minimal Coat Hook",
+    "imgs": [
+      "images/minimal-coat-hook-1.jpg",
+      "images/minimal-coat-hook-2.jpg"
+    ],
+    "description": "A wall-mounted coat hook set in brushed metal for entryways and bedrooms. Clean lines hold bags, coats, and accessories neatly.",
+    "weight": "0.3 kg",
+    "dimensions": "5 x 8 x 12 cm each",
+    "price": 24,
+    "stockQuantity": 55,
+    "category": "other",
+    "slug": "minimal-coat-hook"
   }
 ]
