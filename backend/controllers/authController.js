@@ -12,19 +12,19 @@ const signToken = (id) => {
   });
 };
 
+const getCookieOptions = (req) => ({
+  expires: new Date(
+    Date.now() + process.env.COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+  ),
+  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+  httpOnly: true,
+  secure: req.secure || req.headers["x-forwarded-proto"] === "https",
+});
+
 const createSendToken = (user, statusCode, req, res) => {
   const token = signToken(user._id);
 
-  const cookieOptions = {
-    expires: new Date(
-      Date.now() + process.env.COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
-    ),
-    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-    httpOnly: true,
-    secure: req.secure || req.headers["x-forwarded-proto"] === "https",
-  };
-
-  res.cookie("jwt", token, cookieOptions);
+  res.cookie("jwt", token, getCookieOptions(req));
 
   user.password = undefined;
 
@@ -64,9 +64,8 @@ exports.login = catchAsync(async (req, res, next) => {
 
 exports.logout = catchAsync(async (req, res) => {
   res.cookie("jwt", "", {
+    ...getCookieOptions(req),
     expires: new Date(Date.now() + 10 * 1000),
-    httpOnly: true,
-    sameSite: "Lax",
   });
   res.status(200).json({ status: "success" });
 });

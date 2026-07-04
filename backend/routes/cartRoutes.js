@@ -11,6 +11,7 @@ router.post("/", cartController.addToCart);
 router.post("/merge-cart", cartController.mergeCart);
 
 router.post("/:productId", cartController.updateQuantity);
+router.delete("/", cartController.clearCart);
 router.delete("/:productId", cartController.removeFromCart);
 
 module.exports = router;

@@ -209,6 +209,8 @@ exports.webhookHandler = catchAsync(async (req, res, next) => {
 
       order.status = "paid";
       await order.save();
+
+      await User.findByIdAndUpdate(order.user, { cart: [] });
     }
   }
 

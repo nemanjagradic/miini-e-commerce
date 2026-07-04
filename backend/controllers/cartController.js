@@ -205,6 +205,17 @@ exports.removeFromCart = catchAsync(async (req, res, next) => {
   });
 });
 
+exports.clearCart = catchAsync(async (req, res, next) => {
+  await User.findByIdAndUpdate(req.user.id, { cart: [] });
+
+  res.status(200).json({
+    status: "success",
+    cart: [],
+    subtotal: 0,
+    totalQuantity: 0,
+  });
+});
+
 exports.mergeCart = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.user.id);
   const anonymousCart = req.body.cart;

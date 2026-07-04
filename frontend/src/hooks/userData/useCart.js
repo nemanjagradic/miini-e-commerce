@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useSearchParams } from "react-router-dom";
 import { cartActions } from "../../store/cart-slice";
 import {
   buildCartItemsFromStorage,
@@ -9,12 +10,14 @@ import {
 export function useFetchCart() {
   const API_URL = process.env.REACT_APP_API_URL;
   const dispatch = useDispatch();
+  const [searchParams] = useSearchParams();
   const currentUser = useSelector((state) => state.user.currentUser);
   const authChecked = useSelector((state) => state.user.authChecked);
   const allProducts = useSelector((state) => state.products.allProducts);
 
   useEffect(() => {
     if (!authChecked) return;
+    if (searchParams.get("payment") === "success") return;
 
     if (currentUser) {
       const getCart = async () => {
@@ -64,5 +67,5 @@ export function useFetchCart() {
         subtotal,
       }),
     );
-  }, [currentUser, authChecked, allProducts, dispatch, API_URL]);
+  }, [currentUser, authChecked, allProducts, dispatch, API_URL, searchParams]);
 }
