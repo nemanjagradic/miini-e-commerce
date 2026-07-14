@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const validator = require("validator");
 const bcryptjs = require("bcryptjs");
 const crypto = require("crypto");
+const { shippingAddressSchema } = require("../utils/shippingAddress");
 
 const cartItemSchema = new mongoose.Schema(
   {
@@ -59,10 +60,18 @@ const userSchema = new mongoose.Schema({
   passwordChangedAt: Date,
   passwordResetToken: String,
   passwordResetTokenExpires: Date,
+  tokenVersion: {
+    type: Number,
+    default: 0,
+  },
   active: {
     type: Boolean,
     default: true,
     select: false,
+  },
+  shippingAddress: {
+    type: shippingAddressSchema,
+    default: undefined,
   },
 });
 

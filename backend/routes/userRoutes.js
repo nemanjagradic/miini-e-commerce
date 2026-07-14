@@ -33,4 +33,17 @@ router.post(
   userController.toggleFavorite
 );
 
+router.get(
+  "/admin/list",
+  authController.protect,
+  authController.restrictTo("admin"),
+  userController.adminListUsers
+);
+router.patch(
+  "/admin/:id/active",
+  authController.protect,
+  authController.restrictTo("admin"),
+  userController.adminSetUserActive
+);
+
 module.exports = router;

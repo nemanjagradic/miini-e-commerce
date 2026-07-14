@@ -3,13 +3,26 @@ import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import {
+  getPrimaryImageUrl,
+  resolveMediaUrl,
+} from "../../utils/productImages";
 
 const TrendingProducts = () => {
   const [slide, setSlide] = useState(0);
   const [margin, setMargin] = useState(0);
   const { allProducts, loading } = useSelector((state) => state.products);
 
-  const productSliced = allProducts.slice(1, 9);
+  const hasFeatured = allProducts.some(
+    (p) => p.featuredPlacement === "trending" || p.featuredPlacement === "both"
+  );
+
+  const productSliced = hasFeatured
+    ? allProducts.filter(
+        (p) =>
+          p.featuredPlacement === "trending" || p.featuredPlacement === "both"
+      )
+    : allProducts.slice(1, 9);
 
   const slideLeft = () => {
     if (slide === 0) {
@@ -41,7 +54,7 @@ const TrendingProducts = () => {
           <div className="h-[200px] overflow-hidden">
             <img
               className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-              src={`/${product.imgs[0]}`}
+              src={resolveMediaUrl(getPrimaryImageUrl(product.imgs))}
               alt={product.title}
             />
           </div>
@@ -63,16 +76,20 @@ const TrendingProducts = () => {
         <div className="flex-1">
           <h2 className="font-Heebo text-3xl font-semibold">Trending Now</h2>
         </div>
-        <div>
+        <div className="flex gap-2">
           <button
-            className="mx-1 border border-black bg-lightBlack px-3 py-2 text-white transition hover:bg-transparent hover:text-black"
+            type="button"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-black/20 text-black transition hover:border-black hover:bg-lightBlack hover:text-white"
             onClick={slideLeft}
+            aria-label="Previous products"
           >
             <FontAwesomeIcon icon={faArrowLeft} />
           </button>
           <button
-            className="mx-1 border border-black bg-lightBlack px-3 py-2 text-white transition hover:bg-transparent hover:text-black"
+            type="button"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-black/20 text-black transition hover:border-black hover:bg-lightBlack hover:text-white"
             onClick={slideRight}
+            aria-label="Next products"
           >
             <FontAwesomeIcon icon={faArrowRight} />
           </button>

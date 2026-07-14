@@ -5,18 +5,30 @@ export function useResumePayment() {
   const API_URL = process.env.REACT_APP_API_URL;
   const dispatch = useDispatch();
 
-  const resumePayment = async (orderId, stripePromise) => {
+  const resumePayment = async (orderId, stripePromise, options = {}) => {
     dispatch(uiActions.clearAlert());
 
     try {
+      const body =
+        options.shippingAddress != null
+          ? {
+              shippingAddress: options.shippingAddress,
+              saveToProfile: options.saveToProfile !== false,
+            }
+          : undefined;
+
       const res = await fetch(`${API_URL}/orders/${orderId}/resume-payment`, {
         method: "POST",
         credentials: "include",
+        headers: body ? { "Content-Type": "application/json" } : undefined,
+        body: body ? JSON.stringify(body) : undefined,
       });
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.message || "Could not resume payment.");
+        const err = new Error(data.message || "Could not resume payment.");
+        err.code = data.message;
+        throw err;
       }
 
       const stripe = await stripePromise;
@@ -27,6 +39,7 @@ export function useResumePayment() {
       if (error) {
         throw new Error(error.message);
       }
+      return true;
     } catch (err) {
       dispatch(
         uiActions.setAlert({
@@ -35,6 +48,7 @@ export function useResumePayment() {
           time: 3,
         }),
       );
+      return false;
     }
   };
 

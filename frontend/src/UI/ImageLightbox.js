@@ -5,6 +5,7 @@ import {
   faChevronRight,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
+import { resolveMediaUrl } from "../utils/productImages";
 
 const ImageLightbox = ({ images, currentIndex, onClose, onNavigate }) => {
   const hasPrev = currentIndex > 0;
@@ -76,7 +77,7 @@ const ImageLightbox = ({ images, currentIndex, onClose, onNavigate }) => {
       )}
 
       <img
-        src={`/${images[currentIndex]}`}
+        src={resolveMediaUrl(images[currentIndex])}
         alt=""
         className="max-h-[90vh] max-w-[90vw] object-contain"
         onClick={(e) => e.stopPropagation()}

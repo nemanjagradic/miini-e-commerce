@@ -20,8 +20,15 @@ export function useAuth() {
   const [errors, setErrors] = useState(null);
 
   const redirectAfterAuth = () => {
-    const from = location.state?.from?.pathname;
-    navigate(from || "/", { replace: true });
+    const from = location.state?.from;
+    if (from?.pathname) {
+      navigate(
+        { pathname: from.pathname, search: from.search || "" },
+        { replace: true }
+      );
+      return;
+    }
+    navigate("/", { replace: true });
   };
 
   const handleAuth = async (mode, formData) => {

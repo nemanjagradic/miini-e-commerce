@@ -11,6 +11,12 @@ import { useFavoriteToggle } from "../../hooks/useFavoriteToggle";
 import { useAddToCart } from "../../hooks/useAddToCart";
 import { useSelector } from "react-redux";
 import StockBadge from "../../UI/StockBadge";
+import {
+  getCategoryName,
+  getCategorySlug,
+  getPrimaryImageUrl,
+  resolveMediaUrl,
+} from "../../utils/productImages";
 
 const capitalize = (str) => `${str[0].toUpperCase()}${str.slice(1)}`;
 
@@ -23,6 +29,9 @@ const ProductSmallItem = ({ product }) => {
   const productId = product._id ?? product.id;
   const productSlug = product.slug;
   const outOfStock = (product.stockQuantity ?? 0) === 0;
+  const categorySlug = getCategorySlug(product.category);
+  const categoryLabel = getCategoryName(product.category) || capitalize(categorySlug);
+  const primarySrc = resolveMediaUrl(getPrimaryImageUrl(product.imgs));
 
   const isFavorite = favorites.some(
     (fav) => fav._id.toString() === productId.toString(),
@@ -71,11 +80,11 @@ const ProductSmallItem = ({ product }) => {
 
       <div className="absolute left-3 top-3 z-[2] flex flex-col gap-1.5">
         <Link
-          to={`/categories/${product.category}`}
+          to={`/categories/${categorySlug}`}
           onClick={(e) => e.stopPropagation()}
           className="rounded-full bg-white/90 px-2.5 py-1 text-xs font-medium text-gray-700 transition hover:bg-white hover:text-black"
         >
-          {capitalize(product.category)}
+          {categoryLabel}
         </Link>
         <StockBadge stockQuantity={product.stockQuantity} />
       </div>
@@ -84,7 +93,7 @@ const ProductSmallItem = ({ product }) => {
         <div className="aspect-square w-full overflow-hidden">
           <img
             className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-            src={`/${product.imgs[0]}`}
+            src={primarySrc}
             alt={product.title}
           />
         </div>

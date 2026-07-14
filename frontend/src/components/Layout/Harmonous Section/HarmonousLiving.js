@@ -12,7 +12,7 @@ const PromoContent = ({ title, description, to, ctaLabel }) => (
       {description}
     </p>
     <Link
-      className="inline-block w-fit rounded-md bg-lightBlack px-6 py-2.5 text-sm font-semibold uppercase tracking-wide text-white transition hover:bg-darker"
+      className="inline-block w-fit rounded-lg bg-lightBlack px-6 py-2.5 text-sm font-semibold text-white transition hover:bg-black"
       to={to}
     >
       {ctaLabel}

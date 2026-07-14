@@ -6,6 +6,7 @@ import { useUpdateSettings } from "../../../hooks/useUpdateSettings";
 import { useUpdatePassword } from "../../../hooks/useUpdatePassword";
 import { hasUserPhoto } from "../../../UI/UserAvatar";
 import ProfilePanel from "./ProfilePanel";
+import ShippingAddressForm from "../Checkout/ShippingAddressForm";
 
 const inputClass =
   "mt-1.5 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-lightBlack focus:outline-none focus:ring-1 focus:ring-lightBlack";
@@ -23,7 +24,7 @@ const ProfileSettings = () => {
   const [photoPreview, setPhotoPreview] = useState(
     hasUserPhoto(user?.photo)
       ? `${ASSET_URL}/images/users/${user.photo}`
-      : null,
+      : null
   );
   const {
     updateSettings,
@@ -32,6 +33,10 @@ const ProfileSettings = () => {
     setName,
     email,
     setEmail,
+    shippingAddress,
+    setShippingAddress,
+    shippingErrors,
+    clearShippingError,
     settingsError,
   } = useUpdateSettings();
 
@@ -50,7 +55,7 @@ const ProfileSettings = () => {
     setPhotoPreview(
       hasUserPhoto(user?.photo)
         ? `${ASSET_URL}/images/users/${user.photo}`
-        : null,
+        : null
     );
   }, [user?.photo, ASSET_URL]);
 
@@ -70,12 +75,13 @@ const ProfileSettings = () => {
             e.preventDefault();
             updateSettings();
           }}
+          noValidate
           className="space-y-6"
         >
           <h2 className="text-2xl font-semibold">Personal info</h2>
           <div>
             <label htmlFor="name" className="text-sm">
-              Name
+              Account name
             </label>
             <input
               id="name"
@@ -127,6 +133,23 @@ const ProfileSettings = () => {
               Choose new photo
             </label>
           </div>
+
+          <div className="border-t border-gray-200 pt-6">
+            <h3 className="text-lg font-semibold">Shipping address</h3>
+            <p className="mt-1 mb-4 text-sm text-darker/60">
+              Used to prefill checkout. You can leave it empty until your first
+              order.
+            </p>
+            <ShippingAddressForm
+              value={shippingAddress}
+              onChange={setShippingAddress}
+              idPrefix="profile"
+              requireFields={false}
+              errors={shippingErrors}
+              onClearError={clearShippingError}
+            />
+          </div>
+
           <div>
             {settingsError?.map((err, idx) => (
               <p key={idx} className="mt-2 text-sm font-medium text-red-600">

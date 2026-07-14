@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { loadStripe } from "@stripe/stripe-js";
 import Modal from "../../../UI/Modal";
@@ -7,13 +7,18 @@ import { useOrderCancel } from "../../../hooks/useOrderCancel";
 import { useResumePayment } from "../../../hooks/useResumePayment";
 import ProfilePanel from "./ProfilePanel";
 import ProfileEmptyState from "./ProfileEmptyState";
+import {
+  formatShippingAddress,
+  isCompleteShippingAddress,
+} from "../../../utils/shippingAddress";
 
 const orderFilterOptions = [
   { value: "active", label: "Active orders" },
-  { value: "canceled", label: "Canceled orders" },
+  { value: "canceled", label: "Canceled / refunded" },
 ];
 
 const OrderHistory = () => {
+  const navigate = useNavigate();
   const { orders } = useSelector((state) => state.orders);
   const [showOrdersType, setShowOrdersType] = useState("active");
   const [modalOrderId, setModalOrderId] = useState(null);
@@ -31,21 +36,48 @@ const OrderHistory = () => {
     }
   };
 
-  const handleResumePayment = async (orderId) => {
-    setPayingOrderId(orderId);
-    await resumePayment(orderId, stripePromise);
+  const handleResumePayment = async (order) => {
+    if (!isCompleteShippingAddress(order.shippingAddress)) {
+      navigate("/checkout?step=shipping", {
+        state: {
+          step: "shipping",
+          orderId: order._id,
+          shippingAddress: order.shippingAddress || null,
+        },
+      });
+      return;
+    }
+
+    setPayingOrderId(order._id);
+    await resumePayment(order._id, stripePromise);
     setPayingOrderId(null);
   };
 
   const showOrders = (orders ?? []).filter((order) => {
     if (showOrdersType === "active") {
-      return order.status === "pending" || order.status === "paid";
+      return [
+        "pending",
+        "paid",
+        "processing",
+        "shipped",
+        "delivered",
+      ].includes(order.status);
     }
     if (showOrdersType === "canceled") {
-      return order.status === "canceled";
+      return order.status === "canceled" || order.status === "refunded";
     }
     return true;
   });
+
+  const statusBadgeClass = (status) => {
+    if (status === "pending") return "bg-yellow-200 text-yellow-800";
+    if (status === "paid" || status === "delivered")
+      return "bg-green-200 text-green-800";
+    if (status === "processing" || status === "shipped")
+      return "bg-blue-200 text-blue-800";
+    if (status === "refunded") return "bg-stone-200 text-stone-800";
+    return "bg-red-200 text-red-800";
+  };
 
   const formatPrice = (amount) =>
     new Intl.NumberFormat("en-US", {
@@ -66,7 +98,7 @@ const OrderHistory = () => {
               id="order-filter"
               value={showOrdersType}
               onChange={(e) => setShowOrdersType(e.target.value)}
-              className="rounded-full border border-gray-300 px-3 py-1.5 text-sm outline-none focus:border-lightBlack"
+              className="rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm outline-none focus:border-lightBlack"
             >
               {orderFilterOptions.map((option) => (
                 <option key={option.value} value={option.value}>
@@ -101,13 +133,9 @@ const OrderHistory = () => {
             <div className="flex flex-col items-center justify-between gap-2 sm:flex-row">
               <h3 className="font-semibold">Order #{order._id.slice(-6)}</h3>
               <span
-                className={`rounded-full px-3 py-1.5 text-xs font-semibold uppercase ${
-                  order.status === "pending"
-                    ? "bg-yellow-200 text-yellow-800"
-                    : order.status === "paid"
-                      ? "bg-green-200 text-green-800"
-                      : "bg-red-200 text-red-800"
-                }`}
+                className={`rounded-full px-3 py-1.5 text-xs font-semibold uppercase ${statusBadgeClass(
+                  order.status
+                )}`}
               >
                 {order.status}
               </span>
@@ -161,6 +189,12 @@ const OrderHistory = () => {
                 )}
               </div>
             </div>
+            {formatShippingAddress(order.shippingAddress) && (
+              <div className="mt-3 rounded-lg bg-gray-50 px-3 py-2 text-xs text-gray-600 whitespace-pre-line">
+                <p className="mb-1 font-semibold text-gray-700">Ship to</p>
+                {formatShippingAddress(order.shippingAddress)}
+              </div>
+            )}
             {order.status === "pending" && (
               <div className="flex flex-col gap-2 border-t border-gray-200 pt-4 sm:flex-row sm:justify-end">
                 <button
@@ -173,7 +207,7 @@ const OrderHistory = () => {
                 <button
                   type="button"
                   disabled={payingOrderId === order._id}
-                  onClick={() => handleResumePayment(order._id)}
+                  onClick={() => handleResumePayment(order)}
                   className="rounded-lg bg-lightBlack px-4 py-2 text-sm font-semibold text-white transition hover:bg-black disabled:opacity-60"
                 >
                   {payingOrderId === order._id

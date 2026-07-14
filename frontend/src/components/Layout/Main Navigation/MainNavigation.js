@@ -8,6 +8,7 @@ import {
   faBoxArchive,
   faHeart,
   faMagnifyingGlass,
+  faGaugeHigh,
 } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { uiActions } from "../../../store/ui-slice";
@@ -25,18 +26,11 @@ const NAV_ITEMS = [
     to: "/categories/all",
     isActive: (pathname) => pathname.startsWith("/categories"),
   },
-  {
-    label: "Product Page",
-    to: "/product-page",
-    isActive: (pathname) => pathname === "/product-page",
-  },
 ];
 
 const getNavLinkClass = (active) =>
   `relative pb-1 text-base font-extrabold uppercase tracking-wide transition-colors lg:text-lg ${
-    active
-      ? "text-lightBlack after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:bg-lightBlack"
-      : "text-darker/60 hover:text-lightBlack"
+    active ? "text-lightBlack" : "text-darker/60 hover:text-lightBlack"
   }`;
 
 const getMobileNavLinkClass = (active) =>
@@ -203,33 +197,96 @@ const MainNavigation = () => {
                   />
                 </Link>
               </div>
-              <ul className="pointer-events-none absolute right-0 top-full z-10 w-48 -translate-y-4 transform space-y-2 rounded-md bg-white px-4 py-3 opacity-0 shadow-md transition-all ease-in-out group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100">
-                <li className="flex items-center gap-2 rounded px-2 py-1 transition hover:bg-gray-100 hover:text-blue-500">
-                  <FontAwesomeIcon icon={faUser} className="text-blue-500" />
-                  <Link to="/profile">Profile Settings</Link>
-                </li>
-                <li className="flex items-center gap-2 rounded px-2 py-1 transition hover:bg-gray-100 hover:text-blue-500">
-                  <FontAwesomeIcon
-                    icon={faBoxArchive}
-                    className="text-yellow-500"
+              <div className="pointer-events-none absolute right-0 top-full z-10 w-64 -translate-y-4 transform rounded-xl border border-gray-200 bg-white py-2 opacity-0 shadow-lg transition-all ease-in-out group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-100">
+                <div className="flex items-center gap-3 border-b border-gray-100 px-4 pb-3 pt-1">
+                  <UserAvatar
+                    photo={user.photo}
+                    assetUrl={ASSET_URL}
+                    className="h-10 w-10 shrink-0"
                   />
-                  <Link to="/profile/orders">Order History</Link>
-                </li>
-                <li className="flex items-center gap-2 rounded px-2 py-1 transition hover:bg-gray-100 hover:text-blue-500">
-                  <FontAwesomeIcon icon={faHeart} className="text-pink-500" />
-                  <Link to="/profile/favorites">My Favorites</Link>
-                </li>
-                <li
-                  onClick={() => setModal(true)}
-                  className="flex cursor-pointer items-center gap-2 rounded px-2 py-1 transition hover:bg-gray-100 hover:text-red-700"
-                >
-                  <FontAwesomeIcon
-                    icon={faRightFromBracket}
-                    className="text-red-500"
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-semibold text-lightBlack">
+                      {user.name}
+                    </p>
+                    <p className="truncate text-xs text-gray-500">{user.email}</p>
+                  </div>
+                </div>
+                <ul className="space-y-0.5 px-2 pt-2 font-Heebo text-sm">
+                  <li>
+                    <Link
+                      to="/profile"
+                      className="flex items-center gap-3 whitespace-nowrap rounded-lg px-3 py-2 text-lightBlack/80 transition hover:bg-gray-50 hover:text-lightBlack"
+                    >
+                      <FontAwesomeIcon
+                        icon={faUser}
+                        className="w-4 text-center text-gray-500"
+                      />
+                      Profile Settings
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="/profile/orders"
+                      className="flex items-center gap-3 whitespace-nowrap rounded-lg px-3 py-2 text-lightBlack/80 transition hover:bg-gray-50 hover:text-lightBlack"
+                    >
+                      <FontAwesomeIcon
+                        icon={faBoxArchive}
+                        className="w-4 text-center text-gray-500"
+                      />
+                      Order History
+                    </Link>
+                  </li>
+                  <li>
+                    <Link
+                      to="/profile/favorites"
+                      className="flex items-center gap-3 whitespace-nowrap rounded-lg px-3 py-2 text-lightBlack/80 transition hover:bg-gray-50 hover:text-lightBlack"
+                    >
+                      <FontAwesomeIcon
+                        icon={faHeart}
+                        className="w-4 text-center text-gray-500"
+                      />
+                      My Favorites
+                    </Link>
+                  </li>
+                  {user.role === "admin" && (
+                    <>
+                      <li
+                        className="my-1.5 border-t border-gray-100"
+                        aria-hidden="true"
+                      />
+                      <li>
+                        <Link
+                          to="/admin"
+                          className="flex items-center gap-3 whitespace-nowrap rounded-lg px-3 py-2 text-lightBlack/80 transition hover:bg-gray-50 hover:text-lightBlack"
+                        >
+                          <FontAwesomeIcon
+                            icon={faGaugeHigh}
+                            className="w-4 text-center text-emerald-700/80"
+                          />
+                          Admin dashboard
+                        </Link>
+                      </li>
+                    </>
+                  )}
+                  <li
+                    className="my-1.5 border-t border-gray-100"
+                    aria-hidden="true"
                   />
-                  Logout
-                </li>
-              </ul>
+                  <li>
+                    <button
+                      type="button"
+                      onClick={() => setModal(true)}
+                      className="flex w-full items-center gap-3 whitespace-nowrap rounded-lg px-3 py-2 text-left text-red-600/90 transition hover:bg-red-50 hover:text-red-700"
+                    >
+                      <FontAwesomeIcon
+                        icon={faRightFromBracket}
+                        className="w-4 text-center"
+                      />
+                      Log out
+                    </button>
+                  </li>
+                </ul>
+              </div>
             </div>
           ) : (
             <div className="hidden shrink-0 items-center gap-2 md:flex lg:gap-3">
@@ -338,6 +395,20 @@ const MainNavigation = () => {
                     className="block rounded-md px-3 py-2 normal-case transition-colors hover:bg-gray-50"
                   >
                     Sign up
+                  </Link>
+                </li>
+              </>
+            )}
+            {user?.role === "admin" && (
+              <>
+                <li className="my-2 border-t border-borderColor" aria-hidden="true" />
+                <li>
+                  <Link
+                    to="/admin"
+                    onClick={() => setShowNav(false)}
+                    className="block rounded-md px-3 py-2 normal-case transition-colors hover:bg-gray-50"
+                  >
+                    Admin dashboard
                   </Link>
                 </li>
               </>

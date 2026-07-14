@@ -9,12 +9,19 @@ const mongoSanitize = require("express-mongo-sanitize");
 const xss = require("xss-clean");
 const userRouter = require("./routes/userRoutes");
 const productRouter = require("./routes/productRoutes");
+const categoryRouter = require("./routes/categoryRoutes");
 const cartRouter = require("./routes/cartRoutes");
 const orderRouter = require("./routes/orderRoutes");
+const settingsRouter = require("./routes/settingsRoutes");
+const auditRouter = require("./routes/auditRoutes");
 const globalErrorHandler = require("./controllers/errorController");
 const orderController = require("./controllers/orderController");
 const AppError = require("./utils/appError");
-const { userUploadDir } = require("./utils/uploadPaths");
+const {
+  userUploadDir,
+  productUploadDir,
+  categoryUploadDir,
+} = require("./utils/uploadPaths");
 
 const app = express();
 app.set("trust proxy", 1);
@@ -33,8 +40,10 @@ app.use(
 );
 
 app.use("/images/users", express.static(userUploadDir));
+app.use("/images/products", express.static(productUploadDir));
+app.use("/images/categories", express.static(categoryUploadDir));
 app.use(express.static(path.join(__dirname, "public")));
-app.use(express.json({ limit: "10kb" }));
+app.use(express.json({ limit: "1mb" }));
 app.use(cookieParser());
 
 app.use(helmet());
@@ -63,8 +72,11 @@ app.get("/api/health", (req, res) => {
 
 app.use("/api/users", userRouter);
 app.use("/api/products", productRouter);
+app.use("/api/categories", categoryRouter);
 app.use("/api/cart", cartRouter);
 app.use("/api/orders", orderRouter);
+app.use("/api/settings", settingsRouter);
+app.use("/api/audit", auditRouter);
 
 app.all("*", (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server.`, 404));

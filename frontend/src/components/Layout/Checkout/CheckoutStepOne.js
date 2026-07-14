@@ -4,18 +4,22 @@ import { faPlus, faMinus, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { useUpdateQuantity } from "../../../hooks/useUpdateQuantity";
 import { useRemoveItem } from "../../../hooks/useRemoveItem";
-import { useContinuePayment } from "../../../hooks/useContinuePayment";
+import useShippingSettings from "../../../hooks/useShippingSettings";
 import {
   getAmountUntilFreeShipping,
   getOrderTotal,
   getShippingCost,
-  TRUST_LINE,
 } from "../../../utils/shipping";
+import {
+  getPrimaryImageUrl,
+  resolveMediaUrl,
+} from "../../../utils/productImages";
+import { CheckoutStepper } from "./CheckoutStepTwo";
 
-const CheckoutStepOne = () => {
+const CheckoutStepOne = ({ onContinueToShipping }) => {
   const { cartItems, subtotal } = useSelector((state) => state.cart);
+  const { freeShippingThreshold, trustLine } = useShippingSettings();
 
-  const continuePayment = useContinuePayment();
   const updateQuantity = useUpdateQuantity();
   const removeItem = useRemoveItem();
 
@@ -25,142 +29,151 @@ const CheckoutStepOne = () => {
       currency: "USD",
     }).format(number);
 
-  const shippingCost = getShippingCost(subtotal);
-  const orderTotal = getOrderTotal(subtotal);
-  const amountUntilFreeShipping = getAmountUntilFreeShipping(subtotal);
+  const shippingCost = getShippingCost(subtotal, freeShippingThreshold);
+  const orderTotal = getOrderTotal(subtotal, freeShippingThreshold);
+  const amountUntilFreeShipping = getAmountUntilFreeShipping(
+    subtotal,
+    freeShippingThreshold
+  );
 
   return (
-    <div className="my-container mt-12">
-      <div className="flex items-center justify-center gap-3 font-Heebo sm:gap-4">
-        <div className="flex items-center gap-2">
-          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-lightBlack text-sm font-bold text-white">
-            1
-          </span>
-          <span className="text-sm font-semibold">Basket</span>
-        </div>
-        <div className="h-px w-12 bg-gray-300 sm:w-20"></div>
-        <div className="flex items-center gap-2 text-gray-400">
-          <span className="flex h-8 w-8 items-center justify-center rounded-full border border-gray-300 text-sm font-bold">
-            2
-          </span>
-          <span className="text-sm font-semibold">Payment</span>
-        </div>
-      </div>
-      <h1 className="mt-10 text-3xl font-bold">Shopping basket</h1>
-      <div className="mt-10 flex flex-wrap justify-center gap-16 font-Heebo font-semibold">
-        <div className="basis-full min-[1000px]:flex-1">
-          <div className="hidden border-b-2 pb-3 uppercase sm:flex">
-            <div className="grow">Article</div>
-            <div className="basis-1/6">Price</div>
-            <div className="basis-1/6">Quantity</div>
-            <div className="basis-1/6">Total</div>
-          </div>
-          {cartItems.map((item) => (
-            <div
-              key={item.id}
-              className="grid grid-cols-2 items-center border-b-2 py-3 sm:my-0 sm:grid-cols-12"
-            >
-              <div className="flex items-center">
-                <div
-                  className="inline-block pr-5 text-center sm:hidden"
-                  onClick={() => removeItem(item.id)}
-                >
-                  <FontAwesomeIcon icon={faXmark} />
-                </div>
-                <img
-                  className="h-24 w-24 object-cover sm:h-full sm:w-full"
-                  src={`/${item.imgs[0]}`}
-                  alt={item.title}
-                />
-              </div>
-              <div className="text-right sm:col-span-5 sm:pl-4 sm:text-start">
-                <p className="mb-1 block text-sm uppercase sm:hidden">
-                  Product
-                </p>
-                <p>{item.title}</p>
-              </div>
-              <div className="mt-3 text-sm uppercase sm:my-0 sm:hidden">
-                Price
-              </div>
-              <div className="text-right sm:col-span-2 sm:text-start">
-                <p>{formatNumber(item.price)}</p>
-              </div>
-              <div className="mt-3 text-sm uppercase sm:my-0 sm:hidden">
-                Quantity
-              </div>
-              <div className="text-right sm:col-span-2 sm:text-start">
-                <button
-                  className="h-6 w-6 bg-lightBlack text-xs text-white"
-                  onClick={() => updateQuantity(item.id, -1)}
-                >
-                  <FontAwesomeIcon icon={faMinus} />
-                </button>
-                <span className="mx-2">{item.quantity}</span>
-                <button
-                  className="h-6 w-6 bg-lightBlack text-xs text-white"
-                  onClick={() => updateQuantity(item.id, 1)}
-                >
-                  <FontAwesomeIcon icon={faPlus} />
-                </button>
-              </div>
-              <div className="mt-3 text-sm uppercase sm:hidden">Total</div>
-              <div className="text-right sm:text-start">
-                {formatNumber(item.totalPrice)}
-              </div>
+    <div className="my-container mt-12 mb-16">
+      <CheckoutStepper active="basket" />
+      <h1 className="mt-10 font-Heebo text-3xl font-semibold">
+        Shopping basket
+      </h1>
+
+      <div className="mt-8 grid gap-8 font-Heebo min-[1000px]:grid-cols-[minmax(0,1fr)_320px] lg:gap-10">
+        <div className="min-w-0">
+          <div className="space-y-3">
+            {cartItems.map((item) => (
               <div
-                className="hidden text-center sm:block"
-                onClick={() => removeItem(item.id)}
+                key={item.id}
+                className="relative rounded-lg border border-black/10 p-3 sm:p-4"
               >
-                <FontAwesomeIcon icon={faXmark} />
+                <div className="flex gap-3 sm:gap-4">
+                  <img
+                    className="h-20 w-20 shrink-0 rounded-lg object-cover sm:h-24 sm:w-24"
+                    src={resolveMediaUrl(getPrimaryImageUrl(item.imgs))}
+                    alt={item.title}
+                  />
+
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="min-w-0">
+                        <p className="truncate font-semibold text-lightBlack">
+                          {item.title}
+                        </p>
+                        <p className="mt-0.5 text-sm text-gray-500 sm:hidden">
+                          {formatNumber(item.price)} each
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-gray-400 transition hover:bg-black/5 hover:text-black"
+                        onClick={() => removeItem(item.id)}
+                        aria-label={`Remove ${item.title}`}
+                      >
+                        <FontAwesomeIcon icon={faXmark} />
+                      </button>
+                    </div>
+
+                    <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
+                      <div className="flex items-center gap-1.5">
+                        <button
+                          type="button"
+                          className="flex h-7 w-7 items-center justify-center rounded-full border border-black/20 text-xs text-black transition hover:border-black hover:bg-lightBlack hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
+                          onClick={() => updateQuantity(item.id, -1)}
+                          disabled={item.quantity <= 1}
+                          aria-label="Decrease quantity"
+                        >
+                          <FontAwesomeIcon icon={faMinus} />
+                        </button>
+                        <span className="min-w-6 text-center text-sm font-medium">
+                          {item.quantity}
+                        </span>
+                        <button
+                          type="button"
+                          className="flex h-7 w-7 items-center justify-center rounded-full border border-black/20 text-xs text-black transition hover:border-black hover:bg-lightBlack hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
+                          onClick={() => updateQuantity(item.id, 1)}
+                          disabled={item.quantity >= (item.stockQuantity ?? 0)}
+                          aria-label="Increase quantity"
+                        >
+                          <FontAwesomeIcon icon={faPlus} />
+                        </button>
+                      </div>
+
+                      <div className="text-right">
+                        <p className="hidden text-xs text-gray-500 sm:block">
+                          {formatNumber(item.price)} each
+                        </p>
+                        <p className="font-semibold">
+                          {formatNumber(item.totalPrice)}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
+
           <Link
             to="/categories/all"
-            className="mt-7 inline-block bg-lightBlack px-4 py-2 text-xs uppercase text-white"
+            className="mt-6 inline-block rounded-lg border border-black/20 bg-white px-4 py-2 text-sm font-medium transition hover:border-black hover:bg-lightBlack hover:text-white"
           >
             Back to shop
           </Link>
         </div>
-        <div className="basis-full min-[1000px]:basis-[30%] min-[1000px]:border-l-2 min-[1000px]:pl-7">
-          <div className="flex items-center justify-between border-b-2 pb-3">
-            <h1 className="uppercase">Order summary</h1>
-          </div>
-          <div className="space-y-3 border-b-2 py-3">
-            <div className="flex justify-between text-sm">
-              <span className="text-slate-600">Subtotal</span>
-              <span>{formatNumber(subtotal)}</span>
+
+        <aside className="min-w-0">
+          <div className="rounded-lg border border-black/10 p-5 sm:sticky sm:top-6">
+            <h2 className="text-sm font-semibold text-lightBlack">
+              Order summary
+            </h2>
+
+            <div className="mt-4 space-y-3 border-b border-black/10 pb-4 text-sm">
+              <div className="flex justify-between">
+                <span className="text-gray-500">Subtotal</span>
+                <span className="font-medium">{formatNumber(subtotal)}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-500">Delivery</span>
+                <span className="font-medium">
+                  {shippingCost === 0 ? "Free" : formatNumber(shippingCost)}
+                </span>
+              </div>
+              {amountUntilFreeShipping > 0 && (
+                <p className="text-xs text-gray-500">
+                  Add {formatNumber(amountUntilFreeShipping)} more for free
+                  delivery
+                </p>
+              )}
             </div>
-            <div className="flex justify-between text-sm">
-              <span className="text-slate-600">Delivery</span>
-              <span>
-                {shippingCost === 0 ? "Free" : formatNumber(shippingCost)}
-              </span>
+
+            <div className="mt-4 flex items-start justify-between gap-4">
+              <span className="text-sm font-semibold">Total</span>
+              <div className="text-right">
+                <p className="text-xl font-semibold">
+                  {formatNumber(orderTotal)}
+                </p>
+                <p className="mt-1 text-xs text-gray-500">
+                  VAT included (20%)
+                </p>
+                <p className="mt-1 text-xs text-gray-500">{trustLine}</p>
+              </div>
             </div>
-            {amountUntilFreeShipping > 0 && (
-              <p className="text-xs text-slate-500">
-                Add {formatNumber(amountUntilFreeShipping)} more for free
-                delivery
-              </p>
-            )}
+
+            <button
+              type="button"
+              onClick={onContinueToShipping}
+              disabled={cartItems.length === 0}
+              className="mt-6 w-full rounded-lg bg-lightBlack px-4 py-3 text-sm font-semibold text-white transition hover:bg-black disabled:opacity-50"
+            >
+              Continue to shipping
+            </button>
           </div>
-          <div className="mt-7 flex justify-between">
-            <h3 className="uppercase">Total</h3>
-            <div className="text-right">
-              <p className="mb-3 text-xl">{formatNumber(orderTotal)}</p>
-              <p className="text-xs text-slate-500">
-                VAT is included in the price (20%)
-              </p>
-              <p className="mt-2 text-xs text-slate-500">{TRUST_LINE}</p>
-            </div>
-          </div>
-          <button
-            onClick={continuePayment}
-            className="mt-7 w-full bg-lightBlack px-4 py-3 text-sm font-semibold uppercase tracking-wider text-white transition duration-300 hover:bg-black"
-          >
-            Continue to payment
-          </button>
-        </div>
+        </aside>
       </div>
     </div>
   );

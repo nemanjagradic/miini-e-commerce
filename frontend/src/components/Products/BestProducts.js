@@ -5,7 +5,19 @@ import { sortOutOfStockLast } from "../../utils/productStock";
 const BestProducts = () => {
   const { allProducts, loading } = useSelector((state) => state.products);
 
-  const bestSellers = sortOutOfStockLast(allProducts).slice(3, 11);
+  const hasFeatured = allProducts.some(
+    (p) => p.featuredPlacement === "bestSeller" || p.featuredPlacement === "both"
+  );
+
+  const bestSellers = sortOutOfStockLast(
+    hasFeatured
+      ? allProducts.filter(
+          (p) =>
+            p.featuredPlacement === "bestSeller" ||
+            p.featuredPlacement === "both"
+        )
+      : allProducts
+  ).slice(hasFeatured ? 0 : 3, hasFeatured ? undefined : 11);
 
   return (
     <div className="my-container mt-24">

@@ -6,8 +6,8 @@ const AppError = require("../utils/appError");
 const { promisify } = require("util");
 const crypto = require("crypto");
 
-const signToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET, {
+const signToken = (id, tokenVersion = 0) => {
+  return jwt.sign({ id, tokenVersion }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
 };
@@ -22,7 +22,7 @@ const getCookieOptions = (req) => ({
 });
 
 const createSendToken = (user, statusCode, req, res) => {
-  const token = signToken(user._id);
+  const token = signToken(user._id, user.tokenVersion ?? 0);
 
   res.cookie("jwt", token, getCookieOptions(req));
 
@@ -54,10 +54,13 @@ exports.login = catchAsync(async (req, res, next) => {
   if (!email || !password)
     return next(new AppError("You must provide email and password.", 400));
 
-  const user = await User.findOne({ email }).select("+password");
+  const user = await User.findOne({ email }).select("+password +active");
 
   if (!user || !(await user.correctPassword(password, user.password)))
     return next(new AppError("Incorrect email or password.", 401));
+
+  if (user.active === false)
+    return next(new AppError("This account has been deactivated.", 401));
 
   createSendToken(user, 200, req, res);
 });
@@ -89,13 +92,26 @@ exports.protect = catchAsync(async (req, res, next) => {
 
     const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
 
-    const currentUser = await User.findById(decoded.id);
+    const currentUser = await User.findById(decoded.id).select("+active");
     if (!currentUser) {
       return next(
         new AppError(
           "A user belonging to this token does no longer exist.",
           401
         )
+      );
+    }
+
+    if (currentUser.active === false) {
+      return next(
+        new AppError("This account has been deactivated.", 401)
+      );
+    }
+
+    const tokenVersion = decoded.tokenVersion ?? 0;
+    if (tokenVersion !== (currentUser.tokenVersion ?? 0)) {
+      return next(
+        new AppError("Session is no longer valid. Please log in again.", 401)
       );
     }
 
@@ -114,6 +130,17 @@ exports.protect = catchAsync(async (req, res, next) => {
     next(err);
   }
 });
+
+exports.restrictTo = (...roles) => {
+  return (req, res, next) => {
+    if (!roles.includes(req.user.role)) {
+      return next(
+        new AppError("You do not have permission to perform this action.", 403)
+      );
+    }
+    next();
+  };
+};
 
 exports.forgotPassword = catchAsync(async (req, res, next) => {
   const user = await User.findOne({ email: req.body.email });

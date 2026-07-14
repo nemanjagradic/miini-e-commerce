@@ -10,7 +10,13 @@ import StockBadge from "../../UI/StockBadge";
 import ProductSpecs from "./ProductSpecs";
 import Spinner from "../../UI/Spinner";
 import { capQuantity, LOW_STOCK_THRESHOLD } from "../../utils/productStock";
-import { TRUST_LINE } from "../../utils/shipping";
+import useShippingSettings from "../../hooks/useShippingSettings";
+import {
+  getCategoryName,
+  getCategorySlug,
+  getImageUrls,
+  resolveMediaUrl,
+} from "../../utils/productImages";
 
 const capitalize = (str) => `${str[0].toUpperCase()}${str.slice(1)}`;
 
@@ -25,6 +31,7 @@ const SingleProduct = ({ tableProductSlug }) => {
   const slugToUse = tableProductSlug ?? slug;
   const { product: curProduct, loading } = useProduct(slugToUse);
   const addToCart = useAddToCart();
+  const { trustLine } = useShippingSettings();
 
   const navigate = useNavigate();
   const [bigImage, setBigImage] = useState(null);
@@ -38,14 +45,15 @@ const SingleProduct = ({ tableProductSlug }) => {
 
   const stockQuantity = curProduct?.stockQuantity ?? 0;
   const outOfStock = stockQuantity === 0;
+  const imageUrls = getImageUrls(curProduct?.imgs);
 
-  const currentImageIndex =
-    curProduct?.imgs?.findIndex((img) => img === bigImage) ?? 0;
+  const currentImageIndex = imageUrls.findIndex((img) => img === bigImage);
 
   useEffect(() => {
     if (!curProduct) return;
 
-    setBigImage(curProduct.imgs?.[0]);
+    const urls = getImageUrls(curProduct.imgs);
+    setBigImage(urls[0] || null);
     const initialQuantity = capQuantity(1, curProduct.stockQuantity);
     setItemData({
       quantity: initialQuantity,
@@ -78,7 +86,7 @@ const SingleProduct = ({ tableProductSlug }) => {
   };
 
   const navigateLightbox = (index) => {
-    const img = curProduct.imgs[index];
+    const img = imageUrls[index];
     setBigImage(img);
   };
 
@@ -107,7 +115,11 @@ const SingleProduct = ({ tableProductSlug }) => {
     );
   }
 
-  const smallImgs = curProduct.imgs.map((img, i) => {
+  const categorySlug = getCategorySlug(curProduct.category);
+  const categoryLabel =
+    getCategoryName(curProduct.category) || capitalize(categorySlug);
+
+  const smallImgs = imageUrls.map((img, i) => {
     const isActive = img === bigImage;
 
     return (
@@ -123,7 +135,11 @@ const SingleProduct = ({ tableProductSlug }) => {
         aria-label={`View image ${i + 1}`}
         aria-current={isActive ? "true" : undefined}
       >
-        <img className="h-full w-full object-cover" src={`/${img}`} alt="" />
+        <img
+          className="h-full w-full object-cover"
+          src={resolveMediaUrl(img)}
+          alt=""
+        />
       </button>
     );
   });
@@ -140,7 +156,7 @@ const SingleProduct = ({ tableProductSlug }) => {
           >
             <img
               className="h-full w-full object-cover"
-              src={`/${bigImage}`}
+              src={resolveMediaUrl(bigImage)}
               alt={curProduct.title}
             />
           </button>
@@ -152,8 +168,8 @@ const SingleProduct = ({ tableProductSlug }) => {
             items={[
               { label: "Home", to: "/" },
               {
-                label: capitalize(curProduct.category),
-                to: `/categories/${curProduct.category}`,
+                label: categoryLabel,
+                to: `/categories/${categorySlug}`,
               },
               { label: curProduct.title },
             ]}
@@ -161,10 +177,10 @@ const SingleProduct = ({ tableProductSlug }) => {
 
           <div className="mb-4 flex flex-wrap items-center gap-3">
             <Link
-              to={`/categories/${curProduct.category}`}
+              to={`/categories/${categorySlug}`}
               className="rounded-full bg-light px-3 py-1 text-sm font-medium text-gray-700 transition hover:bg-lightBlack hover:text-white"
             >
-              {capitalize(curProduct.category)}
+              {categoryLabel}
             </Link>
             <StockBadge stockQuantity={stockQuantity} />
             {stockQuantity > 0 && stockQuantity <= LOW_STOCK_THRESHOLD && (
@@ -188,7 +204,7 @@ const SingleProduct = ({ tableProductSlug }) => {
             </p>
           )}
 
-          <p className="mb-4 mt-2 text-sm text-gray-500">{TRUST_LINE}</p>
+          <p className="mb-4 mt-2 text-sm text-gray-500">{trustLine}</p>
 
           <p className="mb-6 text-base leading-relaxed text-gray-600">
             {curProduct.description}
@@ -198,20 +214,22 @@ const SingleProduct = ({ tableProductSlug }) => {
             <span className="text-sm font-semibold uppercase tracking-wide text-gray-700">
               Quantity
             </span>
-            <div className="flex items-center">
+            <div className="flex items-center gap-1.5">
               <button
-                className="border border-black/80 px-2 py-1 transition duration-300 hover:border hover:border-black hover:bg-light disabled:cursor-not-allowed disabled:opacity-50 md:px-3.5 md:py-2"
+                type="button"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-black/20 text-sm text-black transition hover:border-black hover:bg-lightBlack hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
                 onClick={quantityMinus}
                 disabled={outOfStock || itemData.quantity <= 1}
                 aria-label="Decrease quantity"
               >
                 <FontAwesomeIcon icon={faMinus} />
               </button>
-              <span className="px-2 py-2 text-lg md:px-3.5 md:py-2">
+              <span className="min-w-8 px-2 text-center text-lg">
                 {itemData.quantity}
               </span>
               <button
-                className="border border-black/80 px-2 py-1 transition duration-300 hover:border hover:border-black hover:bg-light disabled:cursor-not-allowed disabled:opacity-50 md:px-3.5 md:py-2"
+                type="button"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-black/20 text-sm text-black transition hover:border-black hover:bg-lightBlack hover:text-white disabled:cursor-not-allowed disabled:opacity-40"
                 onClick={quantityPlus}
                 disabled={outOfStock || itemData.quantity >= stockQuantity}
                 aria-label="Increase quantity"
@@ -221,10 +239,11 @@ const SingleProduct = ({ tableProductSlug }) => {
             </div>
           </div>
 
-          <div className="mb-0 flex justify-between gap-6">
+          <div className="mb-0 flex justify-between gap-4">
             <button
+              type="button"
               disabled={outOfStock || addStatus === "adding" || buying}
-              className="h-12 flex-1 border-2 border-solid border-black px-2 text-base font-semibold uppercase transition duration-300 hover:bg-lightBlack hover:text-white disabled:cursor-not-allowed disabled:opacity-70 md:w-40 md:text-lg lg:w-44 xl:w-56"
+              className="h-12 flex-1 rounded-lg border border-black/20 bg-white px-2 text-base font-semibold transition hover:border-black hover:bg-lightBlack hover:text-white disabled:cursor-not-allowed disabled:opacity-50 md:w-40 md:text-lg lg:w-44 xl:w-56"
               onClick={addToCartHandler}
             >
               {outOfStock
@@ -233,18 +252,19 @@ const SingleProduct = ({ tableProductSlug }) => {
                   ? "Adding..."
                   : addStatus === "added"
                     ? "Added \u2713"
-                    : "Add To Cart"}
+                    : "Add to cart"}
             </button>
             <button
+              type="button"
               disabled={outOfStock || buying || addStatus === "adding"}
-              className="h-12 flex-1 border-2 border-solid border-bloodRed bg-bloodRed px-2 text-base font-semibold uppercase text-white transition duration-300 hover:bg-transparent hover:text-bloodRed disabled:cursor-not-allowed disabled:opacity-70 md:w-40 md:text-lg lg:w-44 xl:w-56"
+              className="h-12 flex-1 rounded-lg border border-bloodRed bg-bloodRed px-2 text-base font-semibold text-white transition hover:bg-transparent hover:text-bloodRed disabled:cursor-not-allowed disabled:opacity-50 md:w-40 md:text-lg lg:w-44 xl:w-56"
               onClick={buyHandler}
             >
               {outOfStock
                 ? "Out of stock"
                 : buying
                   ? "Processing..."
-                  : "Buy Now"}
+                  : "Buy now"}
             </button>
           </div>
 
@@ -258,7 +278,7 @@ const SingleProduct = ({ tableProductSlug }) => {
 
       {lightboxOpen && (
         <ImageLightbox
-          images={curProduct.imgs}
+          images={imageUrls}
           currentIndex={currentImageIndex >= 0 ? currentImageIndex : 0}
           onClose={() => setLightboxOpen(false)}
           onNavigate={navigateLightbox}

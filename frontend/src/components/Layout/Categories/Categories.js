@@ -1,19 +1,20 @@
 import ProductSmallItem from "../../Products/ProductSmallItem";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { sortOutOfStockLast } from "../../../utils/productStock";
-
-const categoryButtons = ["all", "chairs", "tables", "clocks", "lamps", "other"];
+import { getCategorySlug } from "../../../utils/productImages";
 
 const sortOptions = [
   { value: "default", label: "Default" },
   { value: "price-asc", label: "Price: Low to High" },
   { value: "price-desc", label: "Price: High to Low" },
   { value: "name-asc", label: "Name: A–Z" },
+  { value: "name-desc", label: "Name: Z–A" },
 ];
 
-const capitalize = (str) => `${str[0].toUpperCase()}${str.slice(1)}`;
+const capitalize = (str) =>
+  str ? `${str[0].toUpperCase()}${str.slice(1)}` : "";
 
 const getCategoryChipClass = (active) =>
   `shrink-0 rounded-full px-4 py-1.5 text-sm font-medium transition ${
@@ -26,9 +27,32 @@ const Categories = () => {
   const { categoryName = "all" } = useParams();
   const [searchParams] = useSearchParams();
   const query = (searchParams.get("q") || "").trim();
+  const API_URL = process.env.REACT_APP_API_URL;
 
   const { allProducts } = useSelector((state) => state.products);
   const [sort, setSort] = useState("default");
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch(`${API_URL}/categories`);
+        const data = await res.json();
+        if (!cancelled && res.ok) setCategories(data.data || []);
+      } catch {
+        /* keep empty; chips fall back below */
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [API_URL]);
+
+  const categoryButtons = useMemo(() => {
+    const slugs = categories.map((c) => c.slug);
+    return ["all", ...(slugs.length ? slugs : ["chairs", "tables", "clocks", "lamps", "other"])];
+  }, [categories]);
 
   const activeCategory = query ? "all" : categoryName.toLowerCase();
 
@@ -37,13 +61,19 @@ const Categories = () => {
 
     if (query) {
       const q = query.toLowerCase();
-      products = products.filter(
-        (p) =>
+      products = products.filter((p) => {
+        const slug = getCategorySlug(p.category);
+        return (
           p.title?.toLowerCase().includes(q) ||
-          p.category?.toLowerCase().includes(q),
-      );
+          slug.toLowerCase().includes(q) ||
+          (typeof p.category === "object" &&
+            p.category?.name?.toLowerCase().includes(q))
+        );
+      });
     } else if (activeCategory !== "all") {
-      products = products.filter((p) => p.category === activeCategory);
+      products = products.filter(
+        (p) => getCategorySlug(p.category) === activeCategory
+      );
     }
 
     switch (sort) {
@@ -55,6 +85,9 @@ const Categories = () => {
         break;
       case "name-asc":
         products.sort((a, b) => a.title.localeCompare(b.title));
+        break;
+      case "name-desc":
+        products.sort((a, b) => b.title.localeCompare(a.title));
         break;
       default:
         break;
@@ -78,6 +111,11 @@ const Categories = () => {
         >
           {categoryButtons.map((button) => {
             const active = activeCategory === button;
+            const label =
+              button === "all"
+                ? "All"
+                : categories.find((c) => c.slug === button)?.name ||
+                  capitalize(button);
             return (
               <Link
                 to={`/categories/${button}`}
@@ -85,7 +123,7 @@ const Categories = () => {
                 aria-current={active ? "page" : undefined}
                 className={getCategoryChipClass(active)}
               >
-                {capitalize(button)}
+                {label}
               </Link>
             );
           })}
@@ -104,11 +142,11 @@ const Categories = () => {
               id="sort"
               value={sort}
               onChange={(e) => setSort(e.target.value)}
-              className="rounded-full border border-gray-300 px-3 py-1.5 text-sm outline-none focus:border-lightBlack"
+              className="rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm outline-none focus:border-lightBlack"
             >
-              {sortOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
+              {sortOptions.map((opt) => (
+                <option key={opt.value} value={opt.value}>
+                  {opt.label}
                 </option>
               ))}
             </select>
@@ -117,30 +155,12 @@ const Categories = () => {
       </div>
 
       {displayedProducts.length === 0 ? (
-        <div className="flex flex-col items-center py-20 text-center font-Heebo">
-          <div className="mx-auto h-24 w-24">
-            <img className="h-full w-full" src="/images/empty.png" alt="" />
-          </div>
-          <h5 className="mb-2 mt-6 text-xl font-semibold">
-            {query
-              ? `No results for "${query}"`
-              : "No products in this category yet."}
-          </h5>
-          <p className="mb-6 text-gray-500">
-            Try a different {query ? "search" : "category"}.
-          </p>
-          <Link
-            to="/categories/all"
-            className="border-2 border-solid border-black bg-white px-5 py-2.5 text-sm uppercase tracking-wider transition duration-300 hover:bg-lightBlack hover:text-white"
-          >
-            Browse all products
-          </Link>
-        </div>
+        <p className="py-16 text-center text-gray-500">No products found.</p>
       ) : (
         <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 xl:grid-cols-4 xl:gap-8">
           {displayedProducts.map((product) => (
             <ProductSmallItem
-              key={product._id || product.id}
+              key={product._id ?? product.id}
               product={product}
             />
           ))}

@@ -12,7 +12,7 @@ const ErrorPage = () => {
         </h3>
         <Link
           to="/"
-          className="rounded-2xl bg-lightBlack px-6 py-3 text-white shadow-md transition-all duration-300 hover:bg-black"
+          className="rounded-lg bg-lightBlack px-6 py-3 text-sm font-semibold text-white transition hover:bg-black"
         >
           Back to Home
         </Link>

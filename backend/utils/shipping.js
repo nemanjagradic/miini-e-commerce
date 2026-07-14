@@ -1,15 +1,29 @@
-const FREE_SHIPPING_THRESHOLD = 100;
+const {
+  getOrCreateSettings,
+  DEFAULT_FREE_SHIPPING_THRESHOLD,
+} = require("../models/settingsModel");
+
 const STANDARD_SHIPPING = 15;
 
-const getShippingCost = (subtotal) =>
-  subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : STANDARD_SHIPPING;
+const getFreeShippingThreshold = async () => {
+  const settings = await getOrCreateSettings();
+  return settings.freeShippingThreshold ?? DEFAULT_FREE_SHIPPING_THRESHOLD;
+};
 
-const getAmountUntilFreeShipping = (subtotal) =>
-  Math.max(0, FREE_SHIPPING_THRESHOLD - subtotal);
+const getShippingCost = async (subtotal) => {
+  const threshold = await getFreeShippingThreshold();
+  return subtotal >= threshold ? 0 : STANDARD_SHIPPING;
+};
+
+const getAmountUntilFreeShipping = async (subtotal) => {
+  const threshold = await getFreeShippingThreshold();
+  return Math.max(0, threshold - subtotal);
+};
 
 module.exports = {
-  FREE_SHIPPING_THRESHOLD,
   STANDARD_SHIPPING,
+  DEFAULT_FREE_SHIPPING_THRESHOLD,
+  getFreeShippingThreshold,
   getShippingCost,
   getAmountUntilFreeShipping,
 };

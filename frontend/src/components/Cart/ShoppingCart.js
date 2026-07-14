@@ -5,10 +5,8 @@ import { uiActions } from "../../store/ui-slice";
 import CartItem from "./CartItem";
 import { useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import {
-  FREE_SHIPPING_THRESHOLD,
-  getAmountUntilFreeShipping,
-} from "../../utils/shipping";
+import { getAmountUntilFreeShipping } from "../../utils/shipping";
+import useShippingSettings from "../../hooks/useShippingSettings";
 
 const ShoppingCart = () => {
   const dispatch = useDispatch();
@@ -18,7 +16,11 @@ const ShoppingCart = () => {
   const cartItems = useSelector((state) => state.cart.cartItems);
   const subtotal = useSelector((state) => state.cart.subtotal);
   const totalQuantity = useSelector((state) => state.cart.totalQuantity);
-  const amountUntilFreeShipping = getAmountUntilFreeShipping(subtotal);
+  const { freeShippingThreshold } = useShippingSettings();
+  const amountUntilFreeShipping = getAmountUntilFreeShipping(
+    subtotal,
+    freeShippingThreshold
+  );
   const closeModal = () => {
     dispatch(uiActions.closeModal());
   };
@@ -60,11 +62,12 @@ const ShoppingCart = () => {
             Your Shopping Cart (<span>{totalQuantity}</span>)
           </h6>
           <button
-            className="text-2xl"
+            type="button"
+            className="flex h-9 w-9 items-center justify-center rounded-full text-gray-500 transition hover:bg-black/5 hover:text-black"
             onClick={closeModal}
             aria-label="Close cart"
           >
-            <FontAwesomeIcon icon={faXmark} />
+            <FontAwesomeIcon icon={faXmark} className="text-xl" />
           </button>
         </div>
 
@@ -76,10 +79,10 @@ const ShoppingCart = () => {
               </div>
               <h5 className="mb-3 mt-6 text-xl">Your cart is empty.</h5>
               <Link
-                className="border-2 border-solid border-black bg-white px-5 py-2.5 text-center text-sm uppercase tracking-wider transition duration-300 hover:bg-lightBlack hover:text-white"
+                className="rounded-lg border border-black/20 bg-white px-5 py-2.5 text-center text-sm font-semibold transition hover:border-black hover:bg-lightBlack hover:text-white"
                 to="/"
               >
-                Keep Browsing
+                Keep browsing
               </Link>
             </div>
           ) : (
@@ -104,15 +107,16 @@ const ShoppingCart = () => {
                     style: "currency",
                     currency: "USD",
                   }).format(amountUntilFreeShipping)}{" "}
-                  for free delivery over ${FREE_SHIPPING_THRESHOLD}
+                  for free delivery over ${freeShippingThreshold}
                 </p>
               )}
             </div>
             <button
+              type="button"
               onClick={() => navigate("/checkout")}
-              className="border-2 border-solid border-black bg-white px-5 py-2 text-sm uppercase tracking-wider transition duration-300 hover:bg-lightBlack hover:text-white"
+              className="rounded-lg bg-lightBlack px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-black"
             >
-              Payment
+              Checkout
             </button>
           </div>
         )}
