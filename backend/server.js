@@ -24,6 +24,29 @@ app.get("/", (req, res) => {
   res.send("API is running...");
 });
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
+
+const shutdown = (signal) => {
+  console.log(`${signal} received, shutting down gracefully…`);
+  server.close(async () => {
+    try {
+      await mongoose.connection.close();
+      console.log("HTTP server and database closed.");
+      process.exit(0);
+    } catch (err) {
+      console.error("Error during shutdown:", err);
+      process.exit(1);
+    }
+  });
+
+  // Force exit if connections hang
+  setTimeout(() => {
+    console.error("Forced shutdown after timeout.");
+    process.exit(1);
+  }, 10000).unref();
+};
+
+process.on("SIGTERM", () => shutdown("SIGTERM"));
+process.on("SIGINT", () => shutdown("SIGINT"));
